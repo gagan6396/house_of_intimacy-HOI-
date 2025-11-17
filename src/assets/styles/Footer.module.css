@@ -1,7 +1,16 @@
+/* ===== Base footer wrapper ===== */
 .site-footer {
+  width: 100%;
   background: #f2fbfa;
   color: #123;
   font-family: "Inter", system-ui, sans-serif;
+}
+
+/* Make sure these sections don't collapse or shrink oddly */
+.footer-top,
+.footer-mid,
+.footer-bottom {
+  width: 100%;
 }
 
 /* socials & small icons */
@@ -28,6 +37,7 @@
   object-fit: contain;
 }
 
+/* payment icons */
 .payment-icons svg {
   width: 90%;
   height: 90%;
@@ -62,6 +72,7 @@
   text-decoration: none;
 }
 
+/* social icons hover */
 .socials a svg {
   transition: color 0.3s, transform 0.3s;
   color: #000;
@@ -77,6 +88,7 @@
   .footer-top {
     row-gap: 1.25rem;
   }
+
   .footer-logo {
     height: 58px;
   }
