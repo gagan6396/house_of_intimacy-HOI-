@@ -1,0 +1,33 @@
+import React, { useState } from "react";
+import SwimwearSection from "../components/Swimwear.jsx";
+import Herosection from "./Herosection.jsx";
+import Offermarquee from "./Offermarquee.jsx";
+import Bestsellers from "./Bestsellers.jsx";
+import Footer from "./Footer.jsx";
+import ProductSection from "./Productsection.jsx";
+import BestChoice from "./BestChoice.jsx";
+import Carousel from "./Carousel.jsx";
+import ColorsSelector from "./ColorsSelector.jsx";
+import VideoPlayer from "./VideoPlayer.jsx";
+
+
+
+
+export default function Home() {
+  
+
+  return (
+    <>
+      <Herosection/>
+      <Carousel/>
+      <ColorsSelector/>
+      <SwimwearSection />
+      <Offermarquee/>
+      <Bestsellers/>
+      <BestChoice/>
+      <ProductSection/>
+      <VideoPlayer/>
+      <Footer/>
+    </>
+  );
+}

@@ -1,0 +1,467 @@
+:root {
+  --text: #ffffff;
+  --muted: rgba(255, 255, 255, 0.85);
+  --line: rgba(255, 255, 255, 0.12);
+  --btn-bg: rgba(255, 255, 255, 0.12);
+  --btn-border: rgba(255, 255, 255, 0.25);
+  --btn-hover: rgba(255, 255, 255, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+    "Helvetica Neue", Arial;
+}
+
+/* ============ HERO ============ */
+
+.shore_hero {
+  position: relative;
+  min-height: 100vh;
+  color: var(--text);
+  isolation: isolate;
+}
+
+/* Top-to-bottom subtle shade */
+.shore_hero__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.18),
+    rgba(0, 0, 0, 0.05) 45%,
+    rgba(0, 0, 0, 0.22)
+  );
+  z-index: -2;
+}
+
+/* Background image */
+.hero_bg_image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -4;
+}
+
+/* Content (center-ish) */
+.shore_hero__content {
+  position: absolute;
+  top: 26%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #fff;
+  z-index: 5;
+  width: 100%;
+  max-width: 700px;
+  padding: 0 20px;
+}
+
+.eyebrow {
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+
+.title {
+  font-weight: 700;
+  font-size: clamp(2rem, 4.2vw, 3.2rem);
+  line-height: 1.2;
+  margin: 0 0 22px 0;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.22);
+  text-align: center;
+}
+
+/* CTA button */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: var(--btn-bg);
+  color: var(--text);
+  border: 1px solid var(--btn-border);
+  text-decoration: none;
+  font-weight: 600;
+  backdrop-filter: blur(6px);
+  transition: transform 0.18s ease, background 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.cta:hover {
+  transform: translateY(-2px);
+  background: var(--btn-hover);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* Nav arrows */
+.shore_hero__nav {
+  position: absolute;
+  right: clamp(12px, 2.5vw, 28px);
+  bottom: clamp(12px, 2.5vw, 28px);
+  display: flex;
+  gap: 10px;
+}
+
+.navbtn {
+  height: 40px;
+  width: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+
+.navbtn:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.navbtn:active {
+  transform: translateY(0);
+}
+
+/* Dots */
+.shore_hero__dots {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+}
+
+.dotbtn {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.dotbtn:hover {
+  transform: scale(1.15);
+}
+
+/* Active dot */
+.dotActive {
+  background: #fff;
+  border-color: #fff;
+  transform: scale(1.2);
+}
+
+/* ============ SHUTTER EFFECT ============ */
+
+.shutter {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  z-index: -3;
+  pointer-events: none;
+}
+
+.shutter_slice {
+  background: #000;
+  transform: scaleX(0); /* default open */
+}
+
+/* When active, run close → open on slices */
+.shutterActive .shutter_slice {
+  animation:
+    shutterCloseLeft 0.55s ease forwards,
+    shutterOpenRight 0.55s ease 0.55s forwards;
+}
+
+/* CLOSE old slide → Left to Right */
+@keyframes shutterCloseLeft {
+  0% {
+    transform-origin: left center;
+    transform: scaleX(0);
+  }
+  100% {
+    transform-origin: left center;
+    transform: scaleX(1);
+  }
+}
+
+/* OPEN new slide → Right to Left */
+@keyframes shutterOpenRight {
+  0% {
+    transform-origin: right center;
+    transform: scaleX(1);
+  }
+  100% {
+    transform-origin: right center;
+    transform: scaleX(0);
+  }
+}
+
+/* Stagger wave timing */
+.shutter_slice:nth-child(1) {
+  animation-delay: 0s, 0.45s;
+}
+
+.shutter_slice:nth-child(2) {
+  animation-delay: 0.05s, 0.5s;
+}
+
+.shutter_slice:nth-child(3) {
+  animation-delay: 0.1s, 0.55s;
+}
+
+.shutter_slice:nth-child(4) {
+  animation-delay: 0.15s, 0.6s;
+}
+
+.shutter_slice:nth-child(5) {
+  animation-delay: 0.2s, 0.65s;
+}
+
+.shutter_slice:nth-child(6) {
+  animation-delay: 0.25s, 0.7s;
+}
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+  .shore_hero__content {
+    top: 30%;
+  }
+}
+
+@media (max-width: 560px) {
+  .shore_hero {
+    min-height: 78vh;
+  }
+}
+
+/* ============ PRODUCT GRID (your bottom CSS) ============ */
+
+.swimwear-section {
+  padding: 60px 0;
+  background-color: #fff;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #212529;
+  margin: 0;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-view-all {
+  background-color: #212529;
+  color: #fff;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s;
+}
+
+.btn-view-all:hover {
+  background-color: #000;
+}
+
+.arrow {
+  font-size: 18px;
+}
+
+.btn-nav {
+  background-color: #212529;
+  color: #fff;
+  width: 45px;
+  height: 45px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  transition: background-color 0.3s;
+}
+
+.btn-nav:hover {
+  background-color: #000;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+.product-card {
+  margin-bottom: 0;
+}
+
+.product-image-wrapper {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background-color: #f8f9fa;
+  margin-bottom: 20px;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
+}
+
+.quick-view-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s;
+}
+
+.quick-view-btn:hover {
+  background-color: #f8f9fa;
+}
+
+.product-info {
+  text-align: center;
+}
+
+.product-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #212529;
+  margin-bottom: 12px;
+}
+
+.product-pricing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.product-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #212529;
+}
+
+.product-original-price {
+  font-size: 14px;
+  color: #6c757d;
+  text-decoration: line-through;
+}
+
+.color-swatches {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.color-swatch {
+  width: 32px;
+  height: 32px;
+  border: 2px solid #dee2e6;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.color-swatch:hover {
+  border-color: #212529;
+}
+
+@media (max-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .header-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-view-all {
+    flex: 1;
+    justify-content: center;
+  }
+}

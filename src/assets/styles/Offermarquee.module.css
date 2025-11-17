@@ -1,0 +1,37 @@
+.offerMarquee {
+  background: #fff;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: scrollLeft 45s linear infinite;
+}
+
+.marqueeText {
+  font-family: "Playfair Display", serif;
+  font-size: 54px;
+  font-weight: 700;
+  color: transparent;
+  -webkit-text-stroke: 1px #000;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  display: inline-block;
+  padding-right: 4rem;
+}
+
+/* constant scroll */
+@keyframes scrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.offerMarquee:hover .marquee {
+  animation-play-state: paused;
+}

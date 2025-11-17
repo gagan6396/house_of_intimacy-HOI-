@@ -1,0 +1,87 @@
+.site-footer {
+  background: #f2fbfa;
+  color: #123;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+/* socials & small icons */
+.socials img,
+.payment-icons img {
+  height: 20px;
+  width: auto;
+  opacity: 0.95;
+}
+
+/* footer links */
+.footer-links a {
+  color: #334;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+/* logo styling */
+.footer-logo {
+  height: 210px;
+  object-fit: contain;
+}
+
+.payment-icons svg {
+  width: 90%;
+  height: 90%;
+  border-radius: 4px;
+  transition: transform 0.3s ease;
+}
+
+.payment-icons svg:hover {
+  transform: scale(1.1);
+}
+
+.fake-select {
+  background: transparent;
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: #203232;
+  align-items: center;
+}
+
+/* newsletter */
+.newsletter .form-control {
+  min-width: 150px;
+}
+
+.subscribe-btn {
+  border-radius: 6px;
+}
+
+/* bottom links */
+.bottom-links a {
+  color: #556;
+  text-decoration: none;
+}
+
+.socials a svg {
+  transition: color 0.3s, transform 0.3s;
+  color: #000;
+}
+
+.socials a:hover svg {
+  color: #e0231a;
+  transform: scale(1.1);
+}
+
+/* responsive */
+@media (max-width: 767px) {
+  .footer-top {
+    row-gap: 1.25rem;
+  }
+  .footer-logo {
+    height: 58px;
+  }
+
+  .newsletter .form-control {
+    min-width: 100%;
+  }
+}

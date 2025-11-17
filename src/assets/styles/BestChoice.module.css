@@ -1,0 +1,231 @@
+/* BestChoice.module.css */
+
+:root {
+  --bc-gap: 26px;
+  --card-radius: 10px;
+  --overlay-height: 84px;
+  --muted: #777;
+  --accent: #111;
+}
+
+
+
+/* container helper */
+.container {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 28px 20px;
+}
+
+/* header */
+.bcHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  position: relative;
+  margin-bottom: 22px;
+}
+
+.bcTitle {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+/* controls (top-right) */
+.bcControls {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  gap: 8px;
+}
+
+.bcArrow {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: #fff;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* grid of cards */
+.bcGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--bc-gap);
+  align-items: stretch;
+}
+
+/* each card */
+.bcCard {
+  position: relative;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  min-height: 536px; /* adjust to match your design */
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 6px rgba(9, 10, 10, 0.03);
+  background: #fafafa;
+}
+
+/* background image cover */
+.bcImage {
+  flex: 1 1 auto;
+  background-size: cover;
+  background-position: center;
+  min-height: 0;
+}
+
+/* overlay at bottom */
+.bcOverlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--overlay-height);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(6, 6, 6, 0.45) 45%,
+    rgba(6, 6, 6, 0.75) 100%
+  );
+  color: #fff;
+}
+
+/* thumbnail inside overlay */
+.bcThumb {
+  width: 48px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 3px solid rgba(255, 255, 255, 0.95);
+  background: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* meta text */
+.bcMeta {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+.bcName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 80px);
+}
+
+.bcPrice {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.old {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
+  margin-right: 8px;
+}
+
+
+
+/* CTA at bottom center */
+.bcCta {
+  display: flex;
+  justify-content: center;
+  margin-top: 26px;
+}
+
+.btnGhost {
+  display: inline-block;
+  padding: 12px 26px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #fff;
+  color: #111;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.6px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btnGhost:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* responsive */
+@media (max-width: 1100px) {
+  .bcGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .bcCard {
+    min-height: 380px;
+  }
+}
+
+@media (max-width: 820px) {
+  .bcGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  .bcCard {
+    min-height: 320px;
+  }
+  .bcHeader {
+    align-items: center;
+  }
+  .bcControls {
+    position: absolute;
+    right: 8px;
+    top: -6px;
+  }
+}
+
+@media (max-width: 520px) {
+  .bcGrid {
+    grid-template-columns: 1fr;
+  }
+  .bcCard {
+    min-height: 260px;
+    border-radius: 8px;
+  }
+  .bcTitle {
+    font-size: 20px;
+    padding: 4px 8px;
+  }
+  .bcOverlay {
+    height: 72px;
+    padding: 8px;
+  }
+  .bcThumb {
+    width: 44px;
+    height: 56px;
+  }
+}

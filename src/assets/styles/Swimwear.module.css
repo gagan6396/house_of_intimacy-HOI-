@@ -1,0 +1,184 @@
+.swimwearSection {
+  padding: 60px 5%;
+  background: #fff;
+  font-family: "Inter", sans-serif;
+}
+
+.container {
+  max-width: 1560px !important;
+  margin: 0 auto;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.sectionTitle {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.headerButtons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btnViewAll {
+  background: #111;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btnViewAll:hover {
+  background: #e0231a;
+}
+
+.arrowIcon {
+  font-size: 1.2rem;
+}
+
+.navButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btnNav {
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #111;
+  font-size: 1.2rem;
+  width: 38px;
+  height: 38px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btnNav:hover {
+  background: #f4f4f4;
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.productCard {
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.productCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.productImageWrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.productImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.productCard:hover .productImage {
+  transform: scale(1.05);
+}
+
+.quickViewBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.quickViewBtn:hover {
+  background: #fff;
+}
+
+.productInfo {
+  padding: 15px;
+  text-align: center;
+}
+
+.productName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 6px;
+}
+
+.productPricing {
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
+.productPrice {
+  font-weight: 600;
+  color: #000;
+  margin-right: 6px;
+}
+
+.productOriginalPrice {
+  color: #999;
+  text-decoration: line-through;
+}
+
+.colorSwatches {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.colorThumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  object-fit: cover;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  transition: border-color 0.3s ease;
+}
+
+.colorThumb:hover {
+  border-color: #000;
+}
+
+@media (max-width: 768px) {
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .btnViewAll {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+}

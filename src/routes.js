@@ -18,8 +18,15 @@ import RTL from 'views/admin/rtl';
 
 // Auth Imports
 import SignInCentered from 'views/auth/signIn';
+import Home from 'components/Home';
 
 const routes = [
+   {
+    name: 'Main Dashboard',
+    layout: '/home',
+    path: '/',
+    component: <Home />,
+  },
   {
     name: 'Main Dashboard',
     layout: '/admin',

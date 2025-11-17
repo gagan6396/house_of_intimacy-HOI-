@@ -8,9 +8,9 @@ import {
   Checkbox,
 } from "@chakra-ui/react";
 // Custom components
-import Card from "components/card/Card.js";
-import Menu from "components/menu/MainMenu";
-import IconBox from "components/icons/IconBox";
+import Card from "../../../../components/Dashboard/card/Card";
+import Menu from "../../../../components/Dashboard/menu/MainMenu";
+import IconBox from "../../../../components/Dashboard/icons/IconBox";
 
 // Assets
 import { MdCheckBox, MdDragIndicator } from "react-icons/md";

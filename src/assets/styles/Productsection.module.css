@@ -1,0 +1,79 @@
+.product-section {
+  --muted: #777;
+  --accent: #e0231a;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+/* column title */
+.column-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #222;
+}
+
+/* product item layout */
+.product-item {
+  gap: 14px;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+/* thumbnail box - fixed visual size */
+.thumb {
+  width: 126px;
+  height: 180px;
+  overflow: hidden;
+  display: inline-block;
+  background: #f6f6f6;
+  border-radius: 8px;
+}
+
+/* ensure image covers thumbnail area */
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* meta text */
+.meta .brand {
+  color: #444;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.meta .title {
+  color: #6b6b6b;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+/* price */
+.price .old {
+  text-decoration: line-through;
+  color: #999;
+  font-weight: 400;
+}
+
+.price .now {
+  color: #111;
+}
+
+/* spacing for the last item (remove border) */
+.product-item:last-child {
+  border-bottom: 0;
+}
+
+/* responsive adjustments */
+@media (max-width: 767.98px) {
+  .column-title {
+    text-align: left;
+    margin-bottom: 12px;
+  }
+
+  .thumb {
+    width: 74px;
+    height: 92px;
+  }
+}
