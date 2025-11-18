@@ -1,6 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
-// Chakra imports
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -15,39 +14,75 @@ import {
   InputRightElement,
   Text,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
-// Custom components
+
+import { useForm } from "react-hook-form";
 import { HSeparator } from "../../../components/Dashboard/separator/Separator";
 import DefaultAuth from "layouts/auth/Default";
-// Assets
+
 import illustration from "assets/img/auth/auth.png";
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
 
-function SignIn() {
-  // Chakra color mode
-  const textColor = useColorModeValue("navy.700", "white");
-  const textColorSecondary = useColorModeValue("gray.500", "gray.400");
-  const textColorDetails = useColorModeValue("gray.600", "gray.300");
-  const textColorBrand = useColorModeValue("brand.500", "brand.400");
-  const brandStars = useColorModeValue("brand.500", "brand.300");
+import axios from "axios";
 
-  const googleBg = useColorModeValue("secondaryGray.300", "whiteAlpha.200");
-  const googleText = useColorModeValue("navy.700", "white");
-  const googleHover = useColorModeValue(
-    { bg: "gray.200" },
-    { bg: "whiteAlpha.300" }
-  );
-  const googleActive = useColorModeValue(
-    { bg: "secondaryGray.300" },
-    { bg: "whiteAlpha.200" }
-  );
+const baseUrl = process.env.REACT_APP_APIURL || "http://localhost:8000/v1";
+
+function SignIn() {
+  const textColor = useColorModeValue("navy.700", "black");
+  const textColorSecondary = useColorModeValue("gray.500", "black");
+  const textColorDetails = useColorModeValue("gray.600", "black");
+  const textColorBrand = useColorModeValue("brand.500", "black");
+  const brandStars = useColorModeValue("brand.500", "brand.300");
 
   const inputTextColor = useColorModeValue("navy.700", "white");
 
   const [show, setShow] = React.useState(false);
-  const handleClick = () => setShow(!show);
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  // React Hook Form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm();
+
+  // Submit Handler (AJAX + Keep me logged in)
+  const onSubmit = async (data) => {
+    try {
+      // separate rememberMe from login payload
+      const { rememberMe, ...loginPayload } = data;
+
+      const res = await axios.post(`${baseUrl}/auth/login`, loginPayload);
+
+      toast({
+        title: "Login Successful",
+        status: "success",
+        duration: 2000,
+      });
+
+      // 🔐 KEEP ME LOGGED IN LOGIC
+      if (rememberMe) {
+        // stays even after browser restart
+        localStorage.setItem("authToken", res.data.token);
+      } else {
+        // only for current tab / session
+        sessionStorage.setItem("authToken", res.data.token);
+      }
+
+      navigate("/admin");
+    } catch (err) {
+      toast({
+        title: "Login Failed",
+        description: err.response?.data?.message || "Invalid credentials",
+        status: "error",
+        duration: 3000,
+      });
+    }
+  };
 
   return (
     <DefaultAuth illustrationBackground={illustration} image={illustration}>
@@ -59,53 +94,31 @@ function SignIn() {
         h="100%"
         alignItems="start"
         justifyContent="center"
-        mb={{ base: "30px", md: "60px" }}
         px={{ base: "25px", md: "0px" }}
-        mt={{ base: "40px", md: "14vh" }}
+        mt={{ base: "40px", md: "0vh" }}
         flexDirection="column"
       >
         <Box me="auto">
           <Heading color={textColor} fontSize="36px" mb="10px">
             Sign In
           </Heading>
-          <Text
-            mb="36px"
-            ms="4px"
-            color={textColorSecondary}
-            fontWeight="400"
-            fontSize="md"
-          >
+          <Text mb="36px" color={textColorSecondary} fontWeight="400">
             Enter your email and password to sign in!
           </Text>
         </Box>
-        <Flex
-          zIndex="2"
-          direction="column"
-          w={{ base: "100%", md: "420px" }}
-          maxW="100%"
-          background="transparent"
-          borderRadius="15px"
-          mx={{ base: "auto", lg: "unset" }}
-          me="auto"
-          mb={{ base: "20px", md: "auto" }}
-        >
+
+        <Flex direction="column" w={{ base: "100%", md: "420px" }} maxW="100%">
           <Button
-            fontSize="sm"
-            me="0px"
             mb="26px"
-            py="15px"
             h="50px"
             borderRadius="16px"
-            bg={googleBg}
-            color={googleText}
-            fontWeight="500"
-            _hover={googleHover}
-            _active={googleActive}
-            _focus={googleActive}
+            bg="gray.300"
+            color="black"
           >
             <Icon as={FcGoogle} w="20px" h="20px" me="10px" />
             Sign in with Google
           </Button>
+
           <Flex align="center" mb="25px">
             <HSeparator />
             <Text color="gray.400" mx="14px">
@@ -113,118 +126,104 @@ function SignIn() {
             </Text>
             <HSeparator />
           </Flex>
-          <FormControl>
-            <FormLabel
-              display="flex"
-              ms="4px"
-              fontSize="sm"
-              fontWeight="500"
-              color={textColor}
-              mb="8px"
-            >
-              Email<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <Input
-              isRequired={true}
-              variant="auth"
-              fontSize="sm"
-              ms={{ base: "0px", md: "0px" }}
-              type="email"
-              placeholder="mail@simmmple.com"
-              mb="24px"
-              fontWeight="500"
-              size="lg"
-              color={inputTextColor}
-            />
-            <FormLabel
-              ms="4px"
-              fontSize="sm"
-              fontWeight="500"
-              color={textColor}
-              display="flex"
-            >
-              Password<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <InputGroup size="md">
+
+          {/* Form */}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <FormControl mb="20px">
+              <FormLabel color={textColor} fontSize="sm">
+                Email <Text as="span" color={brandStars}>*</Text>
+              </FormLabel>
+
               <Input
-                isRequired={true}
-                fontSize="sm"
-                placeholder="Min. 8 characters"
-                mb="24px"
-                size="lg"
-                type={show ? "text" : "password"}
+                type="email"
+                placeholder="mail@example.com"
                 variant="auth"
                 color={inputTextColor}
+                {...register("email", {
+                  required: "Email is required",
+                })}
               />
-              <InputRightElement display="flex" alignItems="center" mt="4px">
-                <Icon
-                  color={textColorSecondary}
-                  _hover={{ cursor: "pointer" }}
-                  as={show ? RiEyeCloseLine : MdOutlineRemoveRedEye}
-                  onClick={handleClick}
+
+              {errors.email && (
+                <Text color="red.400" fontSize="xs" mt="1">
+                  {errors.email.message}
+                </Text>
+              )}
+            </FormControl>
+
+            <FormControl mb="24px">
+              <FormLabel color={textColor} fontSize="sm">
+                Password <Text as="span" color={brandStars}>*</Text>
+              </FormLabel>
+
+              <InputGroup>
+                <Input
+                  type={show ? "text" : "password"}
+                  placeholder="Min. 8 characters"
+                  variant="auth"
+                  color={inputTextColor}
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 8,
+                      message: "Password must be at least 8 characters",
+                    },
+                  })}
                 />
-              </InputRightElement>
-            </InputGroup>
-            <Flex justifyContent="space-between" align="center" mb="24px">
-              <FormControl display="flex" alignItems="center">
-                <Checkbox
-                  id="remember-login"
-                  colorScheme="brandScheme"
-                  me="10px"
-                />
-                <FormLabel
-                  htmlFor="remember-login"
-                  mb="0"
-                  fontWeight="normal"
-                  color={textColor}
-                  fontSize="sm"
-                >
-                  Keep me logged in
-                </FormLabel>
-              </FormControl>
+
+                <InputRightElement>
+                  <Icon
+                    as={show ? RiEyeCloseLine : MdOutlineRemoveRedEye}
+                    onClick={() => setShow(!show)}
+                    cursor="pointer"
+                    color={textColorSecondary}
+                  />
+                </InputRightElement>
+              </InputGroup>
+
+              {errors.password && (
+                <Text color="red.400" fontSize="xs" mt="1">
+                  {errors.password.message}
+                </Text>
+              )}
+            </FormControl>
+
+            <Flex justifyContent="space-between" mb="24px" align="center">
+              {/* 🔥 Keep me logged in is now connected to useForm */}
+              <Checkbox
+                colorScheme="brandScheme"
+                {...register("rememberMe")}
+              >
+                Keep me logged in
+              </Checkbox>
+
               <NavLink to="/auth/forgot-password">
-                <Text
-                  color={textColorBrand}
-                  fontSize="sm"
-                  w="124px"
-                  fontWeight="500"
-                >
+                <Text color={textColorBrand} fontWeight="500" fontSize="sm">
                   Forgot password?
                 </Text>
               </NavLink>
             </Flex>
+
+            {/* Submit button */}
             <Button
-              fontSize="sm"
-              variant="brand"
-              fontWeight="500"
+              type="submit"
               w="100%"
-              h="50"
-              mb="24px"
+              h="50px"
+              variant="brand"
+              isLoading={isSubmitting}
             >
               Sign In
             </Button>
-          </FormControl>
-          <Flex
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="start"
-            maxW="100%"
-            mt="0px"
-          >
-            <Text color={textColorDetails} fontWeight="400" fontSize="14px">
-              Not registered yet?
-              <NavLink to="/auth/sign-up">
-                <Text
-                  color={textColorBrand}
-                  as="span"
-                  ms="5px"
-                  fontWeight="500"
-                >
-                  Create an Account
-                </Text>
-              </NavLink>
-            </Text>
-          </Flex>
+          </form>
+
+          <Text color={textColorDetails} mt="20px">
+            Not registered yet?
+            <NavLink to="/auth/create_new_user">
+              <Text as="span" color={textColorBrand} ms="5px" fontWeight="500">
+                Create an Account
+              </Text>
+            </NavLink>
+          </Text>
         </Flex>
       </Flex>
     </DefaultAuth>
