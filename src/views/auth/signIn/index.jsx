@@ -53,7 +53,8 @@ function SignIn() {
     try {
       const { rememberMe, ...loginPayload } = data;
 
-      const res = await axios.post(`${baseUrl}/auth/auth/login`, loginPayload);
+     const res = await axios.post(`${baseUrl}/auth/login`, loginPayload);
+
 
       console.log("LOGIN RESPONSE:", res.data); // 👈 DEBUG
 

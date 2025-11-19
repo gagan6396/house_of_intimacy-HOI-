@@ -57,7 +57,7 @@ function SignUp() {
     try {
       const { confirmPassword, ...payload } = data;
 
-      await axios.post(`${baseUrl}/auth/auth/register`, payload);
+      await axios.post(`${baseUrl}/auth/register`, payload);
 
       toast({
         title: "Account created",
