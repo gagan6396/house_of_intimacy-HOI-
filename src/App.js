@@ -10,7 +10,7 @@ import Home from 'components/Home';
 import SignIn from 'views/auth/signIn';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
-import CreateNewUser from "views/auth/CreateNewUser";
+import CreateNewUser from 'views/auth/CreateNewUser';
 
 // LAYOUTS
 import AuthLayout from './layouts/auth';
@@ -54,72 +54,74 @@ export default function Main() {
 
         <div style={{ flex: 1 }}>
           <Routes>
-  {/* Auth layout (register, forgot, etc) */}
-  <Route path="auth/*" element={<AuthLayout />} />
+            {/* Auth layout (register, forgot, etc) */}
+            <Route path="auth/*" element={<AuthLayout />} />
 
-  {/* 🔐 ADMIN LAYOUT – now uses AdminRoute */}
-  <Route
-    path="admin/*"
-    element={
-      <AdminRoute>
-        <AdminLayout theme={currentTheme} setTheme={setCurrentTheme} />
-      </AdminRoute>
-    }
-  />
+            {/* 🔐 ADMIN LAYOUT – now uses AdminRoute */}
+            <Route
+              path="admin/*"
+              element={
+                <AdminRoute>
+                  <AdminLayout
+                    theme={currentTheme}
+                    setTheme={setCurrentTheme}
+                  />
+                </AdminRoute>
+              }
+            />
 
-  {/* Login */}
-  <Route
-    path="/login"
-    element={
-      <PublicRoute>
-        <SignIn />
-      </PublicRoute>
-    }
-  />
+            {/* Login */}
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <SignIn />
+                </PublicRoute>
+              }
+            />
 
-  {/* Register */}
-  <Route
-    path="/auth/create_new_user"
-    element={
-      <PublicRoute>
-        <CreateNewUser />
-      </PublicRoute>
-    }
-  />
+            {/* Register */}
+            <Route
+              path="/auth/create_new_user"
+              element={
+                <PublicRoute>
+                  <CreateNewUser />
+                </PublicRoute>
+              }
+            />
 
-  {/* ✅ NEW: Verify Email (OTP) */}
-  <Route
-    path="/auth/verify-email"
-    element={
-      <PublicRoute>
-        <VerifyEmail />
-      </PublicRoute>
-    }
-  />
+            {/* ✅ NEW: Verify Email (OTP) */}
+            <Route
+              path="/auth/verify-email"
+              element={
+                <PublicRoute>
+                  <VerifyEmail />
+                </PublicRoute>
+              }
+            />
 
-  {/* Account pages (protected) */}
-  <Route
-    path="/account/profile"
-    element={
-      <ProtectedRoute>
-        <ProfilePage />
-      </ProtectedRoute>
-    }
-  />
+            {/* Account pages (protected) */}
+            <Route
+              path="/account/profile"
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
 
-  <Route
-    path="/account/orders"
-    element={
-      <ProtectedRoute>
-        <OrdersPage />
-      </ProtectedRoute>
-    }
-  />
+            <Route
+              path="/account/orders"
+              element={
+                <ProtectedRoute>
+                  <OrdersPage />
+                </ProtectedRoute>
+              }
+            />
 
-  {/* HOME PAGE (public) */}
-  <Route path="/" element={<Home />} />
-</Routes>
-
+            {/* HOME PAGE (public) */}
+            <Route path="/" element={<Home />} />
+          </Routes>
         </div>
 
         <FixedPlugin />

@@ -1,25 +1,25 @@
 import React from 'react';
 
 import { Icon } from '@chakra-ui/react';
-import {
-  MdPerson,
-  MdHome,
-} from 'react-icons/md';
+import { MdHome } from 'react-icons/md';
 
 // Admin Imports
 import MainDashboard from 'views/admin/admin_dashboard';
-import Profile from 'views/admin/profile';
 
-// Auth Imports
+// Auth / Other Imports
 import Home from 'components/Home';
+import Users from 'pages/management/users';
 
 const routes = [
-   {
+  // Home page
+  {
     name: 'Main Dashboard',
     layout: '/home',
     path: '/',
     component: <Home />,
   },
+
+  // Admin dashboard (sidebar pe dikh raha)
   {
     name: 'Main Dashboard',
     layout: '/admin',
@@ -27,14 +27,15 @@ const routes = [
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
     component: <MainDashboard />,
   },
+
+  // ✅ Users – ab admin sidebar me dikhega
   {
-    name: 'Profile',
-    layout: '/admin',
-    path: '/profile',
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-    component: <Profile />,
+    name: 'Users',
+    layout: '/admin',  // ⬅️ /pages se /admin kar diya
+    path: '/users',
+    icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
+    component: <Users />,
   },
-  
 ];
 
 export default routes;
