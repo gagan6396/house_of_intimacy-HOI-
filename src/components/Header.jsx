@@ -1,539 +1,345 @@
-import React, { useState, useEffect, useRef } from "react";
-import styles from "../assets/styles/Header.module.css";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import logoDark from "../assets/images/logo.png";
-import logoLight from "../assets/images/logo.png";
+// src/components/Header.jsx
+import React, { useState } from 'react';
+import {
+  FiSearch,
+  FiHeart,
+  FiUser,
+  FiShoppingBag,
+  FiMenu,
+  FiX,
+} from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 
-const Caret = () => (
-  <svg width="14" height="14" viewBox="0 0 20 20" aria-hidden="true">
-    <path
-      d="M5 7l5 6 5-6"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-    />
-  </svg>
-);
+import logo from '../assets/images/House_of_intimacy_logo.webp';
+import authSideImg from '../assets/images/auth_login.png';
 
-const IconSearch = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-    <circle
-      cx="11"
-      cy="11"
-      r="7"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    />
-    <path
-      d="M20 20l-3.2-3.2"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    />
-  </svg>
-);
+import styles from '../assets/styles/Header.module.css';
 
-const IconUser = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-    <circle
-      cx="12"
-      cy="8"
-      r="4"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    />
-    <path
-      d="M4 20c0-4 4-6 8-6s8 2 8 6"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    />
-  </svg>
-);
+const BRAS_MEGA = {
+  columns: [
+    {
+      title: 'PREFERENCE',
+      items: ['PADDED', 'WIRED', 'NON-WIRED', 'SPORTS BRA', 'STRAPLESS'],
+    },
+    {
+      title: 'STYLE',
+      items: [
+        'T-SHIRT',
+        'PUSH UP',
+        'STRAPLESS/MULTIWAY ',
+        'MINIMISER',
+        'BRALETTES',
+        'SPORTS BRAS',
+        'FULL FIGURE BRAS',
+        'SLIP ON BRA / LOUNGE',
+      ],
+    },
+    {
+      title: 'STYLE',
+      items: [
+        'T-SHIRT',
+        'PUSH UP',
+        'STRAPLESS/MULTIWAY ',
+        'MINIMISER',
+        'BRALETTES',
+        'SPORTS BRAS',
+        'FULL FIGURE BRAS',
+        'SLIP ON BRA / LOUNGE',
+      ],
+    },
+    {
+      title: 'STYLE',
+      items: [
+        'T-SHIRT',
+        'PUSH UP',
+        'STRAPLESS/MULTIWAY ',
+        'MINIMISER',
+        'BRALETTES',
+        'SPORTS BRAS',
+        'FULL FIGURE BRAS',
+        'SLIP ON BRA / LOUNGE',
+      ],
+    },
+    {
+      title: 'PATTERN',
+      items: ['PRINTS', 'SOLID', 'NEW ARRIVALS', 'BEST SELLERS', 'ALL PANTIES'],
+    },
+  ],
+};
 
-const IconCart = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-    <path
-      d="M6 6h15l-1.5 9H8L6 4H3"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    />
-    <circle cx="9" cy="20" r="1.5" />
-    <circle cx="18" cy="20" r="1.5" />
-  </svg>
-);
+const pantiesMega = {
+  columns: [
+    {
+      title: 'PREFERENCE',
+      items: [
+        'BIKINI',
+        'HIPSTER',
+        'BOY SHORTS',
+        'THONG',
+        'SEAMLESS',
+        'BRAZILLIAN',
+        'OCCASION',
+        'BRIDAL PANTIES',
+      ],
+    },
+    {
+      title: 'PANTY PACK',
+      items: [
+        'PACK OF 2',
+        'PACK OF 3',
+        'PACK OF 5',
+        'ALL PANTY PACKS',
+        'LATEST PANTY PACK',
+        'FABRIC',
+        'COTTON',
+        'LACE',
+        'MICRO-FIBER',
+      ],
+    },
+    {
+      title: 'PATTERN',
+      items: ['PRINTS', 'SOLID', 'NEW ARRIVALS', 'BEST SELLERS', 'ALL PANTIES'],
+    },
+  ],
+};
 
-const IconMenu = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-    <path
-      d="M3 6h18M3 12h18M3 18h18"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-  </svg>
-);
+const navItems = [
+  { label: 'NEW SEASON', path: '/new-season' },
+  { label: 'BRAS', path: '/bras', mega: BRAS_MEGA },
+  { label: 'PANTIES', path: '/panties', mega: pantiesMega },
+  { label: 'ATHLEISURE', path: '/athleisure' },
+  { label: 'LOUNGE/SLEEP', path: '/lounge-sleep' },
+  { label: 'LAYERING', path: '/layering' },
+  { label: 'SHAPEWEAR', path: '/shapewear' },
+  { label: 'SWIMWEAR', path: '/swimwear' },
+  { label: 'SALE', path: '/sale' },
+  { label: 'ACCESSORIES', path: '/accessories' },
+  { label: 'AMANTÉ SPECIALS', path: '/specials' },
+];
 
-const IconClose = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-    <path
-      d="M6 6l12 12M18 6l-12 12"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-  </svg>
-);
+const Header = () => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [megaOpen, setMegaOpen] = useState(null);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
-export default function Header() {
-  const [open, setOpen] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const firstLinkRef = useRef(null);
-  const userMenuRef = useRef(null);
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const isHomePage = location.pathname === "/";
+  const toggleMobile = () => setMobileOpen((prev) => !prev);
 
-  // scrolled: true = solid, false = transparent
-  const [scrolled, setScrolled] = useState(() => !isHomePage);
-
-  // ====== AUTH INFO FROM STORAGE (ONLY localStorage) ======
-  const token = localStorage.getItem("authToken");
-  const isAuthenticated = !!token;
-  const storedName = localStorage.getItem("userName");
-  const userName = isAuthenticated
-    ? storedName || "My Account"
-    : "Login / Signup";
-
-  // lock background scroll while drawer is open
-  useEffect(() => {
-    const root = document.documentElement;
-    const body = document.body;
-    if (open) {
-      root.style.overflow = "hidden";
-      body.style.overflow = "hidden";
-    } else {
-      root.style.overflow = "";
-      body.style.overflow = "";
-    }
-    return () => {
-      root.style.overflow = "";
-      body.style.overflow = "";
-    };
-  }, [open]);
-
-  // close with ESC
-  useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === "Escape") {
-        setOpen(false);
-        setUserMenuOpen(false);
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
-  // focus first link when opening drawer
-  useEffect(() => {
-    if (open && firstLinkRef.current) firstLinkRef.current.focus();
-  }, [open]);
-
-  // 🔥 Handle transparent vs solid ONLY on home page
-  useEffect(() => {
-    // Non-home pages → ALWAYS solid
-    if (!isHomePage) {
-      setScrolled(true);
-      return;
-    }
-
-    const hero = document.getElementById("hero");
-
-    if (hero && "IntersectionObserver" in window) {
-      const io = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            setScrolled(!entry.isIntersecting); // hero visible → transparent
-          });
-        },
-        { root: null, threshold: 0.01 }
-      );
-      io.observe(hero);
-      return () => io.disconnect();
-    } else {
-      const onScroll = () => setScrolled(window.scrollY > 80);
-      onScroll();
-      window.addEventListener("scroll", onScroll, { passive: true });
-      return () => window.removeEventListener("scroll", onScroll);
-    }
-  }, [isHomePage]);
-
-  // Close user menu on outside click
-  useEffect(() => {
-    const handleClick = (e) => {
-      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
-        setUserMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
-
-  const closeAnd =
-    (fn) =>
-    (e) => {
-      if (typeof fn === "function") fn(e);
-      setOpen(false);
-    };
-
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("userRole");
-    setUserMenuOpen(false);
-    navigate("/login");
+  const handleEnter = (item) => {
+    if (item.mega) setMegaOpen(item.label);
   };
 
-  const logoSrc = scrolled ? logoDark : logoLight || logoDark;
+  const handleLeave = () => {
+    setMegaOpen(null);
+  };
+
+  const openAuthModal = () => {
+    setAuthModalOpen(true);
+  };
+
+  const closeAuthModal = () => setAuthModalOpen(false);
+
+  const handleOverlayClick = () => {
+    closeAuthModal();
+  };
+
+  const handleModalContentClick = (e) => {
+    e.stopPropagation(); // prevent closing when clicking inside
+  };
 
   return (
-    <header
-      className={`${styles.nav} ${
-        scrolled ? styles["nav--solid"] : styles["nav--transparent"]
-      }`}
-    >
-      <div className={styles.nav__inner}>
-        {/* Left: Logo + menu */}
-        <div className={styles.nav__left}>
-          <Link to="/" className={styles.nav__logo} aria-label="FLUTE Home">
-            <img
-              src={logoSrc}
-              alt="FLUTE Logo"
-              className={styles["nav__logo-img"]}
-            />
-          </Link>
+    <header className={styles.header}>
+      {/* ===== Top row ===== */}
+      <div className={styles.topRow}>
+        <button
+          className={styles.menuBtn}
+          onClick={toggleMobile}
+          aria-label="Toggle navigation"
+        >
+          {mobileOpen ? <FiX /> : <FiMenu />}
+        </button>
 
-          <nav className={styles.nav__menu} aria-label="Primary">
-            <div
-              className={`${styles.nav__item} ${styles["nav__item--has-submenu"]}`}
-            >
-              <a href="#swimwear" className={styles.nav__link}>
-                SWIMWEAR <Caret />
-              </a>
-              <div className={styles.nav__submenu} role="menu">
-                <a
-                  href="#onepiece"
-                  role="menuitem"
-                  className={styles["nav__submenu-link"]}
-                >
-                  One Pieces
-                </a>
-                <a
-                  href="#bikinis"
-                  role="menuitem"
-                  className={styles["nav__submenu-link"]}
-                >
-                  Bikinis
-                </a>
-                <a
-                  href="#coverups"
-                  role="menuitem"
-                  className={styles["nav__submenu-link"]}
-                >
-                  Cover-ups
-                </a>
-              </div>
-            </div>
-
-            <div className={styles.nav__item}>
-              <a href="#beachwear" className={styles.nav__link}>
-                BEACHWEAR
-              </a>
-            </div>
-
-            <div
-              className={`${styles.nav__item} ${styles["nav__item--has-submenu"]}`}
-            >
-              <a href="#lingerie" className={styles.nav__link}>
-                LINGERIE SETS <Caret />
-              </a>
-              <div className={styles.nav__submenu} role="menu">
-                <a
-                  href="#bralettes"
-                  role="menuitem"
-                  className={styles["nav__submenu-link"]}
-                >
-                  Bralettes
-                </a>
-                <a
-                  href="#pushup"
-                  role="menuitem"
-                  className={styles["nav__submenu-link"]}
-                >
-                  Push-up
-                </a>
-                <a
-                  href="#lace"
-                  role="menuitem"
-                  className={styles["nav__submenu-link"]}
-                >
-                  Lace
-                </a>
-              </div>
-            </div>
-
-            <div className={styles.nav__item}>
-              <a href="#our-story" className={styles.nav__link}>
-                OUR STORY
-              </a>
-            </div>
-
-            <div className={styles.nav__item}>
-              <a
-                href="#features"
-                className={`${styles.nav__link} ${styles["nav__link--active"]}`}
-              >
-                FEATURES
-              </a>
-            </div>
-          </nav>
+        <div className={styles.logo}>
+          <img src={logo} alt="House Of Intimacy" className={styles.logoImg} />
         </div>
 
-        {/* Right: Utilities (desktop) */}
-        <div className={styles.nav__actions}>
-          <a href="#search" className={styles.nav__action}>
-            <IconSearch /> <span>SEARCH</span>
-          </a>
+        <div className={styles.iconGroup}>
+          <button className={styles.iconBtn} aria-label="Search">
+            <FiSearch />
+          </button>
 
-          {/* USER MENU */}
-          <div
-            className={styles.nav__user}
-            ref={userMenuRef}
-            onMouseEnter={() => setUserMenuOpen(true)}
-            onMouseLeave={() => setUserMenuOpen(false)}
+          <button
+            className={`${styles.iconBtn} ${styles.iconHeart}`}
+            aria-label="Wishlist"
           >
+            <FiHeart />
+            <span className={styles.badge}>0</span>
+          </button>
+
+          {/* Account icon opens auth modal */}
+          <button
+            className={styles.iconBtn}
+            aria-label="Account"
+            onClick={openAuthModal}
+          >
+            <FiUser />
+          </button>
+
+          <button className={styles.iconBtn} aria-label="Bag">
+            <FiShoppingBag />
+          </button>
+        </div>
+      </div>
+
+      {/* ===== Desktop nav row ===== */}
+      <div className={styles.bottomRow}>
+        <nav className={styles.navDesktop}>
+          <ul className={styles.navList}>
+            {navItems.map((item) => (
+              <li
+                key={item.label}
+                className={styles.navItem}
+                onMouseEnter={() => handleEnter(item)}
+                // onMouseLeave={handleLeave}
+              >
+                <a href={item.path} className={styles.navLink}>
+                  {item.label}
+                </a>
+
+                {item.mega && megaOpen === item.label && (
+                  <div className={styles.megaMenu}>
+                    <div className={styles.megaInner}>
+                      {item.mega.columns.map((col) => (
+                        <div className={styles.megaColumn} key={col.title}>
+                          <h4 className={styles.megaTitle}>{col.title}</h4>
+                          <ul className={styles.megaList}>
+                            {col.items.map((entry) => (
+                              <li key={entry}>
+                                <a href="/" className={styles.megaLink}>
+                                  {entry}
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+
+                      <div className={styles.megaPromo}>
+                        <img
+                          src="https://via.placeholder.com/350x360.png?text=Bestsellers"
+                          alt="Bestsellers"
+                          className={styles.megaPromoImg}
+                        />
+                        <button className={styles.promoBtn}>
+                          Bestsellers →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+
+      {/* ===== Mobile dropdown nav ===== */}
+      <div
+        className={`${styles.mobileNav} ${
+          mobileOpen ? styles.mobileNavOpen : ''
+        }`}
+      >
+        <ul className={styles.mobileNavList}>
+          {navItems.map((item) => (
+            <li key={item.label} className={styles.mobileNavItem}>
+              <a href={item.path} className={styles.mobileNavLink}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* ===== Auth Modal ===== */}
+      {authModalOpen && (
+        <div
+          className={styles.authOverlay}
+          onClick={handleOverlayClick}
+          aria-modal="true"
+          role="dialog"
+        >
+          <div className={styles.authModal} onClick={handleModalContentClick}>
+            {/* Close button */}
             <button
-              type="button"
-              className={styles["nav__user-btn"]}
-              onClick={() => setUserMenuOpen((o) => !o)}
+              className={styles.authCloseBtn}
+              onClick={closeAuthModal}
+              aria-label="Close"
             >
-              <IconUser />
-              <span className={styles["nav__user-name"]}>{userName}</span>
-              <Caret />
+              <FiX />
             </button>
 
-            <div
-              className={`${styles["nav__user-menu"]} ${
-                userMenuOpen ? styles["is-open"] : ""
-              }`}
-            >
-              {!isAuthenticated ? (
-                <>
-                  <Link
-                    to="/login"
-                    className={styles["nav__user-menu-item"]}
-                    onClick={() => setUserMenuOpen(false)}
-                  >
-                    Login
-                  </Link>
+            <div className={styles.authContent}>
+              {/* LEFT IMAGE */}
+              <div className={styles.authLeft}>
+                <img
+                  src={authSideImg}
+                  alt="Welcome to House Of Intimacy"
+                  className={styles.authLeftImg}
+                />
+              </div>
 
-                  <Link
-                    to="/auth/create_new_user"
-                    className={styles["nav__user-menu-item"]}
-                    onClick={() => setUserMenuOpen(false)}
-                  >
-                    Sign up
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/account/profile"
-                    className={styles["nav__user-menu-item"]}
-                    onClick={() => setUserMenuOpen(false)}
-                  >
-                    My Profile
-                  </Link>
+              {/* RIGHT SIDE - ONLY TWO BUTTONS */}
+              <div className={styles.authRight}>
+                <div className={styles.authLogo}>House Of Intimacy</div>
 
-                  <Link
-                    to="/account/orders"
-                    className={styles["nav__user-menu-item"]}
-                    onClick={() => setUserMenuOpen(false)}
+                <h2 className={styles.authHeading}>Welcome</h2>
+                <p className={styles.authSubheading}>
+                  Choose how you want to continue.
+                </p>
+
+                <div className={styles.authButtonGroup}>
+                  <button
+                    type="button"
+                    className={styles.primaryBtn}
+                    onClick={() => {
+                      closeAuthModal();
+                      navigate('/login');
+                    }}
                   >
-                    My Orders
-                  </Link>
+                    Already have an account? Login
+                  </button>
 
                   <button
                     type="button"
-                    className={styles["nav__user-menu-item"]}
-                    onClick={handleLogout}
+                    className={styles.secondaryBtn}
+                    onClick={() => {
+                      closeAuthModal();
+                      navigate('/auth/create_new_user');
+                    }}
                   >
-                    Logout
+                    New to House Of Intimacy? Create account
                   </button>
-                </>
-              )}
+                </div>
+
+                <p className={styles.termsText}>
+                  By continuing, you agree to our{' '}
+                  <a href="/terms" className={styles.termsLink}>
+                    Terms &amp; Conditions
+                  </a>{' '}
+                  and{' '}
+                  <a href="/privacy" className={styles.termsLink}>
+                    Privacy Policy
+                  </a>
+                  .
+                </p>
+              </div>
             </div>
           </div>
-
-          <a href="#cart" className={styles.nav__action}>
-            <IconCart /> <span>CART</span>
-          </a>
         </div>
-
-        {/* Mobile hamburger */}
-        <button
-          type="button"
-          className={styles["nav__burger"]}
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          aria-controls="mobile-drawer"
-          onClick={() => setOpen((o) => !o)}
-        >
-          <IconMenu />
-        </button>
-      </div>
-
-      {/* Backdrop */}
-      <button
-        type="button"
-        className={`${styles["nav__backdrop"]} ${
-          open ? styles["is-open"] : ""
-        }`}
-        aria-hidden={!open}
-        onClick={() => setOpen(false)}
-        tabIndex={open ? 0 : -1}
-      />
-
-      {/* Right drawer (mobile) */}
-      <aside
-        id="mobile-drawer"
-        className={`${styles["nav__drawer"]} ${
-          open ? styles["is-open"] : ""
-        }`}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Mobile menu"
-      >
-        <div className={styles["nav__drawer-head"]}>
-          <span className={styles["nav__drawer-title"]}>Menu</span>
-          <button
-            type="button"
-            className={styles["nav__drawer-close"]}
-            aria-label="Close menu"
-            onClick={() => setOpen(false)}
-          >
-            <IconClose />
-          </button>
-        </div>
-
-        <div className={styles["nav__drawer-body"]}>
-          <a
-            href="#swimwear"
-            className={styles["nav__drawer-link"]}
-            onClick={closeAnd()}
-            ref={firstLinkRef}
-          >
-            SWIMWEAR
-          </a>
-          <a
-            href="#beachwear"
-            className={styles["nav__drawer-link"]}
-            onClick={closeAnd()}
-          >
-            BEACHWEAR
-          </a>
-          <a
-            href="#lingerie"
-            className={styles["nav__drawer-link"]}
-            onClick={closeAnd()}
-          >
-            LINGERIE SETS
-          </a>
-          <a
-            href="#our-story"
-            className={styles["nav__drawer-link"]}
-            onClick={closeAnd()}
-          >
-            OUR STORY
-          </a>
-          <a
-            href="#features"
-            className={`${styles["nav__drawer-link"]} ${
-              styles["is-active"]
-            }`}
-            onClick={closeAnd()}
-          >
-            FEATURES
-          </a>
-
-          <div className={styles["nav__drawer-sep"]} />
-
-          <a
-            href="#search"
-            className={styles["nav__drawer-link"]}
-            onClick={closeAnd()}
-          >
-            <IconSearch /> <span>SEARCH</span>
-          </a>
-
-          {!isAuthenticated ? (
-            <>
-              <Link
-                to="/login"
-                className={styles["nav__drawer-link"]}
-                onClick={closeAnd()}
-              >
-                <IconUser /> <span>Login</span>
-              </Link>
-              <Link
-                to="/auth/create_new_user"
-                className={styles["nav__drawer-link"]}
-                onClick={closeAnd()}
-              >
-                <span>Sign up</span>
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link
-                to="/account/profile"
-                className={styles["nav__drawer-link"]}
-                onClick={closeAnd()}
-              >
-                My Profile
-              </Link>
-              <Link
-                to="/account/orders"
-                className={styles["nav__drawer-link"]}
-                onClick={closeAnd()}
-              >
-                My Orders
-              </Link>
-              <button
-                type="button"
-                className={styles["nav__drawer-link"]}
-                onClick={closeAnd(handleLogout)}
-              >
-                Logout
-              </button>
-            </>
-          )}
-
-          <a
-            href="#cart"
-            className={styles["nav__drawer-link"]}
-            onClick={closeAnd()}
-          >
-            <IconCart /> <span>CART</span>
-          </a>
-        </div>
-      </aside>
+      )}
     </header>
   );
-}
+};
+
+export default Header;
