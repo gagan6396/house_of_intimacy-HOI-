@@ -7,6 +7,7 @@ import initialTheme from './theme/theme';
 
 // PAGES & COMPONENTS
 import Home from 'components/Home';
+import AboutUs from 'components/AboutUs';
 import SignIn from 'views/auth/signIn';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
@@ -123,6 +124,7 @@ export default function Main() {
 
             {/* HOME PAGE (public) */}
             <Route path="/" element={<Home />} />
+             <Route path="/" element={<AboutUs/>} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
           </Routes>
