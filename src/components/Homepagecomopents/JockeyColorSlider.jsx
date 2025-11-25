@@ -145,7 +145,7 @@ const JockeyColorSlider = () => {
         {/* Top row: title + tabs */}
         <div className={styles.topRow}>
           <h2 className={styles.title}>
-            SLIDE INTO THE COLORS OF JOCKEY
+            SLIDE INTO THE COLORS OF HOI
           </h2>
 
           <div className={styles.tabs}>

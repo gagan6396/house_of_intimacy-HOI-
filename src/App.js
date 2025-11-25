@@ -29,6 +29,9 @@ import OrdersPage from 'views/account/OrdersPage';
 import VerifyEmail from 'views/auth/VerifyEmail';
 import ForgotPassword from 'views/auth/ForgotPassword';
 import ResetPassword from 'views/auth/ResetPassword';
+import BraListing from 'components/productcollections/bras';
+import PantiesListing from 'components/productcollections/panties';
+import NightwearListing from 'components/productcollections/nightwear';
 
 export default function Main() {
   const [currentTheme, setCurrentTheme] = useState(initialTheme);
@@ -121,6 +124,9 @@ export default function Main() {
                 </ProtectedRoute>
               }
             />
+              <Route path="/bras" element={<BraListing />} />
+              <Route path="/panties" element={<PantiesListing />} />
+              <Route path="/nightwear" element={<NightwearListing />} />
 
             {/* HOME PAGE (public) */}
             <Route path="/" element={<Home />} />

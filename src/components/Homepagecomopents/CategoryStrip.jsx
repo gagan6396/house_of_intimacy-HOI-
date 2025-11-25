@@ -12,6 +12,7 @@ import shapewearImg from "../../assets/images/17.jpg";
 import layeringImg from "../../assets/images/19.jpg";
 import accessoriesImg from "../../assets/images/5.jpg";
 import saleImg from "../../assets/images/17.jpg";
+import { Link } from "react-router-dom";
 
 const categories = [
   { label: "Bra", image: braImg, slug: "/bras" },
@@ -30,9 +31,9 @@ const CategoryStrip = () => {
     <section className={styles.wrapper}>
       <div className={styles.inner}>
         {categories.map((cat) => (
-          <a
+          <Link
             key={cat.label}
-            href={cat.slug}
+            to={cat.slug}
             className={styles.card}
           >
             <div className={styles.imageWrapper}>
@@ -43,7 +44,7 @@ const CategoryStrip = () => {
               />
             </div>
             <span className={styles.label}>{cat.label}</span>
-          </a>
+          </Link>
         ))}
       </div>
     </section>

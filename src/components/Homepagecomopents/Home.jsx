@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import SwimwearSection from "../../components/Homepagecomopents/Swimwear.jsx";
+import React from "react";
 import Herosection from "../../components/Homepagecomopents/Herosection.jsx";
 import Offermarquee from "../../components/Homepagecomopents/Offermarquee.jsx";
 import Bestsellers from "../../components/Homepagecomopents/Bestsellers.jsx";
@@ -24,7 +23,6 @@ export default function Home() {
       <Herosection/>
       <NewArrival/>
       <ColorsSelector/>
-      <SwimwearSection />
       <Offermarquee/>
       <JockeyColorSlider/>
       <ShopByCategory/>
