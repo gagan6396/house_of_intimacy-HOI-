@@ -1,11 +1,15 @@
 // src/components/NewArrival/NewArrival.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Slider from 'react-slick';
 import axios from 'axios';
 import { FiHeart, FiShoppingBag } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';   // 👈 ADD THIS
+import { FaHeart } from 'react-icons/fa'; // ✅ filled heart
+import { useNavigate } from 'react-router-dom';
 
 import styles from '../../assets/styles/LingerieSection.module.css';
+
+// ✅ Wishlist context
+import { WishlistContext } from '../../contexts/WishlistContext';
 
 // ---------- ASSETS ----------
 import heroVideoPoster from '../../assets/videos/IMG_3698.MP4';
@@ -33,7 +37,6 @@ const getImageUrl = (path) => {
   if (path.startsWith('http')) return path;
   return `${API_BASE_URL}${path}`;
 };
-
 
 // ---------- CUSTOM ARROWS ----------
 const NextArrow = ({ style, onClick }) => (
@@ -63,7 +66,10 @@ const NewArrival = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const navigate = useNavigate(); // 👈 HOOK
+  const navigate = useNavigate();
+
+  // ✅ get wishlist from context
+  const { wishlistItems, toggleWishlist } = useContext(WishlistContext);
 
   // ---------- SLIDER SETTINGS ----------
   const settings = {
@@ -103,7 +109,10 @@ const NewArrival = () => {
           } else if (typeof prod.stock === 'number') {
             totalStock = prod.stock;
           } else if (Array.isArray(prod.sizes)) {
-            totalStock = prod.sizes.reduce((sum, s) => sum + (s.stock || 0), 0);
+            totalStock = prod.sizes.reduce(
+              (sum, s) => sum + (s.stock || 0),
+              0,
+            );
           }
 
           const genderType = prod.gender || prod.genderType || 'Unisex';
@@ -179,24 +188,27 @@ const NewArrival = () => {
               <Slider {...settings}>
                 {products.map((item) => {
                   const discount = getDiscountPercent(item.mrp, item.price);
+                  const isInWishlist = wishlistItems.includes(item.id); // ✅ check global wishlist
 
                   return (
                     <div key={item.id} className={styles.slideOuter}>
-                      {/* 👇 PURE CARD CLICKABLE */}
+                      {/* 👇 FULL CARD CLICKABLE */}
                       <div
                         className={styles.productCard}
                         onClick={() => navigate(`/product/${item.id}`)}
                         role="button"
                       >
-                        {/* wishlist button – stopPropagation so card click na ho */}
+                        {/* ✅ WISHLIST BUTTON (stops card click) */}
                         <button
-                          className={styles.wishBtn}
+                          className={`${styles.wishBtn} ${
+                            isInWishlist ? styles.wishBtnActive : ''
+                          }`}
                           onClick={(e) => {
                             e.stopPropagation();
-                            // yaha wishlist logic daalna ho to daal sakte ho
+                            toggleWishlist(item.id);
                           }}
                         >
-                          <FiHeart />
+                          {isInWishlist ? <FaHeart /> : <FiHeart />}
                         </button>
 
                         <div className={styles.productImageWrap}>
