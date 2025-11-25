@@ -6,7 +6,7 @@ import { useState } from 'react';
 import initialTheme from './theme/theme';
 
 // PAGES & COMPONENTS
-import Home from 'components/Home';
+import Home from 'components/Homepagecomopents/Home';
 import AboutUs from 'components/AboutUs';
 import SignIn from 'views/auth/signIn';
 import Header from 'components/Header';

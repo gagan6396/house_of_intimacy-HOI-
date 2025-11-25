@@ -8,7 +8,7 @@ import { FaCartShopping } from 'react-icons/fa6';
 import MainDashboard from 'views/admin/admin_dashboard';
 
 // Auth / Other Imports
-import Home from 'components/Home';
+import Home from './components/Homepagecomopents/Home';
 import Users from 'pages/management/users';
 import Products from 'pages/management/products';
 import AddProducts from 'pages/management/products/add-new';
