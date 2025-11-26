@@ -1,6 +1,9 @@
 // src/components/ShopByCategory/ShopByCategory.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 import styles from "../../assets/styles/ShopByCategory.module.css";
 
 // Import slick CSS (global)
@@ -14,58 +17,49 @@ import sleepIcon from "../../assets/icons/clothes.png";
 import activeIcon from "../../assets/icons/trouser.png";
 import layeringIcon from "../../assets/icons/dress.png";
 
-// Images
-import brasImg1 from "../../assets/images/17.jpg";
-import brasImg2 from "../../assets/images/19.jpg";
-import brasImg3 from "../../assets/images/5.jpg";
-import brasImg4 from "../../assets/images/17.jpg";
-import brasImg5 from "../../assets/images/19.jpg";
+// ---------- CONFIG ----------
+const API_BASE_URL = "http://localhost:8000";
+const PRODUCTS_ENDPOINT = `${API_BASE_URL}/v1/products`;
 
-import pantyImg1 from "../../assets/images/17.jpg";
-import pantyImg2 from "../../assets/images/19.jpg";
-import pantyImg3 from "../../assets/images/5.jpg";
-import pantyImg4 from "../../assets/images/17.jpg";
-
-// Tabs config (icon = image path)
-const TABS = [
-  { id: "bras", label: "BRAS", icon: brasIcon },
-  { id: "panty", label: "PANTY", icon: pantyIcon },
-  { id: "sleep", label: "SLEEP", icon: sleepIcon },
-  { id: "active", label: "ACTIVE", icon: activeIcon },
-  { id: "layering", label: "LAYERING", icon: layeringIcon },
-];
-
-// data
-const PRODUCTS = {
-  bras: [
-    { id: 1, title: "T-Shirt Bras", image: brasImg1 },
-    { id: 2, title: "SKINS Bras", image: brasImg2 },
-    { id: 3, title: "Fashion Bras", image: brasImg3 },
-    { id: 4, title: "Full Figure Bras", image: brasImg4 },
-    { id: 5, title: "Push-Up Bras", image: brasImg5 },
-  ],
-  panty: [
-    { id: 1, title: "Bikini Panties", image: pantyImg1 },
-    { id: 2, title: "Hipster Panties", image: pantyImg2 },
-    { id: 3, title: "Boyshorts", image: pantyImg3 },
-    { id: 4, title: "High Waist", image: pantyImg4 },
-  ],
-  sleep: [
-    { id: 1, title: "Night Dresses", image: brasImg1 },
-    { id: 2, title: "Pajama Sets", image: brasImg2 },
-    { id: 3, title: "Robes", image: brasImg3 },
-  ],
-  active: [
-    { id: 1, title: "Sports Bras", image: brasImg2 },
-    { id: 2, title: "Tights", image: brasImg3 },
-    { id: 3, title: "Shorts", image: brasImg4 },
-  ],
-  layering: [
-    { id: 1, title: "Camisoles", image: brasImg3 },
-    { id: 2, title: "Slips", image: brasImg4 },
-    { id: 3, title: "Tanks", image: brasImg5 },
-  ],
+// Helper: resolve image URL from backend
+const getImageUrl = (url) => {
+  if (!url) return "";
+  if (url.startsWith("http")) return url;
+  return `${API_BASE_URL}${url}`;
 };
+
+// Tabs config (also map to category & listing route)
+const TABS = [
+  { id: "bras", label: "BRAS", icon: brasIcon, category: "Bra", route: "/bras" },
+  {
+    id: "panty",
+    label: "PANTY",
+    icon: pantyIcon,
+    category: "Panty",
+    route: "/panties",
+  },
+  {
+    id: "sleep",
+    label: "SLEEP",
+    icon: sleepIcon,
+    category: "Nightwear",
+    route: "/nightwear",
+  },
+  {
+    id: "active",
+    label: "ACTIVE",
+    icon: activeIcon,
+    category: "Active",
+    route: "/activewear",
+  },
+  {
+    id: "layering",
+    label: "LAYERING",
+    icon: layeringIcon,
+    category: "Layering",
+    route: "/layering",
+  },
+];
 
 // Custom arrow components
 const PrevArrow = (props) => {
@@ -98,56 +92,120 @@ const NextArrow = (props) => {
 
 const ShopByCategory = () => {
   const [activeTab, setActiveTab] = useState("bras");
+  const [itemsByTab, setItemsByTab] = useState({});
+  const [loadingTab, setLoadingTab] = useState(null);
+  const [errorTab, setErrorTab] = useState(null);
 
-  const items = PRODUCTS[activeTab] || [];
+  const navigate = useNavigate();
 
-  // react-slick settings
-  const sliderSettings = {
-  dots: false,
-  infinite: items.length > 4, // or true if you prefer
-  speed: 1000,
-  slidesToShow: 4,
-  slidesToScroll: 1,
-  swipeToSlide: true,
-  autoplay: true, // ⛔ desktop: no autoplay
-  nextArrow: <NextArrow />,
-  prevArrow: <PrevArrow />,
-  responsive: [
-    {
-      breakpoint: 993, // < 993px
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 1,
-        autoplay: true,        // ✅ autoplay ON
-        autoplaySpeed: 4500,
-        // optional: hide arrows on small screens
-        // arrows: false,
-      },
-    },
-    {
-      breakpoint: 600, // < 600px
-      settings: {
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        autoplay: true,        // ✅ autoplay ON
-        autoplaySpeed: 4500,
-        // arrows: false,
-      },
-    },
-  ],
-};
+  // find current tab object
+  const currentTab = TABS.find((t) => t.id === activeTab);
+
+  const items = itemsByTab[activeTab] || [];
+
+  // ----- API: fetch products for a tab (category) -----
+  const fetchTabProducts = async (tabObj) => {
+    if (!tabObj) return;
+
+    // if already loaded, don't refetch
+    if (itemsByTab[tabObj.id]?.length) return;
+
+    try {
+      setLoadingTab(tabObj.id);
+      setErrorTab(null);
+
+      const params = {
+        page: 1,
+        limit: 10,
+        category: tabObj.category, // backend: filter.category
+      };
+
+      const res = await axios.get(PRODUCTS_ENDPOINT, { params });
+      const rawProducts = res?.data?.data || [];
+
+      const mapped = rawProducts.map((p) => ({
+        id: p._id,                        // 👈 unique id from backend
+        title: p.name,
+        image: getImageUrl(p.mainImage),
+        slug: p.slug,
+      }));
+
+      setItemsByTab((prev) => ({
+        ...prev,
+        [tabObj.id]: mapped,
+      }));
+    } catch (err) {
+      console.error("ShopByCategory fetch error:", err);
+      setErrorTab(tabObj.id);
+    } finally {
+      setLoadingTab(null);
+    }
+  };
+
+  // initial load for default tab
+  useEffect(() => {
+    const defaultTab = TABS.find((t) => t.id === "bras");
+    fetchTabProducts(defaultTab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
-    // react-slick will handle position; no manual reset needed here
+    const tabObj = TABS.find((t) => t.id === tabId);
+    fetchTabProducts(tabObj);
+  };
+
+  // ✅ OPEN SINGLE PRODUCT PAGE BY UNIQUE ID
+  const handleCardClick = (item) => {
+    // example product route: /product/:id
+    navigate(`/product/${item.id}`);
+    // if you use slug instead: navigate(`/product/${item.slug}`);
+  };
+
+  const handleViewAll = () => {
+    if (currentTab?.route) {
+      navigate(currentTab.route);
+    }
+  };
+
+  // react-slick settings – desktop: no autoplay, mobile: autoplay
+  const sliderSettings = {
+    dots: false,
+    infinite: items.length > 4,
+    speed: 1000,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    swipeToSlide: true,
+    autoplay: false, // ⛔ desktop autoplay off
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+    responsive: [
+      {
+        breakpoint: 993,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          autoplay: true,
+          autoplaySpeed: 4500,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          autoplay: true,
+          autoplaySpeed: 4500,
+        },
+      },
+    ],
   };
 
   return (
     <section className={styles.sectionWrapper}>
-        <h2 className={styles.heading}>Shop by Category</h2>
+      <h2 className={styles.heading}>Shop by Category</h2>
 
       <div className={styles.innerContainer}>
-
         {/* Tabs */}
         <div className={styles.tabsRow}>
           {TABS.map((tab) => (
@@ -171,30 +229,65 @@ const ShopByCategory = () => {
           ))}
         </div>
 
-        {/* Slider */}
+        {/* Slider / state */}
         <div className={styles.sliderWrapper}>
-          <Slider {...sliderSettings} className={styles.cardsTrack}>
-            {items.map((item) => (
-              <div key={item.id} className={styles.card}>
-                <div className={styles.cardImageWrap}>
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className={styles.cardImage}
-                  />
-                </div>
-                <button className={styles.cardLink}>
-                  {item.title}
-                  <span className={styles.cardArrow}>↗</span>
-                </button>
-              </div>
-            ))}
-          </Slider>
+          {loadingTab === activeTab && (
+            <div className={styles.loadingText}>
+              Loading {currentTab?.label}…
+            </div>
+          )}
+
+          {errorTab === activeTab && (
+            <div className={styles.errorText}>
+              Failed to load {currentTab?.label}. Please try again.
+            </div>
+          )}
+
+          {!loadingTab && !errorTab && items.length === 0 && (
+            <div className={styles.emptyText}>
+              No products found in {currentTab?.label}.
+            </div>
+          )}
+
+          {!loadingTab && !errorTab && items.length > 0 && (
+           <Slider {...sliderSettings} className={styles.cardsTrack}>
+  {items.map((item) => (
+   <div
+  key={item.id}
+  className={styles.card}
+  onClick={() => handleCardClick(item)}   // 👈 whole card clickable
+  style={{ cursor: "pointer" }}
+>
+  <div className={styles.cardImageWrap}>
+    <img
+      src={item.image}
+      alt={item.title}
+      className={styles.cardImage}
+    />
+  </div>
+
+  <button
+    type="button"
+    className={styles.cardLink}
+  >
+    {item.title}
+    <span className={styles.cardArrow}>↗</span>
+  </button>
+</div>
+
+  ))}
+</Slider>
+
+          )}
         </div>
 
         {/* View all button */}
         <div className={styles.viewAllWrap}>
-          <button type="button" className={styles.viewAllBtn}>
+          <button
+            type="button"
+            className={styles.viewAllBtn}
+            onClick={handleViewAll}
+          >
             View All
             <span className={styles.viewAllArrow}>↗</span>
           </button>

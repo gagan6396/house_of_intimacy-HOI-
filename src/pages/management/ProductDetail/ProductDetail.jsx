@@ -60,6 +60,15 @@ function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  // ✅ page open hote hi top se start hoga
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'auto', // instant jump to top
+    });
+  }, []);
+
   const { wishlistItems, toggleWishlist } = useContext(WishlistContext);
 
   // ✅ from CartContext (note: we use product object + options)
@@ -125,7 +134,8 @@ function ProductDetail() {
           setRelatedProducts(filtered);
         }
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // ❌ yahan wala scrollTo hata diya (ab top pe upar wale useEffect se jaa raha hai)
+        // window.scrollTo({ top: 0, behavior: 'smooth' });
       } catch (error) {
         console.error('Error fetching product', error);
       } finally {

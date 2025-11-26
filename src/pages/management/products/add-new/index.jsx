@@ -380,6 +380,9 @@ const AddProducts = () => {
                     <option>Nightwear</option>
                     <option>Swimwear</option>
                     <option>Shapewear</option>
+                    <option>Active</option>
+                    <option>Layering</option>
+
                   </Select>
                 </FormControl>
 

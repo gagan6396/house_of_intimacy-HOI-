@@ -4,7 +4,6 @@ import Offermarquee from "../../components/Homepagecomopents/Offermarquee.jsx";
 import Bestsellers from "../../components/Homepagecomopents/Bestsellers.jsx";
 import ProductSection from "../../components/Homepagecomopents/Productsection.jsx";
 import BestChoice from "../../components/Homepagecomopents/BestChoice.jsx";
-import ColorsSelector from "../../components/Homepagecomopents/ColorsSelector.jsx";
 import VideoPlayer from "../../components/Homepagecomopents/VideoPlayer.jsx";
 import CategoryStrip from "../../components/Homepagecomopents/CategoryStrip.jsx";
 import ShopByCategory from "../../components/Homepagecomopents/ShopByCategory.jsx";
@@ -22,7 +21,6 @@ export default function Home() {
     <CategoryStrip/>
       <Herosection/>
       <NewArrival/>
-      <ColorsSelector/>
       <Offermarquee/>
       <JockeyColorSlider/>
       <ShopByCategory/>
