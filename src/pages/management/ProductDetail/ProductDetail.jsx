@@ -16,8 +16,10 @@ import { FaHeart } from 'react-icons/fa';
 
 import styles from '../../../assets/styles/productcollection/ProductDetail.module.css';
 
-// ✅ NEW: import WishlistContext
+// ✅ Wishlist context
 import { WishlistContext } from '../../../contexts/WishlistContext';
+// ✅ NEW: Cart context
+import { CartContext } from '../../../contexts/CartContext';
 
 const API_BASE_URL = 'http://localhost:8000';
 
@@ -72,6 +74,10 @@ function ProductDetail() {
 
   // ✅ use wishlist context
   const { wishlistItems, toggleWishlist } = useContext(WishlistContext);
+
+  // ✅ use cart context
+const { addToCart, cartItems } = useContext(CartContext);
+
 
   const [product, setProduct] = useState(null);
   const [activeImage, setActiveImage] = useState('');
@@ -263,29 +269,60 @@ function ProductDetail() {
     setQty((prev) => (prev > 1 ? prev - 1 : prev));
   };
 
-  const handleAddToBag = () => {
-    if (!selectedSize) {
-      setSizeError(true);
-      setActionMessage('Please select a size to continue');
-      setTimeout(() => setActionMessage(''), 2000);
-      const el = document.getElementById('size-section');
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-      return;
-    }
-
-    // yaha cart me add karne ki API call kar sakte ho
-    console.log('ADD TO BAG 👉', {
-      productId: product._id,
-      size: selectedSize,
-      color: selectedColor,
-      qty,
-    });
-
-    setActionMessage('Added to bag 🛍️');
+  // ✅ MAIN CHANGE: Add to Bag now uses CartContext
+const handleAddToBag = () => {
+  if (!selectedSize) {
+    setSizeError(true);
+    setActionMessage('Please select a size to continue');
     setTimeout(() => setActionMessage(''), 2000);
-  };
+    const el = document.getElementById('size-section');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    return;
+  }
+
+  // ✅ 1) Check: already same product + size + color bag me hai kya?
+  const alreadyInCart = cartItems.some(
+    (item) =>
+      item.productId === product._id &&
+      item.size === selectedSize &&
+      item.color === selectedColor
+  );
+
+  if (alreadyInCart) {
+    // ✅ Agar hai, toh dobara add NHI karna, sirf message show karo
+    setActionMessage('This item is already in your bag');
+    setTimeout(() => setActionMessage(''), 2000);
+    return;
+  }
+
+  // ✅ 2) Nahi hai toh ab add karo
+  const priceToUse = salePrice || mrp;
+  const imageToUse = activeImage || product.mainImage;
+
+  addToCart({
+    productId: product._id,
+    name: product.name,
+    brand: product.brand,
+    price: Number(priceToUse),
+    image: imageToUse,
+    size: selectedSize,
+    color: selectedColor,
+    qty,
+  });
+
+  console.log('ADD TO BAG 👉', {
+    productId: product._id,
+    size: selectedSize,
+    color: selectedColor,
+    qty,
+  });
+
+  setActionMessage('Added to bag 🛍️');
+  setTimeout(() => setActionMessage(''), 2000);
+};
+
 
   const handleBuyNow = () => {
     // same validation
@@ -300,15 +337,29 @@ function ProductDetail() {
       return;
     }
 
-    // yaha direct checkout page pe navigate kar sakte ho
+    // Optionally: add to cart then go to checkout
+    const priceToUse = salePrice || mrp;
+    const imageToUse = activeImage || product.mainImage;
+
+    addToCart({
+      productId: product._id,
+      name: product.name,
+      brand: product.brand,
+      price: Number(priceToUse),
+      image: imageToUse,
+      size: selectedSize,
+      color: selectedColor,
+      qty,
+    });
+
     console.log('BUY NOW 👉', {
       productId: product._id,
       size: selectedSize,
       color: selectedColor,
       qty,
     });
-    // example:
-    // navigate('/checkout');
+
+    // navigate('/checkout'); // when checkout page is ready
   };
 
   // ---------- META INFO FROM PRODUCT ----------

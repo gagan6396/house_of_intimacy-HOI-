@@ -7,7 +7,7 @@ import {
   FiShoppingBag,
   FiMenu,
   FiX,
-  FiChevronDown, // 👈 arrow for user dropdown
+  FiChevronDown,
 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,8 +16,12 @@ import authSideImg from '../assets/images/auth_login.png';
 
 import styles from '../assets/styles/Header.module.css';
 
-// ✅ NEW: import WishlistContext
+// ✅ contexts
 import { WishlistContext } from '../contexts/WishlistContext';
+import { CartContext } from '../contexts/CartContext';
+
+// ✅ cart drawer
+import CartDrawer from './cart/CartDrawer';
 
 const BRAS_MEGA = {
   columns: [
@@ -128,10 +132,13 @@ const Header = () => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
 
+  // ✅ cart drawer open/close
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
   const navigate = useNavigate();
   const userMenuRef = useRef(null);
 
-  // ✅ Wishlist from context
+  const { cartCount } = useContext(CartContext); // <-- see below fix
   const { wishlistItems } = useContext(WishlistContext);
   const wishlistCount = wishlistItems.length;
 
@@ -147,7 +154,7 @@ const Header = () => {
     '';
 
   const isLoggedIn = !!authToken;
-  const displayName = rawName || 'Account'; // full name
+  const displayName = rawName || 'Account';
 
   const toggleMobile = () => setMobileOpen((prev) => !prev);
 
@@ -171,12 +178,10 @@ const Header = () => {
   };
 
   const handleModalContentClick = (e) => {
-    e.stopPropagation(); // prevent closing when clicking inside
+    e.stopPropagation();
   };
 
-  // Called only when user confirms "Yes"
   const handleLogout = () => {
-    // clear storage
     localStorage.removeItem('authToken');
     localStorage.removeItem('userRole');
     localStorage.removeItem('userName');
@@ -193,7 +198,7 @@ const Header = () => {
   };
 
   const handleLogoClick = () => {
-    navigate('/'); // home route
+    navigate('/');
   };
 
   useEffect(() => {
@@ -204,305 +209,325 @@ const Header = () => {
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   return (
-    <header className={styles.header}>
-      {/* ===== Top row ===== */}
-      <div className={styles.topRow}>
-        <button
-          className={styles.menuBtn}
-          onClick={toggleMobile}
-          aria-label="Toggle navigation"
-        >
-          {mobileOpen ? <FiX /> : <FiMenu />}
-        </button>
-
-        <div
-          className={styles.logo}
-          onClick={handleLogoClick}
-          style={{ cursor: 'pointer' }}
-        >
-          <img src={logo} alt="House Of Intimacy" className={styles.logoImg} />
-        </div>
-
-        <div className={styles.iconGroup}>
-          <button className={styles.iconBtn} aria-label="Search">
-            <FiSearch />
-          </button>
-
-          {/* ✅ Wishlist with dynamic count */}
+    <>
+      <header className={styles.header}>
+        {/* ===== Top row ===== */}
+        <div className={styles.topRow}>
           <button
-            className={`${styles.iconBtn} ${styles.iconHeart}`}
-            aria-label="Wishlist"
-            // onClick={() => navigate('/wishlist')} // later when you make wishlist page
+            className={styles.menuBtn}
+            onClick={toggleMobile}
+            aria-label="Toggle navigation"
           >
-            <FiHeart />
-            <span className={styles.badge}>{wishlistCount}</span>
+            {mobileOpen ? <FiX /> : <FiMenu />}
           </button>
 
-          {/* ===== If NOT logged in → show icon that opens auth modal ===== */}
-          {!isLoggedIn && (
-            <button
-              className={styles.iconBtn}
-              aria-label="Account"
-              onClick={openAuthModal}
-            >
-              <FiUser />
+          <div
+            className={styles.logo}
+            onClick={handleLogoClick}
+            style={{ cursor: 'pointer' }}
+          >
+            <img
+              src={logo}
+              alt="House Of Intimacy"
+              className={styles.logoImg}
+            />
+          </div>
+
+          <div className={styles.iconGroup}>
+            <button className={styles.iconBtn} aria-label="Search">
+              <FiSearch />
             </button>
-          )}
 
-          {/* ===== If logged in → show full name + arrow + dropdown ===== */}
-          {isLoggedIn && (
-            <div className={styles.userMenuWrapper} ref={userMenuRef}>
-              <button
-                type="button"
-                className={`${styles.iconBtn} ${styles.userBtn}`}
-                onClick={() => setUserMenuOpen((prev) => !prev)}
-                aria-label="User menu"
-              >
-                <span className={styles.userNameText}>{displayName}</span>
-                <FiChevronDown className={styles.userArrow} />
-              </button>
-
-              {userMenuOpen && (
-                <div className={styles.userDropdown}>
-                  <button
-                    type="button"
-                    className={styles.userDropdownItem}
-                    onClick={() => {
-                      setUserMenuOpen(false);
-                      navigate('/account/profile');
-                    }}
-                  >
-                    My Account
-                  </button>
-
-                  <button
-                    type="button"
-                    className={styles.userDropdownItem}
-                    onClick={() => {
-                      setUserMenuOpen(false);
-                      setLogoutConfirmOpen(true);
-                    }}
-                  >
-                    Logout
-                  </button>
-                </div>
+            {/* Wishlist */}
+            <button
+              type="button"
+              className={styles.wishlistButton}
+              onClick={() => navigate('/wishlist')}
+            >
+              <FiHeart className={styles.wishlistIcon} />
+              {wishlistCount > 0 && (
+                <span className={styles.wishlistCount}>{wishlistCount}</span>
               )}
-            </div>
-          )}
+            </button>
 
-          <button className={styles.iconBtn} aria-label="Bag">
-            <FiShoppingBag />
-          </button>
-        </div>
-      </div>
-
-      {/* ===== Desktop nav row ===== */}
-      <div className={styles.bottomRow}>
-        <nav className={styles.navDesktop}>
-          <ul className={styles.navList}>
-            {navItems.map((item) => (
-              <li
-                key={item.label}
-                className={styles.navItem}
-                onMouseEnter={() => handleEnter(item)}
-                onMouseLeave={handleLeave}
+            {/* Auth / User */}
+            {!isLoggedIn && (
+              <button
+                className={styles.iconBtn}
+                aria-label="Account"
+                onClick={openAuthModal}
               >
-                <a href={item.path} className={styles.navLink}>
-                  {item.label}
-                </a>
+                <FiUser />
+              </button>
+            )}
 
-                {item.mega && megaOpen === item.label && (
-                  <div className={styles.megaMenu}>
-                    <div className={styles.megaInner}>
-                      {item.mega.columns.map((col) => (
-                        <div className={styles.megaColumn} key={col.title}>
-                          <h4 className={styles.megaTitle}>{col.title}</h4>
-                          <ul className={styles.megaList}>
-                            {col.items.map((entry) => (
-                              <li key={entry}>
-                                <a href="/" className={styles.megaLink}>
-                                  {entry}
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
+            {isLoggedIn && (
+              <div className={styles.userMenuWrapper} ref={userMenuRef}>
+                <button
+                  type="button"
+                  className={`${styles.iconBtn} ${styles.userBtn}`}
+                  onClick={() => setUserMenuOpen((prev) => !prev)}
+                  aria-label="User menu"
+                >
+                  <span className={styles.userNameText}>{displayName}</span>
+                  <FiChevronDown className={styles.userArrow} />
+                </button>
 
-                      <div className={styles.megaPromo}>
-                        <img
-                          src={authSideImg}
-                          alt="Bestsellers"
-                          className={styles.megaPromoImg}
-                        />
-                        <button className={styles.promoBtn}>
-                          Bestsellers →
-                        </button>
-                      </div>
-                    </div>
+                {userMenuOpen && (
+                  <div className={styles.userDropdown}>
+                    <button
+                      type="button"
+                      className={styles.userDropdownItem}
+                      onClick={() => {
+                        setUserMenuOpen(false);
+                        navigate('/account/profile');
+                      }}
+                    >
+                      My Account
+                    </button>
+
+                    <button
+                      type="button"
+                      className={styles.userDropdownItem}
+                      onClick={() => {
+                        setUserMenuOpen(false);
+                        setLogoutConfirmOpen(true);
+                      }}
+                    >
+                      Logout
+                    </button>
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* 🛍 Bag – opens cart drawer */}
+            <button
+              className={`${styles.iconBtn} ${styles.iconBag}`}
+              aria-label="Bag"
+              onClick={() => setIsCartOpen(true)}
+            >
+              <FiShoppingBag />
+              {cartCount > 0 && (
+                <span className={styles.badge}>{cartCount}</span>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* ===== Desktop nav row ===== */}
+        <div className={styles.bottomRow}>
+          <nav className={styles.navDesktop}>
+            <ul className={styles.navList}>
+              {navItems.map((item) => (
+                <li
+                  key={item.label}
+                  className={styles.navItem}
+                  onMouseEnter={() => handleEnter(item)}
+                  onMouseLeave={handleLeave}
+                >
+                  <a href={item.path} className={styles.navLink}>
+                    {item.label}
+                  </a>
+
+                  {item.mega && megaOpen === item.label && (
+                    <div className={styles.megaMenu}>
+                      <div className={styles.megaInner}>
+                        {item.mega.columns.map((col) => (
+                          <div
+                            className={styles.megaColumn}
+                            key={col.title}
+                          >
+                            <h4 className={styles.megaTitle}>{col.title}</h4>
+                            <ul className={styles.megaList}>
+                              {col.items.map((entry) => (
+                                <li key={entry}>
+                                  <a href="/" className={styles.megaLink}>
+                                    {entry}
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+
+                        <div className={styles.megaPromo}>
+                          <img
+                            src={authSideImg}
+                            alt="Bestsellers"
+                            className={styles.megaPromoImg}
+                          />
+                          <button className={styles.promoBtn}>
+                            Bestsellers →
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+
+        {/* ===== Mobile nav ===== */}
+        <div
+          className={`${styles.mobileNav} ${
+            mobileOpen ? styles.mobileNavOpen : ''
+          }`}
+        >
+          <ul className={styles.mobileNavList}>
+            {navItems.map((item) => (
+              <li key={item.label} className={styles.mobileNavItem}>
+                <a href={item.path} className={styles.mobileNavLink}>
+                  {item.label}
+                </a>
               </li>
             ))}
           </ul>
-        </nav>
-      </div>
+        </div>
 
-      {/* ===== Mobile dropdown nav ===== */}
-      <div
-        className={`${styles.mobileNav} ${
-          mobileOpen ? styles.mobileNavOpen : ''
-        }`}
-      >
-        <ul className={styles.mobileNavList}>
-          {navItems.map((item) => (
-            <li key={item.label} className={styles.mobileNavItem}>
-              <a href={item.path} className={styles.mobileNavLink}>
-                {item.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* ===== Auth Modal ===== */}
-      {authModalOpen && (
-        <div
-          className={styles.authOverlay}
-          onClick={handleOverlayClick}
-          aria-modal="true"
-          role="dialog"
-        >
-          <div className={styles.authModal} onClick={handleModalContentClick}>
-            {/* Close button */}
-            <button
-              className={styles.authCloseBtn}
-              onClick={closeAuthModal}
-              aria-label="Close"
+        {/* ===== Auth Modal ===== */}
+        {authModalOpen && (
+          <div
+            className={styles.authOverlay}
+            onClick={handleOverlayClick}
+            aria-modal="true"
+            role="dialog"
+          >
+            <div
+              className={styles.authModal}
+              onClick={handleModalContentClick}
             >
-              <FiX />
-            </button>
+              <button
+                className={styles.authCloseBtn}
+                onClick={closeAuthModal}
+                aria-label="Close"
+              >
+                <FiX />
+              </button>
 
-            <div className={styles.authContent}>
-              {/* LEFT IMAGE */}
-              <div className={styles.authLeft}>
-                <img
-                  src={authSideImg}
-                  alt="Welcome to House Of Intimacy"
-                  className={styles.authLeftImg}
-                />
-              </div>
-
-              {/* RIGHT SIDE - ONLY TWO BUTTONS */}
-              <div className={styles.authRight}>
-                <div className={styles.authLogo}>House Of Intimacy</div>
-
-                <h2 className={styles.authHeading}>Welcome</h2>
-                <p className={styles.authSubheading}>
-                  Choose how you want to continue.
-                </p>
-
-                <div className={styles.authButtonGroup}>
-                  <button
-                    type="button"
-                    className={styles.primaryBtn}
-                    onClick={() => {
-                      closeAuthModal();
-                      navigate('/login');
-                    }}
-                  >
-                    Already have an account? Login
-                  </button>
-
-                  <button
-                    type="button"
-                    className={styles.secondaryBtn}
-                    onClick={() => {
-                      closeAuthModal();
-                      navigate('/auth/create_new_user');
-                    }}
-                  >
-                    New to House Of Intimacy? Create account
-                  </button>
+              <div className={styles.authContent}>
+                <div className={styles.authLeft}>
+                  <img
+                    src={authSideImg}
+                    alt="Welcome to House Of Intimacy"
+                    className={styles.authLeftImg}
+                  />
                 </div>
 
-                <p className={styles.termsText}>
-                  By continuing, you agree to our{' '}
-                  <a href="/terms" className={styles.termsLink}>
-                    Terms &amp; Conditions
-                  </a>{' '}
-                  and{' '}
-                  <a href="/privacy" className={styles.termsLink}>
-                    Privacy Policy
-                  </a>
-                  .
-                </p>
+                <div className={styles.authRight}>
+                  <div className={styles.authLogo}>House Of Intimacy</div>
+
+                  <h2 className={styles.authHeading}>Welcome</h2>
+                  <p className={styles.authSubheading}>
+                    Choose how you want to continue.
+                  </p>
+
+                  <div className={styles.authButtonGroup}>
+                    <button
+                      type="button"
+                      className={styles.primaryBtn}
+                      onClick={() => {
+                        closeAuthModal();
+                        navigate('/login');
+                      }}
+                    >
+                      Already have an account? Login
+                    </button>
+
+                    <button
+                      type="button"
+                      className={styles.secondaryBtn}
+                      onClick={() => {
+                        closeAuthModal();
+                        navigate('/auth/create_new_user');
+                      }}
+                    >
+                      New to House Of Intimacy? Create account
+                    </button>
+                  </div>
+
+                  <p className={styles.termsText}>
+                    By continuing, you agree to our{' '}
+                    <a href="/terms" className={styles.termsLink}>
+                      Terms &amp; Conditions
+                    </a>{' '}
+                    and{' '}
+                    <a href="/privacy" className={styles.termsLink}>
+                      Privacy Policy
+                    </a>
+                    .
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* ===== Logout Confirm Modal (interactive like auth modal) ===== */}
-      {logoutConfirmOpen && (
-        <div
-          className={styles.authOverlay}
-          onClick={() => setLogoutConfirmOpen(false)}
-          aria-modal="true"
-          role="dialog"
-        >
+        {/* ===== Logout Confirm Modal ===== */}
+        {logoutConfirmOpen && (
           <div
-            className={styles.logoutModal}
-            onClick={(e) => e.stopPropagation()}
+            className={styles.authOverlay}
+            onClick={() => setLogoutConfirmOpen(false)}
+            aria-modal="true"
+            role="dialog"
           >
-            {/* Close icon (reusing same style as auth) */}
-            <button
-              className={styles.authCloseBtn}
-              onClick={() => setLogoutConfirmOpen(false)}
-              aria-label="Close"
+            <div
+              className={styles.logoutModal}
+              onClick={(e) => e.stopPropagation()}
             >
-              <FiX />
-            </button>
+              <button
+                className={styles.authCloseBtn}
+                onClick={() => setLogoutConfirmOpen(false)}
+                aria-label="Close"
+              >
+                <FiX />
+              </button>
 
-            <div className={styles.logoutContent}>
-              <div className={styles.logoutIconCircle}>!</div>
+              <div className={styles.logoutContent}>
+                <div className={styles.logoutIconCircle}>!</div>
 
-              <h3 className={styles.logoutTitle}>
-                Are you sure you want to logout?
-              </h3>
-              <p className={styles.logoutText}>
-                You&apos;ll be logged out from House Of Intimacy and will need
-                to sign in again to access your account.
-              </p>
+                <h3 className={styles.logoutTitle}>
+                  Are you sure you want to logout?
+                </h3>
+                <p className={styles.logoutText}>
+                  You&apos;ll be logged out from House Of Intimacy and will need
+                  to sign in again to access your account.
+                </p>
 
-              <div className={styles.logoutActions}>
-                <button
-                  type="button"
-                  className={styles.logoutYesBtn}
-                  onClick={handleLogout}
-                >
-                  Yes, Logout
-                </button>
-                <button
-                  type="button"
-                  className={styles.logoutNoBtn}
-                  onClick={() => setLogoutConfirmOpen(false)}
-                >
-                  No, Stay Logged In
-                </button>
+                <div className={styles.logoutActions}>
+                  <button
+                    type="button"
+                    className={styles.logoutYesBtn}
+                    onClick={handleLogout}
+                  >
+                    Yes, Logout
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.logoutNoBtn}
+                    onClick={() => setLogoutConfirmOpen(false)}
+                  >
+                    No, Stay Logged In
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
-    </header>
+        )}
+      </header>
+
+      {/* 🛒 Right-side cart drawer */}
+      <CartDrawer
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+      />
+    </>
   );
 };
 

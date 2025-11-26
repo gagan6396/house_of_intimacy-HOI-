@@ -139,6 +139,32 @@
   color: #000;
   border-color: #ee1493;
 }
+.wishlistButton {
+  position: relative;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wishlistIcon {
+  font-size: 20px;
+}
+
+.wishlistCount {
+  position: absolute;
+  top: 0;
+  right: -2px;
+  background-color: #dc2626;
+  color: #ffffff;
+  border-radius: 999px;
+  font-size: 10px;
+  line-height: 1;
+  padding: 2px 5px;
+}
 
 /* ===== Mega menu (desktop) ===== */
 

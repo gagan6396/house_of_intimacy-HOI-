@@ -37,6 +37,8 @@ import PantiesListing from 'components/productcollections/panties';
 import NightwearListing from 'components/productcollections/nightwear';
 import ProductDetail from 'pages/management/ProductDetail/ProductDetail';
 import { WishlistProvider } from 'contexts/WishlistContext';
+import { CartProvider } from 'contexts/CartContext';
+import WishlistPage from 'pages/Wishlist/WishlistPage';
 
 export default function Main() {
   const [currentTheme, setCurrentTheme] = useState(initialTheme);
@@ -54,104 +56,108 @@ export default function Main() {
 
   return (
     <ChakraProvider theme={currentTheme}>
-      {/* ✅ Wrap whole app UI in WishlistProvider */}
+      {/* ✅ Wrap whole app UI in Wishlist + Cart providers */}
       <WishlistProvider>
-        <div
-          style={{
-            minHeight: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          {!hideHeader && <Header />}
+        <CartProvider>
+          <div
+            style={{
+              minHeight: '100vh',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            {!hideHeader && <Header />}
 
-          <div style={{ flex: 1 }}>
-            <Routes>
-              <Route path="/product/:id" element={<ProductDetail />} />
+            <div style={{ flex: 1 }}>
+              <Routes>
+                <Route path="/product/:id" element={<ProductDetail />} />
 
-              {/* Auth layout (register, forgot, etc) */}
-              <Route path="auth/*" element={<AuthLayout />} />
+                {/* Auth layout (register, forgot, etc) */}
+                <Route path="auth/*" element={<AuthLayout />} />
+                  <Route path="/wishlist" element={<WishlistPage />} />
 
-              {/* 🔐 ADMIN LAYOUT – now uses AdminRoute */}
-              <Route
-                path="admin/*"
-                element={
-                  <AdminRoute>
-                    <AdminLayout
-                      theme={currentTheme}
-                      setTheme={setCurrentTheme}
-                    />
-                  </AdminRoute>
-                }
-              />
+                {/* 🔐 ADMIN LAYOUT – now uses AdminRoute */}
+                <Route
+                  path="admin/*"
+                  element={
+                    <AdminRoute>
+                      <AdminLayout
+                        theme={currentTheme}
+                        setTheme={setCurrentTheme}
+                      />
+                    </AdminRoute>
+                  }
+                />
 
-              {/* Login */}
-              <Route
-                path="/login"
-                element={
-                  <PublicRoute>
-                    <SignIn />
-                  </PublicRoute>
-                }
-              />
+                {/* Login */}
+                <Route
+                  path="/login"
+                  element={
+                    <PublicRoute>
+                      <SignIn />
+                    </PublicRoute>
+                  }
+                />
 
-              {/* Register */}
-              <Route
-                path="/auth/create_new_user"
-                element={
-                  <PublicRoute>
-                    <CreateNewUser />
-                  </PublicRoute>
-                }
-              />
+                {/* Register */}
+                <Route
+                  path="/auth/create_new_user"
+                  element={
+                    <PublicRoute>
+                      <CreateNewUser />
+                    </PublicRoute>
+                  }
+                />
 
-              {/* ✅ NEW: Verify Email (OTP) */}
-              <Route
-                path="/auth/verify-email"
-                element={
-                  <PublicRoute>
-                    <VerifyEmail />
-                  </PublicRoute>
-                }
-              />
+                {/* ✅ NEW: Verify Email (OTP) */}
+                <Route
+                  path="/auth/verify-email"
+                  element={
+                    <PublicRoute>
+                      <VerifyEmail />
+                    </PublicRoute>
+                  }
+                />
 
-              {/* Account pages (protected) */}
-              <Route
-                path="/account/profile"
-                element={
-                  <ProtectedRoute>
-                    <ProfilePage />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Account pages (protected) */}
+                <Route
+                  path="/account/profile"
+                  element={
+                    <ProtectedRoute>
+                      <ProfilePage />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/account/orders"
-                element={
-                  <ProtectedRoute>
-                    <OrdersPage />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/account/orders"
+                  element={
+                    <ProtectedRoute>
+                      <OrdersPage />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route path="/bras" element={<BraListing />} />
-              <Route path="/panties" element={<PantiesListing />} />
-              <Route path="/nightwear" element={<NightwearListing />} />
+                <Route path="/bras" element={<BraListing />} />
+                <Route path="/panties" element={<PantiesListing />} />
+                <Route path="/nightwear" element={<NightwearListing />} />
 
-              {/* HOME PAGE (public) */}
-              <Route path="/" element={<Home />} />
-              <Route path="/about-us" element={<AboutUs />} />
+                {/* HOME PAGE (public) */}
+                <Route path="/" element={<Home />} />
+                <Route path="/about-us" element={<AboutUs />} />
 
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/reset-password/:token" element={<ResetPassword />} />
-            </Routes>
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password/:token" element={<ResetPassword />} />
+              </Routes>
+            </div>
+
+            <FixedPlugin />
+
+            {!hideFooter && <Footer />}
           </div>
-
-          <FixedPlugin />
-
-          {!hideFooter && <Footer />}
-        </div>
+        </CartProvider>
       </WishlistProvider>
     </ChakraProvider>
   );
 }
+
