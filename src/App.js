@@ -9,7 +9,6 @@ import initialTheme from './theme/theme';
 
 // PAGES & COMPONENTS
 import Home from 'components/Homepagecomopents/Home';
-import AboutUs from 'components/AboutUs';
 import SignIn from 'views/auth/signIn';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
@@ -40,6 +39,8 @@ import { WishlistProvider } from 'contexts/WishlistContext';
 import { CartProvider } from 'contexts/CartContext';
 import WishlistPage from 'pages/Wishlist/WishlistPage';
 import AllProducts from 'pages/allbrands/AllProducts';
+import { Aboutus } from 'components/AboutUs';
+import { ContactUs } from 'components/ContactUs';
 
 export default function Main() {
   const [currentTheme, setCurrentTheme] = useState(initialTheme);
@@ -145,7 +146,8 @@ export default function Main() {
 
                 {/* HOME PAGE (public) */}
                 <Route path="/" element={<Home />} />
-                <Route path="/about-us" element={<AboutUs />} />
+                <Route path="/about-us" element={<Aboutus />} />
+               <Route path='ContactUs' element={<ContactUs/>}/>
                  <Route path="/products" element={<AllProducts />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password/:token" element={<ResetPassword />} />

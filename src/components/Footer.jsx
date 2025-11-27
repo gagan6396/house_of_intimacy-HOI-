@@ -39,29 +39,29 @@ export default function Footer() {
           <div className="col-lg-2 col-md-6">
             <h5 className="mb-3">Quick links</h5>
             <ul className={`list-unstyled ${styles["footer-links"]}`}>
-              <li><a href="/about" style={{ color: linkColor }}>About Us</a></li>
-              <li><a href="/faqs" style={{ color: linkColor }}>FAQs</a></li>
-              <li><a href="/blogs" style={{ color: linkColor }}>Blogs</a></li>
+              <li><Link to="/about-us" style={{ color: linkColor }}>About Us</Link></li>
+              <li><Link to="/faqs" style={{ color: linkColor }}>FAQs</Link></li>
+              <li><Link to="/blogs" style={{ color: linkColor }}>Blogs</Link></li>
             </ul>
           </div>
 
           <div className="col-lg-2 col-md-6">
             <h5 className="mb-3">Extras</h5>
             <ul className={`list-unstyled ${styles["footer-links"]}`}>
-              <li><a href="/bodysuit" style={{ color: linkColor }}>Bodysuit</a></li>
-              <li><a href="/sets" style={{ color: linkColor }}>Lingerie Sets</a></li>
-              <li><a href="/swim" style={{ color: linkColor }}>Swimwear</a></li>
-              <li><a href="/one-piece" style={{ color: linkColor }}>One Piece</a></li>
+              <li><Link to="/bodysuit" style={{ color: linkColor }}>Bodysuit</Link></li>
+              <li><Link to="/sets" style={{ color: linkColor }}>Lingerie Sets</Link></li>
+              <li><Link to="/swim" style={{ color: linkColor }}>Swimwear</Link></li>
+              <li><Link to="/one-piece" style={{ color: linkColor }}>One Piece</Link></li>
             </ul>
           </div>
 
           <div className="col-lg-2 col-md-6">
             <h5 className="mb-3">Our Service</h5>
             <ul className={`list-unstyled ${styles["footer-links"]}`}>
-              <li><a href="/contact" style={{ color: linkColor }}>Contact Us</a></li>
-              <li><a href="/privacy" style={{ color: linkColor }}>Privacy Policy</a></li>
-              <li><a href="/refund" style={{ color: linkColor }}>Refund Policy</a></li>
-              <li><a href="/terms" style={{ color: linkColor }}>Terms Of Service</a></li>
+              <li><Link to="/ContactUs" style={{ color: linkColor }}>Contact Us</Link></li>
+              <li><Link to="/privacy" style={{ color: linkColor }}>Privacy Policy</Link></li>
+              <li><Link to="/refund" style={{ color: linkColor }}>Refund Policy</Link></li>
+              <li><Link to="/terms" style={{ color: linkColor }}>Terms Of Service</Link></li>
             </ul>
           </div>
         </div>
@@ -92,9 +92,9 @@ export default function Footer() {
           </div>
 
           <div className={styles["bottom-links"]}>
-            <a href="/privacy" style={{ color: mutedText }} className="me-3 small">Privacy policy</a>
-            <a href="/refund" style={{ color: mutedText }} className="me-3 small">Refund policy</a>
-            <a href="/terms" style={{ color: mutedText }} className="small">Terms of service</a>
+            <Link to="/privacy" style={{ color: mutedText }} className="me-3 small">Privacy policy</Link>
+            <Link to="/refund" style={{ color: mutedText }} className="me-3 small">Refund policy</Link>
+            <Link to="/terms" style={{ color: mutedText }} className="small">Terms of service</Link>
           </div>
         </div>
       </div>
