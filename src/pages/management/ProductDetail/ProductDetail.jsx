@@ -94,6 +94,9 @@ function ProductDetail() {
 
   const [activeAccordion, setActiveAccordion] = useState('description');
 
+  // ⭐ NEW: modal state for Size Guide
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
+
   // ---------- FETCH PRODUCT ----------
   useEffect(() => {
     async function fetchProduct() {
@@ -133,9 +136,6 @@ function ProductDetail() {
           const filtered = relData.filter((p) => String(p._id) !== String(id));
           setRelatedProducts(filtered);
         }
-
-        // ❌ yahan wala scrollTo hata diya (ab top pe upar wale useEffect se jaa raha hai)
-        // window.scrollTo({ top: 0, behavior: 'smooth' });
       } catch (error) {
         console.error('Error fetching product', error);
       } finally {
@@ -232,10 +232,9 @@ function ProductDetail() {
     setPinMessage(`Good news! Delivery is available to ${clean}.`);
   };
 
+  // ⭐ CHANGED: open modal instead of new tab
   const handleSizeGuide = () => {
-    if (product.sizeGuideUrl) {
-      window.open(product.sizeGuideUrl, '_blank');
-    }
+    setIsSizeGuideOpen(true);
   };
 
   const handleRelatedClick = (rpId) => {
@@ -267,7 +266,6 @@ function ProductDetail() {
       return;
     }
 
-    // ✅ check if same line already exists in cart
     const alreadyInCart = cartItems.some(
       (item) =>
         item.productId === product._id &&
@@ -281,7 +279,6 @@ function ProductDetail() {
       return;
     }
 
-    // ✅ call CartContext.addToCart with (product, options)
     addToCart(product, {
       size: selectedSize,
       color: selectedColor,
@@ -304,14 +301,13 @@ function ProductDetail() {
       setSizeError(true);
       setActionMessage('Please select a size to continue');
       setTimeout(() => setActionMessage(''), 2000);
-      const el = document.getElementById('size-section');
+    const el = document.getElementById('size-section');
       if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
       return;
     }
 
-    // ✅ add with same API
     addToCart(product, {
       size: selectedSize,
       color: selectedColor,
@@ -542,6 +538,7 @@ function ProductDetail() {
                     </span>
                   )}
                 </div>
+                {/* button will still only show if sizeGuideUrl is present in DB */}
                 {product.sizeGuideUrl && (
                   <button
                     className={styles.sizeGuideBtn}
@@ -855,6 +852,114 @@ function ProductDetail() {
           <span>Add to Bag</span>
         </button>
       </div>
+
+      {/* ⭐ SIZE GUIDE MODAL ⭐ */}
+      {isSizeGuideOpen && (
+        <div
+          className={styles.sizeGuideOverlay}
+          onClick={() => setIsSizeGuideOpen(false)}
+        >
+          <div
+            className={styles.sizeGuideModal}
+            onClick={(e) => e.stopPropagation()} // prevent overlay close
+          >
+            <button
+              type="button"
+              className={styles.sizeGuideClose}
+              onClick={() => setIsSizeGuideOpen(false)}
+            >
+              ×
+            </button>
+
+            <h2 className={styles.sizeGuideTitle}>Size Guide</h2>
+            <p className={styles.sizeGuideSubtitle}>
+              Use this chart to find your perfect fit.
+            </p>
+
+            <div className={styles.sizeGuideContent}>
+              <div className={styles.sizeGuideBlock}>
+                <h3>Bras / Tops</h3>
+                <table className={styles.sizeGuideTable}>
+                  <thead>
+                    <tr>
+                      <th>Size</th>
+                      <th>Bust (inches)</th>
+                      <th>Underbust (inches)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>32B</td>
+                      <td>32–33</td>
+                      <td>26–27</td>
+                    </tr>
+                    <tr>
+                      <td>34B</td>
+                      <td>34–35</td>
+                      <td>28–29</td>
+                    </tr>
+                    <tr>
+                      <td>36B</td>
+                      <td>36–37</td>
+                      <td>30–31</td>
+                    </tr>
+                    <tr>
+                      <td>38B</td>
+                      <td>38–39</td>
+                      <td>32–33</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div className={styles.sizeGuideBlock}>
+                <h3>Bottoms / Panties</h3>
+                <table className={styles.sizeGuideTable}>
+                  <thead>
+                    <tr>
+                      <th>Size</th>
+                      <th>Waist (inches)</th>
+                      <th>Hip (inches)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>XS</td>
+                      <td>24–26</td>
+                      <td>32–34</td>
+                    </tr>
+                    <tr>
+                      <td>S</td>
+                      <td>26–28</td>
+                      <td>34–36</td>
+                    </tr>
+                    <tr>
+                      <td>M</td>
+                      <td>28–30</td>
+                      <td>36–38</td>
+                    </tr>
+                    <tr>
+                      <td>L</td>
+                      <td>30–32</td>
+                      <td>38–40</td>
+                    </tr>
+                    <tr>
+                      <td>XL</td>
+                      <td>32–34</td>
+                      <td>40–42</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <p className={styles.sizeGuideNote}>
+              Tip: If you fall between two sizes, choose the larger size for
+              more comfort.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
