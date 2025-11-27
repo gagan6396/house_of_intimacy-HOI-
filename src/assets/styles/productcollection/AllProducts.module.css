@@ -359,7 +359,7 @@
 }
 
 .brand {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.06em;
   color: #777;
@@ -367,21 +367,21 @@
 }
 
 .tagPill {
-  font-size: 10px;
+  font-size: 11px;
   padding: 3px 8px;
   border-radius: 999px;
   background: #f6e0eb;
   color: #a33c74;
   white-space: nowrap;
+  font-weight: 500;
 }
 
 /* Product Name */
 .name {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
   color: #222;
-  line-height: 1.35;
-  min-height: 34px;
+  
 }
 
 /* Category / Subcategory meta */
@@ -389,8 +389,9 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 11px;
+  font-size: 13px;
   color: #8a617c;
+  font-weight: 500;
 }
 
 .metaItem {
@@ -475,7 +476,7 @@
 }
 
 .savingsBadge {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
   padding: 2px 8px;
   border-radius: 999px;
@@ -484,8 +485,9 @@
 }
 
 .taxText {
-  font-size: 10px;
+  font-size: 12px;
   color: #9b7d8d;
+  font-weight: 500;
 }
 
 /* ============================= */
@@ -499,7 +501,7 @@
 }
 
 .colorLabel {
-  font-size: 11px;
+  font-size: 13px;
   color: #7a526a;
 }
 
@@ -510,8 +512,8 @@
 }
 
 .colorDot {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border-radius: 999px;
   border: 1px solid #e3c7d7;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7);
@@ -534,7 +536,7 @@
 }
 
 .sizePill {
-  font-size: 10px;
+  font-size: 12px;
   padding: 2px 6px;
   border-radius: 999px;
   border: 1px solid #e3c7d7;
