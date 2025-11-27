@@ -1,7 +1,7 @@
 // src/components/AllProducts/AllProducts.jsx
 import React, { useEffect, useState, useMemo, useContext } from "react";
 import axios from "axios";
-import { FiShoppingBag, FiStar, FiHeart } from "react-icons/fi";
+import { FiShoppingBag,FiHeart } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
 import styles from "../../assets/styles/productcollection/AllProducts.module.css";
