@@ -46,6 +46,7 @@ import PrivacyPolicy from 'pages/legal/PrivacyPolicy';
 import { FAQ } from 'components/FAQ';
 import RefundPolicy from 'pages/RefundPolicy/RefundPolicy';
 import MyOrders from 'pages/account/MyOrders';
+import OrderDetails from 'pages/account/OrderDetails';
 
 export default function Main() {
   const [currentTheme, setCurrentTheme] = useState(initialTheme);
@@ -95,6 +96,7 @@ export default function Main() {
 <Route path="/faq" element={<FAQ />} />
 <Route path="/refund-policy" element={<RefundPolicy />} />
 <Route path="/account/orders" element={<MyOrders />} />
+<Route path="/account/orders/:orderId" element={<OrderDetails />} />
 
 
                 {/* 🔐 ADMIN LAYOUT – now uses AdminRoute */}
