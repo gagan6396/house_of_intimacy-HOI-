@@ -1,0 +1,387 @@
+/* src/assets/styles/legal/PrivacyPolicy.module.css */
+
+.page {
+  min-height: 100vh;
+  background: #f7f7fb;
+  padding: 32px 16px 64px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+
+.header {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto 24px;
+}
+
+.headerInner {
+  background: linear-gradient(135deg, #fce7f3, #eff6ff);
+  border-radius: 20px;
+  padding: 24px 20px 28px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 4px 10px;
+  background: rgba(15, 23, 42, 0.06);
+  border-radius: 999px;
+  margin-bottom: 10px;
+  color: #0f172a;
+}
+
+.title {
+  font-size: 28px;
+  line-height: 1.2;
+  margin: 0 0 8px;
+  color: #0f172a;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #1f2933;
+  max-width: 640px;
+  margin: 0 0 10px;
+}
+
+.updated {
+  font-size: 12px;
+  color: #4b5563;
+  margin: 0 0 14px;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #4b5563;
+}
+
+.metaItem {
+  background: rgba(15, 23, 42, 0.04);
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+.metaDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: #9ca3af;
+}
+
+/* Layout */
+.layout {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 20px;
+  align-items: flex-start;
+}
+
+/* Sidebar */
+.sidebar {
+  position: sticky;
+  top: 88px;
+  align-self: flex-start;
+}
+
+.sidebarCard {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px 14px 14px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+  border: 1px solid #e5e7eb;
+}
+
+.sidebarTitle {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin: 0 0 8px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.navItem {
+  font-size: 13px;
+  color: #111827;
+  text-decoration: none;
+  padding: 6px 8px;
+  border-radius: 8px;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.navItem:hover {
+  background: #f3e8ff;
+  color: #6d28d9;
+  transform: translateX(2px);
+}
+
+/* Sidebar note */
+.noteBox {
+  margin-top: 8px;
+  padding: 10px 10px 9px;
+  border-radius: 10px;
+  background: #f9fafb;
+  border: 1px dashed #d1d5db;
+}
+
+.noteTitle {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+  margin: 0 0 4px;
+}
+
+.noteText {
+  margin: 0;
+  font-size: 12px;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+/* Main content */
+.content {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px 20px 28px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  border: 1px solid #e5e7eb;
+}
+
+/* Sections */
+.section {
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.section:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  margin: 0 0 8px;
+  color: #111827;
+}
+
+.sectionText {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.7;
+}
+
+.sectionTextSmall {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.subTitle {
+  font-size: 15px;
+  margin: 10px 0 6px;
+  color: #111827;
+}
+
+/* Lists */
+.list {
+  margin: 0 0 10px 16px;
+  padding: 0;
+  list-style: disc;
+}
+
+.list li {
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.6;
+}
+
+.list li strong {
+  font-weight: 600;
+}
+
+/* Links */
+.inlineLink {
+  color: #6d28d9;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.inlineLink:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Contact card */
+.contactCard {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.contactName {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 2px;
+  color: #111827;
+}
+
+.contactLine {
+  margin: 0 0 2px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.contactLine a {
+  color: #6d28d9;
+  text-decoration: none;
+}
+
+.contactLine a:hover {
+  text-decoration: underline;
+}
+
+/* Trust row */
+.trustRow {
+  display: flex;
+  gap: 10px;
+  margin: 14px 0;
+  flex-wrap: wrap;
+}
+
+.trustBox {
+  padding: 6px 12px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #1f2937;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+/* Summary card */
+.summaryCard {
+  margin-top: 10px;
+  padding: 14px 16px;
+  background: #f8f5ff;
+  border: 1px solid #e9d5ff;
+  border-radius: 14px;
+}
+
+.summaryTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #6b21a8;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+}
+
+.summaryList {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.summaryList li {
+  font-size: 13px;
+  color: #374151;
+  margin-bottom: 6px;
+  line-height: 1.6;
+}
+
+/* Packaging Privacy */
+.packageNote {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: #effdf5;
+  border: 1px solid #bbf7d0;
+  border-radius: 14px;
+  font-size: 13px;
+  color: #065f46;
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .sidebar {
+    position: static;
+  }
+
+  .sidebarCard {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .nav {
+    max-height: 180px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 20px 10px 40px;
+  }
+
+  .headerInner {
+    padding: 18px 14px 20px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  .content {
+    padding: 16px 14px 20px;
+  }
+
+  .sectionTitle {
+    font-size: 16px;
+  }
+
+  .sectionText,
+  .list li {
+    font-size: 13px;
+  }
+}
