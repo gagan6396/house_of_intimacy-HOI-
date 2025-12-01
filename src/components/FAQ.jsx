@@ -158,7 +158,7 @@ export function FAQ() {
   }
   return (
     <>
-    <section className='FAQ'>
+    <section className='FAQ' >
        <div style={styles.container}>
       <div style={styles.content}>
         <div style={styles.header}>

@@ -135,10 +135,13 @@ const Header = () => {
   // ✅ cart drawer open/close
   const [isCartOpen, setIsCartOpen] = useState(false);
 
+  // ⭐ NEW: which mega group is open in mobile dropdown
+  const [mobileMegaOpen, setMobileMegaOpen] = useState(null);
+
   const navigate = useNavigate();
   const userMenuRef = useRef(null);
 
-  const { cartCount } = useContext(CartContext); // <-- see below fix
+  const { cartCount } = useContext(CartContext);
   const { wishlistItems } = useContext(WishlistContext);
   const wishlistCount = wishlistItems.length;
 
@@ -338,10 +341,7 @@ const Header = () => {
                     <div className={styles.megaMenu}>
                       <div className={styles.megaInner}>
                         {item.mega.columns.map((col) => (
-                          <div
-                            className={styles.megaColumn}
-                            key={col.title}
-                          >
+                          <div className={styles.megaColumn} key={col.title}>
                             <h4 className={styles.megaTitle}>{col.title}</h4>
                             <ul className={styles.megaList}>
                               {col.items.map((entry) => (
@@ -380,12 +380,151 @@ const Header = () => {
             mobileOpen ? styles.mobileNavOpen : ''
           }`}
         >
+          {/* 🔹 Top actions (search, wishlist, account, bag) */}
+          <div className={styles.mobileActions}>
+            <button
+              type="button"
+              className={styles.mobileActionBtn}
+              aria-label="Search"
+              onClick={() => {
+                // later you can open a search modal here
+                setMobileOpen(false);
+              }}
+            >
+              <FiSearch />
+              <span>Search</span>
+            </button>
+
+            <button
+              type="button"
+              className={styles.mobileActionBtn}
+              onClick={() => {
+                setMobileOpen(false);
+                navigate('/wishlist');
+              }}
+            >
+              <FiHeart />
+              <span>Wishlist</span>
+              {wishlistCount > 0 && (
+                <span className={styles.mobileBadge}>{wishlistCount}</span>
+              )}
+            </button>
+
+            {!isLoggedIn && (
+              <button
+                type="button"
+                className={styles.mobileActionBtn}
+                onClick={() => {
+                  setMobileOpen(false);
+                  setAuthModalOpen(true);
+                }}
+              >
+                <FiUser />
+                <span>Login / Signup</span>
+              </button>
+            )}
+
+            {isLoggedIn && (
+              <button
+                type="button"
+                className={styles.mobileActionBtn}
+                onClick={() => {
+                  setMobileOpen(false);
+                  navigate('/account/profile');
+                }}
+              >
+                <FiUser />
+                <span>{displayName}</span>
+              </button>
+            )}
+
+            <button
+              type="button"
+              className={styles.mobileActionBtn}
+              onClick={() => {
+                setMobileOpen(false);
+                setIsCartOpen(true);
+              }}
+            >
+              <FiShoppingBag />
+              <span>Bag</span>
+              {cartCount > 0 && (
+                <span className={styles.mobileBadge}>{cartCount}</span>
+              )}
+            </button>
+          </div>
+
+          {/* 🔹 Category list with expandable subcategories */}
           <ul className={styles.mobileNavList}>
             {navItems.map((item) => (
               <li key={item.label} className={styles.mobileNavItem}>
-                <a href={item.path} className={styles.mobileNavLink}>
-                  {item.label}
-                </a>
+                {/* If item has mega menu → accordion style */}
+                {item.mega ? (
+                  <>
+                    <button
+                      type="button"
+                      className={styles.mobileNavLinkButton}
+                      onClick={() =>
+                        setMobileMegaOpen((prev) =>
+                          prev === item.label ? null : item.label
+                        )
+                      }
+                    >
+                      <span>{item.label}</span>
+                      <FiChevronDown
+                        className={`${styles.mobileChevron} ${
+                          mobileMegaOpen === item.label
+                            ? styles.mobileChevronOpen
+                            : ''
+                        }`}
+                      />
+                    </button>
+
+                    {mobileMegaOpen === item.label && (
+                      <div className={styles.mobileMega}>
+                        {item.mega.columns.map((col) => (
+                          <div
+                            key={col.title}
+                            className={styles.mobileMegaColumn}
+                          >
+                            <div className={styles.mobileMegaTitle}>
+                              {col.title}
+                            </div>
+                            <ul className={styles.mobileMegaList}>
+                              {col.items.map((entry) => (
+                                <li key={entry}>
+                                  <button
+                                    type="button"
+                                    className={styles.mobileSubLink}
+                                    onClick={() => {
+                                      // TODO: hook up real routes/filters
+                                      setMobileOpen(false);
+                                      // Example: navigate('/bras');
+                                    }}
+                                  >
+                                    {entry}
+                                  </button>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  // Normal non-mega items
+                  <button
+                    type="button"
+                    className={styles.mobileNavLinkButton}
+                    onClick={() => {
+                      setMobileOpen(false);
+                      navigate(item.path);
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                )}
               </li>
             ))}
           </ul>
@@ -399,10 +538,7 @@ const Header = () => {
             aria-modal="true"
             role="dialog"
           >
-            <div
-              className={styles.authModal}
-              onClick={handleModalContentClick}
-            >
+            <div className={styles.authModal} onClick={handleModalContentClick}>
               <button
                 className={styles.authCloseBtn}
                 onClick={closeAuthModal}
@@ -523,10 +659,7 @@ const Header = () => {
       </header>
 
       {/* 🛒 Right-side cart drawer */}
-      <CartDrawer
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-      />
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>
   );
 };

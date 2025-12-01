@@ -43,6 +43,7 @@ import { Aboutus } from 'components/AboutUs';
 import { ContactUs } from 'components/ContactUs';
 import CheckoutPage from 'contexts/CheckoutPage';
 import PrivacyPolicy from 'pages/legal/PrivacyPolicy';
+import { FAQ } from 'components/FAQ';
 
 export default function Main() {
   const [currentTheme, setCurrentTheme] = useState(initialTheme);
@@ -89,6 +90,8 @@ export default function Main() {
                 <Route path="auth/*" element={<AuthLayout />} />
                   <Route path="/wishlist" element={<WishlistPage />} />
 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+<Route path="/faq" element={<FAQ />} />
+
                 {/* 🔐 ADMIN LAYOUT – now uses AdminRoute */}
                 <Route
                   path="admin/*"

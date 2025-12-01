@@ -305,6 +305,7 @@
 
 .sliderWrapper :global(.slick-slide) {
   height: auto;
+  margin-top: 20px;
 }
 
 /* arrows */
@@ -376,4 +377,16 @@
     border-radius: 22px;
   }
 }
+@media (max-width: 480px) {
+  .sliderWrapper :global(.slick-list) {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .sliderWrapper :global(.slick-list) {
+    padding-right: 0;
+  }
+}
+
 

@@ -8,19 +8,14 @@
   z-index: 999;
 }
 
-
-
 /* ===== Top row ===== */
 .topRow {
-
   margin: 0 auto;
   padding: 14px 40px 10px;
   display: flex;
-  justify-content: center;
-  /* logo centered */
+  justify-content: center; /* logo centered */
   align-items: center;
-  position: relative;
-  /* so absolute children align to this row */
+  position: relative; /* so absolute children align to this row */
 }
 
 /* Hamburger button (absolute on left) */
@@ -31,8 +26,7 @@
   background: transparent;
   font-size: 24px;
   cursor: pointer;
-  display: none;
-  /* shown only on mobile */
+  display: none; /* shown only on mobile */
 }
 
 /* Logo center */
@@ -87,6 +81,10 @@
   outline-offset: 2px;
 }
 
+.iconBag {
+  position: relative;
+}
+
 /* Heart badge */
 .iconHeart {
   position: relative;
@@ -107,10 +105,17 @@
   justify-content: center;
 }
 
+/* bottom row wrapper */
+.bottomRow {
+  border-top: 1px solid #f3f3f3;
+  background: #ffffff;
+}
 
+/* Desktop nav */
 .navDesktop {
   max-width: 1540px;
   padding: 8px 26px 10px;
+  margin: 0 auto;
   margin-top: 20px;
 }
 
@@ -144,6 +149,7 @@
   color: #000;
   border-color: #ee1493;
 }
+
 .wishlistButton {
   position: relative;
   border: none;
@@ -232,7 +238,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  
 }
 
 .megaPromoImg {
@@ -259,12 +264,14 @@
   overflow: hidden;
   transition: max-height 0.25s ease;
   border-bottom: 1px solid transparent;
+  background: #ffffff;
 }
 
+/* when open */
 .mobileNavOpen {
-  max-height: 400px;
-  /* enough for all items */
+  max-height: 100vh;     /* or 80vh, or 1200px – just big enough */
   border-bottom-color: #eee;
+  overflow-y: auto;       /* ⭐ allows scrolling inside menu */
 }
 
 .mobileNavList {
@@ -273,10 +280,114 @@
   padding: 0 16px 10px;
 }
 
-.mobileNavItem+.mobileNavItem {
+.mobileNavItem + .mobileNavItem {
   border-top: 1px solid #eee;
 }
 
+/* ===== Mobile actions row (inside dropdown) ===== */
+.mobileActions {
+  padding: 10px 16px 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  border-bottom: 1px solid #eee;
+  background: #fff;
+}
+
+.mobileActionBtn {
+  flex: 1 1 calc(50% - 10px);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+  border-radius: 999px;
+  border: 1px solid #eee;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.mobileActionBtn svg {
+  font-size: 16px;
+}
+
+.mobileBadge {
+  margin-left: auto;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #dc2626;
+  color: #fff;
+}
+
+/* mobile nav link button for items */
+.mobileNavLinkButton {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 10px 0;
+  text-align: left;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+/* chevron rotation */
+.mobileChevron {
+  transition: transform 0.2s ease;
+}
+
+.mobileChevronOpen {
+  transform: rotate(180deg);
+}
+
+/* mobile mega content (subcategories) */
+.mobileMega {
+  padding: 6px 0 10px;
+}
+
+.mobileMegaColumn + .mobileMegaColumn {
+  margin-top: 6px;
+}
+
+.mobileMegaTitle {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #b02959;
+  margin-bottom: 4px;
+}
+
+.mobileMegaList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mobileSubLink {
+  width: 100%;
+  text-align: left;
+  padding: 4px 0;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: #222;
+  cursor: pointer;
+}
+
+.mobileSubLink:hover {
+  color: #b02959;
+}
+
+/* left-over class if you ever use plain <a> */
 .mobileNavLink {
   display: block;
   padding: 10px 0;
@@ -305,8 +416,7 @@
   }
 
   .navDesktop {
-    display: none;
-    /* hide desktop nav */
+    display: none; /* hide desktop nav */
   }
 
   .bottomRow {
@@ -315,6 +425,14 @@
 
   /* hide mega menu on mobile */
   .megaMenu {
+    display: none;
+  }
+}
+
+/* ✅ On small screens, hide right icons.
+   Only logo + hamburger remain in top bar */
+@media (max-width: 767px) {
+  .iconGroup {
     display: none;
   }
 }
@@ -497,8 +615,6 @@
   }
 }
 
-
-/* wrapper around username button */
 /* wrapper around username button */
 .userMenuWrapper {
   position: relative;
@@ -565,76 +681,6 @@
 
 .userDropdownItem:hover {
   background: #f5f5f5;
-}
-
-/* ===== Logout confirm modal ===== */
-
-.confirmOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-  /* above header */
-}
-
-.confirmModal {
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 20px 24px;
-  max-width: 360px;
-  width: 90%;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-}
-
-.confirmTitle {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.confirmText {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 18px;
-}
-
-.confirmActions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-/* yes / no buttons */
-.confirmYesBtn,
-.confirmNoBtn {
-  padding: 8px 14px;
-  font-size: 14px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-}
-
-/* primary (Yes) */
-.confirmYesBtn {
-  background: #000;
-  color: #fff;
-}
-
-.confirmYesBtn:hover {
-  opacity: 0.9;
-}
-
-/* secondary (No) */
-.confirmNoBtn {
-  background: #f3f3f3;
-  color: #333;
-}
-
-.confirmNoBtn:hover {
-  background: #e4e4e4;
 }
 
 /* ===== Logout modal (auth style) ===== */

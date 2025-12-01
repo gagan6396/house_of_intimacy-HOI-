@@ -40,7 +40,7 @@ export default function Footer() {
             <h5 className="mb-3">Quick links</h5>
             <ul className={`list-unstyled ${styles["footer-links"]}`}>
               <li><Link to="/about-us" style={{ color: linkColor }}>About Us</Link></li>
-              <li><Link to="/faqs" style={{ color: linkColor }}>FAQs</Link></li>
+              <li><Link to="/faq" style={{ color: linkColor }}>FAQs</Link></li>
               <li><Link to="/blogs" style={{ color: linkColor }}>Blogs</Link></li>
             </ul>
           </div>

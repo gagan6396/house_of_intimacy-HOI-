@@ -71,23 +71,34 @@ const NewArrival = () => {
   // ✅ get wishlist from context
   const { wishlistItems, toggleWishlist } = useContext(WishlistContext);
 
-  // ---------- SLIDER SETTINGS ----------
-  const settings = {
-    dots: false,
-    infinite: true,
-    speed: 800,
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    swipeToSlide: true,
-    autoplay: false, // ⛔ desktop autoplay on
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    responsive: [
-      { breakpoint: 1280, settings: { slidesToShow: 3 } },
-      { breakpoint: 992, settings: { slidesToShow: 2 } },
-      { breakpoint: 768, settings: { slidesToShow: 1.2 } },
-    ],
-  };
+ // ---------- SLIDER SETTINGS ----------
+const settings = {
+  dots: false,
+  infinite: true,
+  speed: 800,
+  slidesToShow: 4,
+  slidesToScroll: 1,
+  swipeToSlide: true,
+  autoplay: false, // ⛔ desktop autoplay on
+  nextArrow: <NextArrow />,
+  prevArrow: <PrevArrow />,
+  responsive: [
+    { breakpoint: 1280, settings: { slidesToShow: 3 } },
+    { breakpoint: 992, settings: { slidesToShow: 2 } },
+    // 👇 tablet: still fine to show 1.5 (optional)
+    { breakpoint: 768, settings: { slidesToShow: 1.5 } },
+    // 👇 small phones (≤ 480px): show EXACTLY 1 card
+    {
+      breakpoint: 480,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        centerMode: false,
+      },
+    },
+  ],
+};
+
 
   // ---------- FETCH PRODUCTS ----------
   useEffect(() => {
