@@ -81,6 +81,20 @@
   margin-bottom: 8px;
 }
 
+/* When we need label + multi-line value (address) */
+.infoRowColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.addressText {
+  font-size: 13px;
+  color: #444444;
+  line-height: 1.5;
+}
+
 .label {
   font-size: 13px;
   color: #777777;
@@ -115,10 +129,126 @@
   line-height: 1.5;
 }
 
+/* LOADING / ERROR TEXT */
+.loadingText {
+  font-size: 14px;
+  color: #555555;
+}
+
+.errorText {
+  font-size: 14px;
+  color: #d63333;
+  margin-bottom: 12px;
+}
+
+/* ITEMS CARD */
+.itemsCard {
+  margin-top: 16px;
+  padding: 16px 14px 10px;
+  border-radius: 16px;
+  border: 1px solid #f0e0ea;
+  background: #fffefe;
+  text-align: left;
+}
+
+.itemsTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222222;
+  margin-bottom: 10px;
+}
+
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 260px; /* scroll if too many items */
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.emptyItemsText {
+  font-size: 13px;
+  color: #777777;
+}
+
+/* ITEM ROW: IMAGE LEFT, DETAILS RIGHT */
+.itemRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.itemRow:last-child {
+  border-bottom: none;
+}
+
+/* LEFT SIDE IMAGE */
+.itemImgWrapper {
+  width: 80px;
+  height: 110px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #f6f6f6;
+  flex-shrink: 0;
+}
+
+.itemImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* RIGHT SIDE DETAILS */
+.itemInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.itemBrand {
+  font-size: 12px;
+  font-weight: 600;
+  color: #777777;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.itemName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222222;
+}
+
+.itemMeta {
+  font-size: 12px;
+  color: #555555;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.itemPriceRow {
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.itemLineTotal {
+  color: #d63384;
+  font-weight: 700;
+}
+
 /* BUTTONS */
 .buttonsRow {
   display: flex;
   gap: 12px;
+  margin-top: 18px;
   margin-bottom: 12px;
   flex-wrap: wrap;
   justify-content: center;
@@ -172,6 +302,25 @@
   text-decoration: underline;
   cursor: pointer;
 }
+.colorMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.colorSwatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  display: inline-block;
+}
+
+.colorLabel {
+  font-size: 12px;
+  color: #444;
+}
+
 
 /* RESPONSIVE */
 @media (max-width: 480px) {
@@ -189,5 +338,48 @@
 
   .infoBox {
     padding: 14px 12px 10px;
+  }
+
+  .itemImgWrapper {
+    width: 70px;
+    height: 95px;
+  }
+
+  .itemRow {
+    gap: 10px;
+  }
+}
+/* Make the whole card a bit wider so 2 columns fit */
+.container {
+  width: 100%;
+  max-width: 900px;   /* was 520px */
+}
+
+/* Row that holds left (items) + right (info) */
+.contentRow {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-top: 16px;
+}
+
+/* Left = items list, Right = order summary */
+.leftCol {
+  flex: 1.4;
+}
+
+.rightCol {
+  flex: 1;
+}
+
+/* On small screens: stack vertically */
+@media (max-width: 768px) {
+  .contentRow {
+    flex-direction: column;
+  }
+
+  .leftCol,
+  .rightCol {
+    width: 100%;
   }
 }

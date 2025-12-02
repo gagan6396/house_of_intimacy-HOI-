@@ -98,7 +98,7 @@ export default function Main() {
 <Route path="/refund-policy" element={<RefundPolicy />} />
 <Route path="/account/orders" element={<MyOrders />} />
 <Route path="/account/orders/:orderId" element={<OrderDetails />} />
-<Route path="/order-success" element={<OrderSuccess />} />
+<Route path="/order-success/:orderId" element={<OrderSuccess />} />
 
 
                 {/* 🔐 ADMIN LAYOUT – now uses AdminRoute */}
