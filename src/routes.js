@@ -18,6 +18,7 @@ import EditProducts from 'pages/management/products/[id]';
 // New Admin Order Pages
 import AdminOrdersList from 'views/admin/orders/AdminOrdersList';
 import AdminOrderDetail from 'views/admin/orders/AdminOrdersList';
+import AdminPlacedOrdersList from 'views/admin/orders/AdminPlacedOrdersList';
 
 const routes = [
   {
@@ -73,6 +74,14 @@ const routes = [
     path: '/orders',
     icon: <FaClipboardList />,
     component: <AdminOrdersList />,
+    showInSidebar: true, // sidebar me dikhana hai
+  },
+  {
+    name: 'placed order',
+    layout: '/admin',
+    path: '/placed-orders',
+    icon: <FaClipboardList />,
+    component: <AdminPlacedOrdersList />,
     showInSidebar: true, // sidebar me dikhana hai
   },
   {
