@@ -47,6 +47,7 @@ import { FAQ } from 'components/FAQ';
 import RefundPolicy from 'pages/RefundPolicy/RefundPolicy';
 import MyOrders from 'pages/account/MyOrders';
 import OrderDetails from 'pages/account/OrderDetails';
+import OrderSuccess from 'pages/Checkout/OrderSuccess';
 
 export default function Main() {
   const [currentTheme, setCurrentTheme] = useState(initialTheme);
@@ -97,6 +98,7 @@ export default function Main() {
 <Route path="/refund-policy" element={<RefundPolicy />} />
 <Route path="/account/orders" element={<MyOrders />} />
 <Route path="/account/orders/:orderId" element={<OrderDetails />} />
+<Route path="/order-success" element={<OrderSuccess />} />
 
 
                 {/* 🔐 ADMIN LAYOUT – now uses AdminRoute */}
