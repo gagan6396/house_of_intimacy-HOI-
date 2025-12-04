@@ -48,6 +48,7 @@ import RefundPolicy from 'pages/RefundPolicy/RefundPolicy';
 import MyOrders from 'pages/account/MyOrders';
 import OrderDetails from 'pages/account/OrderDetails';
 import OrderSuccess from 'pages/Checkout/OrderSuccess';
+import ScrollToTop from 'components/ScrollToTop';
 
 export default function Main() {
   const [currentTheme, setCurrentTheme] = useState(initialTheme);
@@ -76,7 +77,7 @@ export default function Main() {
             }}
           >
             {!hideHeader && <Header />}
-
+<ScrollToTop/>
             <div style={{ flex: 1 }}>
               <Routes>
                 <Route path="/product/:id" element={<ProductDetail />} />
