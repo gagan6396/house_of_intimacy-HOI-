@@ -65,13 +65,11 @@ function ProductDetail() {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: 'auto', // instant jump to top
+      behavior: 'auto',
     });
   }, []);
 
   const { wishlistItems, toggleWishlist } = useContext(WishlistContext);
-
-  // ✅ from CartContext (note: we use product object + options)
   const { addToCart, cartItems } = useContext(CartContext);
 
   const [product, setProduct] = useState(null);
@@ -86,6 +84,7 @@ function ProductDetail() {
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [sizeError, setSizeError] = useState(false);
+  const [colorError, setColorError] = useState(false); // ⭐ NEW
 
   const [wishlist, setWishlist] = useState(false);
 
@@ -106,6 +105,7 @@ function ProductDetail() {
         setSelectedColor(null);
         setSelectedSize(null);
         setSizeError(false);
+        setColorError(false); // ⭐ reset on product change
         setPin('');
         setPinMessage('');
         setActionMessage('');
@@ -189,6 +189,11 @@ function ProductDetail() {
     : [];
   const imageList = [product.mainImage, ...gallery].filter(Boolean);
 
+  // helpful flags
+  const hasColors =
+    Array.isArray(product.colors) && product.colors.length > 0;
+  const hasSizes = Array.isArray(product.sizes) && product.sizes.length > 0;
+
   // ---------- HANDLERS ----------
   const handleSizeSelect = (size) => {
     setSelectedSize(size);
@@ -197,6 +202,7 @@ function ProductDetail() {
 
   const handleColorSelect = (color) => {
     setSelectedColor(color);
+    setColorError(false); // ⭐ clear color error on select
   };
 
   const handleWishlistToggle = () => {
@@ -232,7 +238,6 @@ function ProductDetail() {
     setPinMessage(`Good news! Delivery is available to ${clean}.`);
   };
 
-  // ⭐ CHANGED: open modal instead of new tab
   const handleSizeGuide = () => {
     setIsSizeGuideOpen(true);
   };
@@ -253,9 +258,23 @@ function ProductDetail() {
     setQty((prev) => (prev > 1 ? prev - 1 : prev));
   };
 
-  // ✅ MAIN: Add to Bag – only once per product+size+color
+  // ✅ MAIN: Add to Bag – size & color (if available) are mandatory
   const handleAddToBag = () => {
-    if (!selectedSize) {
+    setSizeError(false);
+    setColorError(false);
+
+    if (hasColors && !selectedColor) {
+      setColorError(true);
+      setActionMessage('Please select a color to continue');
+      setTimeout(() => setActionMessage(''), 2000);
+      const el = document.getElementById('color-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
+    if (hasSizes && !selectedSize) {
       setSizeError(true);
       setActionMessage('Please select a size to continue');
       setTimeout(() => setActionMessage(''), 2000);
@@ -297,47 +316,59 @@ function ProductDetail() {
   };
 
   const handleBuyNow = () => {
-  if (!selectedSize) {
-    setSizeError(true);
-    setActionMessage('Please select a size to continue');
-    setTimeout(() => setActionMessage(''), 2000);
+    setSizeError(false);
+    setColorError(false);
 
-    const el = document.getElementById('size-section');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (hasColors && !selectedColor) {
+      setColorError(true);
+      setActionMessage('Please select a color to continue');
+      setTimeout(() => setActionMessage(''), 2000);
+      const el = document.getElementById('color-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
     }
-    return;
-  }
 
-  // 1) Ensure this product is in cart with current options
-  const alreadyInCart = cartItems.some(
-    (item) =>
-      item.productId === product._id &&
-      item.size === selectedSize &&
-      item.color === selectedColor,
-  );
+    if (hasSizes && !selectedSize) {
+      setSizeError(true);
+      setActionMessage('Please select a size to continue');
+      setTimeout(() => setActionMessage(''), 2000);
+      const el = document.getElementById('size-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
 
-  if (!alreadyInCart) {
-    addToCart(product, {
-      size: selectedSize,
-      color: selectedColor,
-      quantity: qty,
-    });
+    // 1) Ensure this product is in cart with current options
+    const alreadyInCart = cartItems.some(
+      (item) =>
+        item.productId === product._id &&
+        item.size === selectedSize &&
+        item.color === selectedColor,
+    );
 
-    console.log('BUY NOW (added to cart) 👉', {
-      productId: product._id,
-      size: selectedSize,
-      color: selectedColor,
-      qty,
-    });
-  } else {
-    console.log('BUY NOW 👉 item already in bag, going to checkout');
-  }
+    if (!alreadyInCart) {
+      addToCart(product, {
+        size: selectedSize,
+        color: selectedColor,
+        quantity: qty,
+      });
 
-  // 2) Go to checkout page
-  navigate('/checkout');
-};
+      console.log('BUY NOW (added to cart) 👉', {
+        productId: product._id,
+        size: selectedSize,
+        color: selectedColor,
+        qty,
+      });
+    } else {
+      console.log('BUY NOW 👉 item already in bag, going to checkout');
+    }
 
+    // 2) Go to checkout page
+    navigate('/checkout');
+  };
 
   const metaFields = [
     { label: 'Fabric', value: product.fabric },
@@ -508,17 +539,25 @@ function ProductDetail() {
           </div>
 
           {/* COLORS */}
-          {Array.isArray(product.colors) && product.colors.length > 0 && (
-            <div className={styles.section}>
-              <div className={styles.sectionLabel}>
-                Color
-                {selectedColor && (
-                  <span className={styles.sectionSubLabel}>
-                    {' '}
-                    — {selectedColor}
-                  </span>
-                )}
+          {hasColors && (
+            <div className={styles.section} id="color-section">
+              <div className={styles.sectionLabelRow}>
+                <div>
+                  <span className={styles.sectionLabel}>Color</span>
+                  {selectedColor && (
+                    <span className={styles.sectionSubLabel}>
+                      {' '}
+                      — {selectedColor}
+                    </span>
+                  )}
+                  {colorError && (
+                    <span className={styles.sizeErrorText}>
+                      &nbsp;— Please select a color
+                    </span>
+                  )}
+                </div>
               </div>
+
               <div className={styles.colorDots}>
                 {product.colors.map((c, idx) => {
                   const colorValue = String(c).trim();
@@ -542,7 +581,7 @@ function ProductDetail() {
           )}
 
           {/* SIZES */}
-          {Array.isArray(product.sizes) && product.sizes.length > 0 && (
+          {hasSizes && (
             <div className={styles.section} id="size-section">
               <div className={styles.sectionLabelRow}>
                 <div>
@@ -553,7 +592,6 @@ function ProductDetail() {
                     </span>
                   )}
                 </div>
-                {/* button will still only show if sizeGuideUrl is present in DB */}
                 {product.sizeGuideUrl && (
                   <button
                     className={styles.sizeGuideBtn}
@@ -627,7 +665,10 @@ function ProductDetail() {
               <button
                 type="button"
                 className={`${styles.addToBag} ${
-                  !selectedSize ? styles.addToBagDisabled : ''
+                  (hasSizes && !selectedSize) ||
+                  (hasColors && !selectedColor)
+                    ? styles.addToBagDisabled
+                    : ''
                 }`}
                 onClick={handleAddToBag}
               >
@@ -876,7 +917,7 @@ function ProductDetail() {
         >
           <div
             className={styles.sizeGuideModal}
-            onClick={(e) => e.stopPropagation()} // prevent overlay close
+            onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"

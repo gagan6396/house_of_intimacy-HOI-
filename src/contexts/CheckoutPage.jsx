@@ -8,6 +8,7 @@ import React, {
 import { useNavigate } from 'react-router-dom';
 import { FiArrowLeft, FiLock, FiTrash2 } from 'react-icons/fi';
 import axios from 'axios';
+import { useToast } from '@chakra-ui/react';
 
 import { CartContext } from '../contexts/CartContext';
 import styles from '../assets/styles/checkout/CheckoutPage.module.css';
@@ -26,8 +27,12 @@ const getImageUrl = (url) => {
 // ✅ Token helper
 const getToken = () => localStorage.getItem('authToken');
 
+// small helper for duplicate check
+const normalize = (str) => (str || '').trim().toLowerCase();
+
 function CheckoutPage() {
   const navigate = useNavigate();
+  const toast = useToast();
   const { cartItems, clearCart, removeFromCart } = useContext(CartContext);
 
   // ---------- CONTACT STATE ----------
@@ -90,7 +95,12 @@ function CheckoutPage() {
             : addrRes.data.addresses || [];
 
           setAddresses(list);
-          if (list.length > 0) {
+
+          // try to select default first
+          const defaultAddr = list.find((a) => a.isDefault);
+          if (defaultAddr) {
+            setSelectedAddressId(defaultAddr._id);
+          } else if (list.length > 0) {
             setSelectedAddressId(list[0]._id);
           }
         } catch (addrErr) {
@@ -149,6 +159,30 @@ function CheckoutPage() {
       return;
     }
 
+    // 🔹 DUPLICATE CHECK (frontend)
+    const isDuplicate = addresses.some(
+      (a) =>
+        normalize(a.addressLine1) === normalize(addressLine1) &&
+        normalize(a.addressLine2) === normalize(addressLine2) &&
+        normalize(a.city) === normalize(city) &&
+        normalize(a.state) === normalize(state) &&
+        normalize(a.pincode) === normalize(pincode),
+    );
+
+    if (isDuplicate) {
+      const msg = 'This address is already saved in your account.';
+      setError(msg);
+      toast({
+        title: 'Duplicate address',
+        description: msg,
+        status: 'warning',
+        duration: 4000,
+        isClosable: true,
+        position: 'top',
+      });
+      return;
+    }
+
     const token = getToken();
     if (!token) {
       navigate('/login');
@@ -188,13 +222,108 @@ function CheckoutPage() {
       const last = updatedAddresses[updatedAddresses.length - 1];
       setSelectedAddressId(last?._id || null);
 
+      // ✅ clear form after successful save
+      setAddressLine1('');
+      setAddressLine2('');
+      setCity('');
+      setStateVal('');
+      setPincode('');
+      setLandmark('');
+      setAddressType('home');
+
       setSuccessMessage('Address saved successfully ✅');
+      toast({
+        title: 'Address saved',
+        description: 'Your new address has been added.',
+        status: 'success',
+        duration: 4000,
+        isClosable: true,
+        position: 'top',
+      });
     } catch (err) {
       console.error('Save address error:', err);
-      setError(
+      const msg =
         err.response?.data?.message ||
-          'Failed to save address. Please try again.',
+        'Failed to save address. Please try again.';
+      setError(msg);
+      toast({
+        title: 'Save failed',
+        description: msg,
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
+  // ---------- DELETE SAVED ADDRESS (BACKEND) ----------
+  const handleDeleteAddress = async (addressId, e) => {
+    // label click ko block karne ke liye
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+
+    setError('');
+    setSuccessMessage('');
+
+    const token = getToken();
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+    const headers = { Authorization: `Bearer ${token}` };
+
+    try {
+      const res = await axios.delete(
+        `${API_ROOT}/users/addresses/${addressId}`,
+
+        { headers },
       );
+
+      // backend returns updated addresses
+      const updated = Array.isArray(res.data)
+        ? res.data
+        : res.data.addresses || [];
+
+      setAddresses(updated);
+
+      // if deleted one was selected, pick default or first
+      if (selectedAddressId === addressId) {
+        const defaultAddr = updated.find((a) => a.isDefault);
+        if (defaultAddr) {
+          setSelectedAddressId(defaultAddr._id);
+        } else if (updated.length > 0) {
+          setSelectedAddressId(updated[0]._id);
+        } else {
+          setSelectedAddressId(null);
+        }
+      }
+
+      setSuccessMessage('Address deleted successfully ✅');
+      toast({
+        title: 'Address deleted',
+        description: 'The address has been removed from your account.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (err) {
+      console.error('Delete address error:', err);
+      const msg =
+        err.response?.data?.message ||
+        'Failed to delete address. Please try again.';
+      setError(msg);
+      toast({
+        title: 'Delete failed',
+        description: msg,
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+        position: 'top',
+      });
     }
   };
 
@@ -224,10 +353,23 @@ function CheckoutPage() {
         return;
       }
 
-      // CartContext me removeFromCart lineIndex expect kar raha hai
       removeFromCart(lineIndex);
+      toast({
+        title: 'Item removed',
+        status: 'info',
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      });
     } catch (err) {
       console.error('Delete item error:', err);
+      toast({
+        title: 'Failed to remove item',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
     }
   };
 
@@ -338,6 +480,15 @@ function CheckoutPage() {
         clearCart();
       }
 
+      toast({
+        title: 'Order placed',
+        description: 'Thank you for shopping with us!',
+        status: 'success',
+        duration: 4000,
+        isClosable: true,
+        position: 'top',
+      });
+
       if (createdOrder && createdOrder._id) {
         navigate(`/order-success/${createdOrder._id}`);
       } else {
@@ -345,10 +496,18 @@ function CheckoutPage() {
       }
     } catch (err) {
       console.error('Place order error:', err);
-      setError(
+      const msg =
         err.response?.data?.message ||
-          'Failed to place order. Please try again.',
-      );
+        'Failed to place order. Please try again.';
+      setError(msg);
+      toast({
+        title: 'Order failed',
+        description: msg,
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+        position: 'top',
+      });
     } finally {
       setPlacingOrder(false);
     }
@@ -470,16 +629,36 @@ function CheckoutPage() {
                         onChange={() => setSelectedAddressId(addr._id)}
                       />
                       <div className={styles.addressContent}>
-                        <div className={styles.addressLabelRow}>
-                          <span className={styles.addressLabel}>
-                            {addr.addressType
-                              ? addr.addressType.toUpperCase()
-                              : 'HOME'}
-                          </span>
-                          <span className={styles.addressName}>
-                            {addr.name} • {addr.phone}
-                          </span>
+                        <div className={styles.addressHeaderRow}>
+                          <div className={styles.addressLabelRow}>
+                            <div className={styles.addressTypePills}>
+                              <span className={styles.addressTypeChip}>
+                                {addr.addressType
+                                  ? addr.addressType.toUpperCase()
+                                  : 'HOME'}
+                              </span>
+                              {addr.isDefault && (
+                                <span className={styles.defaultBadge}>
+                                  Default
+                                </span>
+                              )}
+                            </div>
+
+                            <span className={styles.addressName}>
+                              {addr.name} • {addr.phone}
+                            </span>
+                          </div>
+
+                          {/* DELETE BUTTON */}
+                          <button
+                            type="button"
+                            className={styles.addressDeleteBtn}
+                            onClick={(e) => handleDeleteAddress(addr._id, e)}
+                          >
+                            <FiTrash2 className={styles.addressDeleteIcon} />
+                          </button>
                         </div>
+
                         <div className={styles.addressText}>
                           {addr.addressLine1}
                           {addr.addressLine2 ? `, ${addr.addressLine2}` : ''}
@@ -682,9 +861,7 @@ function CheckoutPage() {
                 return (
                   <div key={idx} className={styles.itemRow}>
                     <div className={styles.itemImgWrapper}>
-                      {img && (
-                        <img src={getImageUrl(img)} alt={itemName} />
-                      )}
+                      {img && <img src={getImageUrl(img)} alt={itemName} />}
                     </div>
                     <div className={styles.itemInfo}>
                       {itemBrand && (
