@@ -77,30 +77,34 @@ export default function Main() {
             }}
           >
             {!hideHeader && <Header />}
-<ScrollToTop/>
+            <ScrollToTop />
             <div style={{ flex: 1 }}>
               <Routes>
                 <Route path="/product/:id" element={<ProductDetail />} />
-               <Route
-  path="/checkout"
-  element={
-    <ProtectedRoute>
-      <CheckoutPage />
-    </ProtectedRoute>
-  }
-/>
-
+                <Route
+                  path="/checkout"
+                  element={
+                    <ProtectedRoute>
+                      <CheckoutPage />
+                    </ProtectedRoute>
+                  }
+                />
 
                 {/* Auth layout (register, forgot, etc) */}
                 <Route path="auth/*" element={<AuthLayout />} />
-                  <Route path="/wishlist" element={<WishlistPage />} />
-<Route path="/privacy-policy" element={<PrivacyPolicy />} />
-<Route path="/faq" element={<FAQ />} />
-<Route path="/refund-policy" element={<RefundPolicy />} />
-<Route path="/account/orders" element={<MyOrders />} />
-<Route path="/account/orders/:orderId" element={<OrderDetails />} />
-<Route path="/order-success/:orderId" element={<OrderSuccess />} />
-
+                <Route path="/wishlist" element={<WishlistPage />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/refund-policy" element={<RefundPolicy />} />
+                <Route path="/account/orders" element={<MyOrders />} />
+                <Route
+                  path="/account/orders/:orderId"
+                  element={<OrderDetails />}
+                />
+                <Route
+                  path="/order-success/:orderId"
+                  element={<OrderSuccess />}
+                />
 
                 {/* 🔐 ADMIN LAYOUT – now uses AdminRoute */}
                 <Route
@@ -171,10 +175,13 @@ export default function Main() {
                 {/* HOME PAGE (public) */}
                 <Route path="/" element={<Home />} />
                 <Route path="/about-us" element={<Aboutus />} />
-               <Route path='/ContactUs' element={<ContactUs/>}/>
-                 <Route path="/products" element={<AllProducts />} />
+                <Route path="/ContactUs" element={<ContactUs />} />
+                <Route path="/products" element={<AllProducts />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/reset-password/:token" element={<ResetPassword />} />
+                <Route
+                  path="/reset-password/:token"
+                  element={<ResetPassword />}
+                />
               </Routes>
             </div>
 
@@ -187,4 +194,3 @@ export default function Main() {
     </ChakraProvider>
   );
 }
-
