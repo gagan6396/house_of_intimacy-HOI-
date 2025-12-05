@@ -380,9 +380,10 @@ function ProductDetail() {
     { label: 'Closure', value: product.closureType },
     { label: 'Pattern', value: product.pattern },
     { label: 'Occasion', value: product.occasion },
-    { label: 'Care', value: product.care },
+    { label: 'Care', value: product.careInstructions }, // ✅ fixed
   ].filter((item) => !!item.value);
 
+  // ⭐ Features from backend or fallback
   const featureList =
     Array.isArray(product.features) && product.features.length > 0
       ? product.features
@@ -392,6 +393,17 @@ function ProductDetail() {
           'Satin trims for a luxurious elegant look',
           'Decorative gold trim detailing',
           'Extended side lace detailing for a sensual coverage',
+        ];
+
+  // ⭐ Shipping & Returns from backend or fallback
+  const shippingList =
+    Array.isArray(product.shippingAndReturns) &&
+    product.shippingAndReturns.length > 0
+      ? product.shippingAndReturns
+      : [
+          'Orders are usually dispatched within 24 hours.',
+          'Delivery time varies between 2–7 working days depending on your pincode.',
+          'Easy 7-day return policy from the date of delivery. Products must be unused, unwashed and with all tags attached.',
         ];
 
   return (
@@ -784,14 +796,9 @@ function ProductDetail() {
             </button>
             {activeAccordion === 'shipping' && (
               <div className={styles.accordionBody}>
-                <p>
-                  Orders are usually dispatched within 24 hours. Delivery time
-                  varies between 2–7 working days depending on your pincode.
-                </p>
-                <p>
-                  Easy 7-day return policy from the date of delivery. Products
-                  must be unused, unwashed and with all tags attached.
-                </p>
+                {shippingList.map((point, idx) => (
+                  <p key={idx}>{point}</p>
+                ))}
               </div>
             )}
           </div>
