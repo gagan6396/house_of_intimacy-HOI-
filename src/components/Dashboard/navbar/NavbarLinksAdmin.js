@@ -5,14 +5,12 @@ import {
   Flex,
   HStack,
   IconButton,
-  Icon,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Text,
   useColorModeValue,
-  useColorMode,
   useDisclosure,
   Drawer,
   DrawerOverlay,
@@ -31,7 +29,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 // Icons
 import { MdNotificationsNone } from "react-icons/md";
-import { IoMdMoon, IoMdSunny } from "react-icons/io";
 import { FiMenu } from "react-icons/fi";
 
 // Routes
@@ -39,12 +36,10 @@ import routes from "routes";
 
 export default function HeaderLinks(props) {
   const { secondary } = props;
-  const { colorMode, toggleColorMode } = useColorMode();
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // Chakra Color Mode
-  const navbarIcon = useColorModeValue("gray.400", "white");
   const menuBg = useColorModeValue("white", "navy.800");
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("#E6ECFA", "rgba(135, 140, 189, 0.3)");

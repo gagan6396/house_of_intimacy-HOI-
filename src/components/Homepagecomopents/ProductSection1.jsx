@@ -2,6 +2,7 @@ import React from 'react';
 import img5 from '../../assets/images/5.jpg';
 import img17 from '../../assets/images/17.jpg';
 import img19 from '../../assets/images/19.jpg';
+import { Link } from 'react-router-dom';
 
 const sampleData = {
    New: [
@@ -488,10 +489,10 @@ const sampleData = {
                 <div className="title-wrapper">
                   <h3 className="column-title">{section.name}</h3>
                   <div className="view-all-wrapper">
-                    <a href="#" className="view-all-link">
+                    <Link to="#" className="view-all-link">
                       View All
                       <span className="arrow-icon">{section.arrow}</span>
-                    </a>
+                    </Link>
                   </div>
                 </div>
 

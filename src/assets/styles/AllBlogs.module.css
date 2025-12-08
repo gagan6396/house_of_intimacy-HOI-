@@ -1,0 +1,434 @@
+/* ===============================
+   Page Wrapper + Background
+   =============================== */
+
+.pageWrapper {
+  padding: 80px 0 70px;
+  background: radial-gradient(
+      circle at top left,
+      rgba(214, 51, 132, 0.18),
+      transparent 55%
+    ),
+    linear-gradient(135deg, #fff5fb 0%, #ffffff 40%, #ffeaf5 100%);
+}
+
+/* ===============================
+   Hero / Intro
+   =============================== */
+
+.hero {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 32px;
+}
+
+.heroBadge {
+  display: inline-block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(214, 51, 132, 0.08);
+  color: #c2185b;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.heroTitle {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 10px;
+}
+
+.heroSubtitle {
+  font-size: 1.02rem;
+  color: #555555;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+/* ===============================
+   Stats Row
+   =============================== */
+
+.statsRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 18px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.statItem {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  padding: 6px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(214, 51, 132, 0.12);
+}
+
+.statLabel {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #777777;
+}
+
+.statValue {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111111;
+}
+
+/* Center text (loading / error / no blogs) */
+
+.centerBox {
+  text-align: center;
+  padding: 40px 10px;
+  color: #555;
+}
+
+/* ===============================
+   Card Link Wrapper (whole card clickable)
+   =============================== */
+
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+}
+
+/* Improve keyboard focus for accessibility */
+.cardLink:focus-visible .blogCard {
+  outline: 2px solid #d63384;
+  outline-offset: 3px;
+}
+
+/* ===============================
+   Blog Card
+   =============================== */
+
+.blogCard {
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 48px rgba(214, 51, 132, 0.14);
+  border: 1px solid rgba(214, 51, 132, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform 0.25s ease, box-shadow 0.25s ease,
+    border-color 0.25s ease;
+  position: relative;
+}
+
+.blogCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at top right,
+    rgba(214, 51, 132, 0.12),
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.blogCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 26px 60px rgba(214, 51, 132, 0.2);
+  border-color: rgba(214, 51, 132, 0.4);
+}
+
+.blogCard:hover::before {
+  opacity: 1;
+}
+
+/* Card Image */
+
+.cardImageWrapper {
+  position: relative;
+  overflow: hidden;
+  max-height: 220px;
+}
+
+.cardImage {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.02);
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+/* Subtle dark overlay with "View details →" text */
+
+.cardImageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.0),
+    rgba(0, 0, 0, 0.45)
+  );
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 10px 14px;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.cardImageOverlay span {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+.blogCard:hover .cardImage {
+  transform: scale(1.06);
+  filter: saturate(1.08);
+}
+
+.blogCard:hover .cardImageOverlay {
+  opacity: 1;
+}
+
+/* Date Badge on Image */
+
+.dateBadge {
+  position: absolute;
+  bottom: 12px;
+  left: 14px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(17, 17, 17, 0.85);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 46px;
+  z-index: 2;
+}
+
+.dateDay {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.dateMonth {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Card Body */
+
+.cardBody {
+  padding: 18px 18px 16px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Top Meta (category + time) */
+
+.cardTopMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+
+.categoryChip {
+  font-size: 0.78rem;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(214, 51, 132, 0.12);
+  color: #c2185b;
+  font-weight: 500;
+}
+
+.timeMeta {
+  font-size: 0.8rem;
+  color: #090909;
+  font-weight: 600;
+}
+
+/* Card Title */
+
+.cardTitle {
+  font-size: 1.07rem;
+  font-weight: 650;
+  color: #111111;
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+/* Description */
+
+.cardDescription {
+  font-size: 0.95rem;
+  color: #444444;
+  margin-bottom: 14px;
+  line-height: 1.7;
+}
+
+/* Card Footer */
+
+.cardFooter {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.readMoreBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #d63384, #ff8ea8);
+  color: #ffffff;
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 10px 20px rgba(214, 51, 132, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.readMoreBtn span {
+  transform: translateX(0);
+  transition: transform 0.2s ease;
+}
+
+.blogCard:hover .readMoreBtn {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px rgba(214, 51, 132, 0.55);
+}
+
+.blogCard:hover .readMoreBtn span {
+  transform: translateX(3px);
+}
+
+/* ===============================
+   Pagination
+   =============================== */
+
+.paginationWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.pageNavBtn {
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(214, 51, 132, 0.4);
+  background: #ffffff;
+  font-size: 0.87rem;
+  font-weight: 500;
+  color: #b71c64;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease,
+    box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.pageNavBtn:hover:not(:disabled) {
+  background-color: #ffe6f2;
+  box-shadow: 0 8px 18px rgba(214, 51, 132, 0.3);
+  transform: translateY(-1px);
+}
+
+.pageNavBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pageNumbers {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pageNumberBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: none;
+  background: #ffffff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+  color: #444444;
+  transition: background-color 0.2s ease, color 0.2s ease,
+    box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.pageNumberBtn:hover {
+  background: #ffe6f2;
+  color: #b71c64;
+  transform: translateY(-1px);
+}
+
+.activePage {
+  background: linear-gradient(135deg, #d63384, #ff8ea8);
+  color: #ffffff !important;
+  box-shadow: 0 10px 20px rgba(214, 51, 132, 0.4);
+}
+
+/* ===============================
+   Responsive
+   =============================== */
+
+@media (max-width: 991px) {
+  .pageWrapper {
+    padding: 60px 0 55px;
+  }
+
+  .heroTitle {
+    font-size: 28px;
+  }
+
+  .cardImage {
+    height: 210px;
+  }
+}
+
+@media (max-width: 576px) {
+  .pageWrapper {
+    padding: 40px 0 45px;
+  }
+
+  .heroTitle {
+    font-size: 24px;
+  }
+
+  .heroSubtitle {
+    font-size: 0.95rem;
+  }
+
+  .statsRow {
+    justify-content: center;
+  }
+}

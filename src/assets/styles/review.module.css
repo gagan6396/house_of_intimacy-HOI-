@@ -1,0 +1,101 @@
+.HeadHomes{
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 30px;
+  font-weight: 600;
+  color:black ;
+  margin-bottom: 30px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  border-bottom: 3px solid #d63384;
+    /* margin: 0px 728px 25px; */
+  text-transform: uppercase;
+
+}
+.HeadHome{
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 30px;
+  font-weight: 600;
+  color:black ;
+  margin-bottom: 30px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  border-bottom: 3px solid #d63384;
+    margin: 0px 728px 25px;
+  text-transform: uppercase;
+
+}
+.ParaHome{
+ font-family: 'Lato', 'Helvetica Neue', sans-serif;
+  font-size: 18px;
+  line-height: 1.9;
+  color: black;
+  margin-bottom: 20px;
+  max-width: 850px;
+  /* margin-left: auto; */
+  margin-right: auto;
+}
+.homePadding{
+  padding: 60px 40px;
+  background-color: #ffeeec;
+  background-image: url('../images/back1.png');
+}
+.HomePadding{
+  padding: 60px 40px;
+  background-color: #ffffff;
+  /* background-image: url('../images/back.png'); */
+}
+.HomeImg{
+  border: 3px solid #d63384;
+}
+
+/**************Review******************* */
+.reviewcard {
+  /* max-width: 500px; */
+  height: 250px;
+  margin: auto;
+  padding: 40px 25px;
+  background: #fff;
+  border-radius: 10px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  font-family: "Poppins", sans-serif;
+}
+
+/* LEFT quote */
+.quoteleft {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 28px;
+  color: #d4005e;
+  font-weight: bold;
+}
+
+/* RIGHT quote */
+.quoteright {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 28px;
+  color: #d4005e;
+  font-weight: bold;
+}
+
+.reviewtext {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.author {
+  font-weight: 600;
+  color: #000;
+}
+
+/************UNDERLINE************ */
+/* .UnderHrLine{
+    border-bottom: 3px solid #d63384;
+    margin: 0px 728px;
+} */

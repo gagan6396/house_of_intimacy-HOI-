@@ -1,12 +1,18 @@
-import React from 'react';
-import Style from '../../assets/styles/InstaReels.module.css';
-import { Link } from 'react-router-dom'; 
+// src/components/Home/BlogCards.jsx
+import React, { useEffect, useState } from "react";
+import Style from "../../assets/styles/blogscard.module.css";
+import { Link } from "react-router-dom";
+import axios from "axios";
+
+const baseUrl = process.env.REACT_APP_APIURL || "http://localhost:8000/v1";
+const apiRoot = baseUrl.replace(/\/v1$/, "");
 
 const BlogCard = ({ image, heading, link }) => {
   return (
     <div className={Style.blogcard}>
       <div className={Style.blogcardimage}>
         <img src={image} alt={heading} />
+        
       </div>
       <div className={Style.blogcardcontent}>
         <h3 className={Style.blogcardheading}>{heading}</h3>
@@ -19,47 +25,82 @@ const BlogCard = ({ image, heading, link }) => {
 };
 
 export default function BlogCards() {
-  const blogs = [
-    {
-      id: 1,
-      image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80',
-      heading: 'How to Choose Innerwear Based on Your Daily Lifestyle',
-      link: '/BlogDetails'
-    },
-    {
-      id: 2,
-      image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&q=80',
-      heading: 'How to Care for Your Intimate Apparel',
-      link: '/BlogDetails'
-    },
-    {
-      id: 3,
-      image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80',
-      heading: 'Latest Fashion Trends in Nightwear',
-      link: '/BlogDetails'
-    },
-    {
-      id: 4,
-      image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80',
-      heading: 'Comfort Meets Style: Best Everyday Wear',
-      link: '/BlogDetails'
-    }
-  ];
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        // GET /v1/myblogs/allblogs
+        const res = await axios.get(`${baseUrl}/myblogs/allblogs`);
+
+        const payload = res.data || {};
+        const list = payload.blogs || [];
+
+        // 1) only published blogs
+        const published = list.filter((b) => b.status === "published");
+
+        // 2) sort by createdAt (latest first)
+        const sorted = [...published].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
+        // 3) show latest 4
+        setBlogs(sorted.slice(0, 4));
+      } catch (err) {
+        console.error("Error fetching blogs", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  if (loading) {
+    return <p className="text-center py-3">Loading blogs...</p>;
+  }
+
+  if (blogs.length === 0) {
+    return <p className="text-center py-3">No blogs found.</p>;
+  }
 
   return (
     <div className={Style.blogcardscontainer}>
-      <div className="row">
-        {blogs.map(blog => (
-          <div className="col-md-3 col-6 col-lg-3" key={blog.id}>
-            <BlogCard
-              image={blog.image}
-              heading={blog.heading}
-              link={blog.link}
-            />
-          </div>
-        ))}
+      {/* Section heading */}
+      <div className={Style.blogSectionHeader}>
+        <h2 className={Style.blogSectionTitle}>From our HOI Blog</h2>
+        <p className={Style.blogSectionSubtitle}>
+          Quick reads on comfort, styling, and everyday lingerie care — curated
+          by the House of Intimacy team.
+        </p>
+      </div>
+
+      <div className="row g-4">
+        {blogs.map((blog) => {
+          const blogImage = blog.featureImage
+            ? `${apiRoot}${blog.featureImage}`
+            : "https://via.placeholder.com/400x300?text=No+Image";
+
+          return (
+            <div className="col-md-6 col-lg-3 col-12" key={blog._id}>
+              <BlogCard
+                image={blogImage}
+                heading={blog.mainHeading}
+                // ✅ Read more will open BlogDetails by slug
+                link={`/blog/${blog.slug}`}
+              />
+            </div>
+          );
+        })}
+      </div>
+
+      {/* VIEW MORE BUTTON CENTERED */}
+      <div className={Style.blogViewMoreWrapper}>
+        <Link to="/blogs" className={Style.blogcardbutton1}>
+          View all blogs
+        </Link>
       </div>
     </div>
   );
 }
-

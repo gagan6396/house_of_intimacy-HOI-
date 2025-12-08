@@ -35,6 +35,7 @@ export default function Footer() {
             <h5 className={styles.heading}>Quick Links</h5>
             <ul className={styles.list}>
               <li><Link to="/about-us">About Us</Link></li>
+               <li><Link to="/Blog">Blogs</Link></li>
               <li><Link to="/FAQ">FAQs</Link></li>
               <li><Link to="/terms">Terms and Condition</Link></li>
               <li><Link to="/privacy-policy">Privacy and Policy</Link></li>

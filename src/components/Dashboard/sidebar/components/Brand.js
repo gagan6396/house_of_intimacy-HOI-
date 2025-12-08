@@ -7,7 +7,6 @@ import HorizonLogo from "../../../../assets/images/House_of_intimacy_logo.webp";
 import { HSeparator } from "../../../../components/Dashboard/separator/Separator";
 
 export function SidebarBrand() {
-  const logoColor = useColorModeValue("navy.700", "white");
   const bgColor = useColorModeValue("white", "navy.800");
 
   return (

@@ -19,7 +19,9 @@ import EditProducts from 'pages/management/products/[id]';
 import AdminOrdersList from 'views/admin/orders/AdminOrdersList';
 import AdminOrderDetail from 'views/admin/orders/AdminOrdersList';
 import AdminPlacedOrdersList from 'views/admin/orders/AdminPlacedOrdersList';
-import { AllBlogs } from 'pages/management/Blogs';
+import AddBlog from 'pages/management/Blogs/add-new';
+import AdminBlogsList from 'pages/management/Blogs';
+import EditBlog from 'pages/management/Blogs/[id]';
 
 const routes = [
   {
@@ -97,8 +99,22 @@ const routes = [
     layout: '/admin',
     path: '/Blogs',
     icon: <FaClipboardList />,
-    component: <AllBlogs />,
+    component: <AdminBlogsList />,
     showInSidebar: true, // sidebar me dikhana hai
+  },
+  {
+    name: 'Add Blogs',
+    layout: '/admin',
+    path: '/Blogs/add-new',
+    component: <AddBlog />,
+    showInSidebar: false,
+  },
+    {
+    name: 'Edit Blogs',
+    layout: '/admin',
+    path: '/Blogs/:id',
+    component: <EditBlog />,
+    showInSidebar: false,
   },
 ];
 

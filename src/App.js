@@ -50,6 +50,7 @@ import OrderDetails from 'pages/account/OrderDetails';
 import OrderSuccess from 'pages/Checkout/OrderSuccess';
 import ScrollToTop from 'components/ScrollToTop';
 import { BlogDetails } from 'components/BlogDetails';
+import { AllBlogs } from 'components/blogs/AllBlogs';
 
 export default function Main() {
   const [currentTheme, setCurrentTheme] = useState(initialTheme);
@@ -106,7 +107,9 @@ export default function Main() {
                   path="/order-success/:orderId"
                   element={<OrderSuccess />}
                 />
-                <Route path="/BlogDetails" element={<BlogDetails/>} />
+                <Route path="/Blog" element={<AllBlogs/>} /> 
+                <Route path="/BlogDetails" element={<BlogDetails/>} />    
+        <Route path="/blog/:slug" element={<BlogDetails />} />
 
                 {/* 🔐 ADMIN LAYOUT – now uses AdminRoute */}
                 <Route

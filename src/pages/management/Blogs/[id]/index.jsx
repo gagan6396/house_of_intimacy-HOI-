@@ -1,5 +1,5 @@
-// src/pages/management/blogs/AddBlog.jsx
-import React, { useState } from "react";
+// src/pages/management/blogs/EditBlog.jsx
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -9,7 +9,6 @@ import {
   Input,
   Heading,
   Text,
-  useColorModeValue,
   Divider,
   Badge,
   Image,
@@ -22,6 +21,8 @@ import {
   TagLabel,
   Icon,
   HStack,
+  Spinner,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useForm, Controller } from "react-hook-form";
 
@@ -30,7 +31,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   FiChevronLeft,
   FiSave,
@@ -40,17 +41,19 @@ import {
 } from "react-icons/fi";
 
 const baseUrl = process.env.REACT_APP_APIURL || "http://localhost:8000/v1";
+const apiRoot = baseUrl.replace(/\/v1$/, "");
 
-const AddBlog = () => {
+const EditBlog = () => {
   const {
     register,
     handleSubmit,
     watch,
     reset,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
 
+  const { id } = useParams(); // /admin/blogs/:id
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -60,15 +63,15 @@ const AddBlog = () => {
   const subtleText = useColorModeValue("gray.500", "gray.400");
 
   const [featurePreview, setFeaturePreview] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const mainHeadingWatch = watch("mainHeading") || "Blog main heading";
   const slugWatch = watch("slug") || "";
   const introWatch = watch("introParagraph") || "";
   const conclusionWatch = watch("conclusion") || "";
 
-  const featureImageRegister = register("featureImage", {
-    required: "Feature image is required",
-  });
+  // For EDIT, featureImage is OPTIONAL
+  const featureImageRegister = register("featureImage");
 
   const editorConfig = {
     toolbar: [
@@ -86,6 +89,83 @@ const AddBlog = () => {
       "redo",
     ],
   };
+
+  // 🔹 Fetch existing blog data on mount
+  useEffect(() => {
+    const fetchBlog = async () => {
+      try {
+        const token =
+          localStorage.getItem("authToken") ||
+          sessionStorage.getItem("authToken");
+
+        if (!token) {
+          toast({
+            title: "Not logged in",
+            description: "Please login as admin to edit the blog.",
+            status: "warning",
+            duration: 3000,
+            isClosable: true,
+            position: "bottom-right",
+          });
+          navigate("/login");
+          return;
+        }
+
+        const res = await axios.get(`${baseUrl}/myblogs/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const blog = res.data;
+
+        // Prefill form fields
+        reset({
+          mainHeading: blog.mainHeading || "",
+          slug: blog.slug || "",
+          introParagraph: blog.introParagraph || "",
+          heading2: blog.heading2 || "",
+          body2: blog.body2 || "",
+          heading3: blog.heading3 || "",
+          body3: blog.body3 || "",
+          heading4: blog.heading4 || "",
+          body4: blog.body4 || "",
+          heading5: blog.heading5 || "",
+          body5: blog.body5 || "",
+          conclusion: blog.conclusion || "",
+          seoTitle: blog.seoTitle || "",
+          seoDescription: blog.seoDescription || "",
+          metaTitle: blog.metaTitle || "",
+          metaDescription: blog.metaDescription || "",
+          keywords: blog.keywords || "",
+          schemaMarkup: blog.schemaMarkup || "",
+        });
+
+        // Existing feature image preview
+        if (blog.featureImage) {
+          setFeaturePreview(`${apiRoot}${blog.featureImage}`);
+        }
+      } catch (err) {
+        console.error("Error loading blog:", err);
+        toast({
+          title: "Error loading blog",
+          description:
+            err.response?.data?.message ||
+            "Failed to fetch blog data. Please try again.",
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+        navigate("/admin/blogs");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlog();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const onSubmit = async (data) => {
     const formData = new FormData();
@@ -117,9 +197,11 @@ const AddBlog = () => {
     formData.append("schemaMarkup", data.schemaMarkup || "");
 
     // IMAGES
+    // Only send new feature image if user selected one
     if (data.featureImage && data.featureImage[0]) {
       formData.append("featureImage", data.featureImage[0]);
     }
+    // Only send new gallery images if selected
     if (data.galleryImages && data.galleryImages.length > 0) {
       Array.from(data.galleryImages).forEach((file) => {
         formData.append("galleryImages", file);
@@ -127,16 +209,14 @@ const AddBlog = () => {
     }
 
     try {
-      // 🔐 Get token – using same key you already use: "authToken"
       const token =
         localStorage.getItem("authToken") ||
         sessionStorage.getItem("authToken");
 
-      // If no token, don't call API → just redirect to login
       if (!token) {
         toast({
           title: "Not logged in",
-          description: "Please login as admin to create a blog.",
+          description: "Please login again.",
           status: "warning",
           duration: 3000,
           isClosable: true,
@@ -146,32 +226,30 @@ const AddBlog = () => {
         return;
       }
 
-      await axios.post(`${baseUrl}/myblogs/blog`, formData, {
+      await axios.put(`${baseUrl}/myblogs/${id}`, formData, {
         headers: {
-          Authorization: `Bearer ${token}`, // ✅ never empty
+          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
 
       toast({
-        title: "Blog saved",
-        description: "Your blog has been created successfully.",
+        title: "Blog updated",
+        description: "Your blog has been updated successfully.",
         status: "success",
         duration: 3000,
         isClosable: true,
         position: "bottom-right",
       });
 
-      reset();
-      setFeaturePreview(null);
       navigate("/admin/blogs");
     } catch (err) {
-      console.error("Create blog error:", err);
+      console.error("Update blog error:", err);
       toast({
         title: "Error",
         description:
           err?.response?.data?.message ||
-          "Something went wrong while creating the blog.",
+          "Something went wrong while updating the blog.",
         status: "error",
         duration: 4000,
         isClosable: true,
@@ -179,6 +257,21 @@ const AddBlog = () => {
       });
     }
   };
+
+  if (loading) {
+    return (
+      <Box
+        bg={pageBg}
+        pt={{ base: "140px", md: "110px" }}
+        minH="100vh"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Spinner size="lg" />
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -191,10 +284,6 @@ const AddBlog = () => {
         position: "fixed",
         inset: 0,
         opacity: 0.3,
-        backgroundImage: useColorModeValue(
-          "radial-gradient(circle at 0 0, rgba(236, 72, 153, 0.18) 0, transparent 55%), radial-gradient(circle at 100% 0, rgba(129, 140, 248, 0.18) 0, transparent 55%)",
-          "radial-gradient(circle at 0 0, rgba(236, 72, 153, 0.25) 0, transparent 60%), radial-gradient(circle at 100% 0, rgba(79, 70, 229, 0.3) 0, transparent 60%)"
-        ),
         zIndex: -1,
       }}
     >
@@ -224,7 +313,7 @@ const AddBlog = () => {
 
           <HStack spacing={3}>
             <Text fontSize="xs" color={subtleText}>
-              Draft mode · Auto-save coming soon
+              Editing mode · Changes apply on save
             </Text>
           </HStack>
         </Flex>
@@ -239,11 +328,11 @@ const AddBlog = () => {
         >
           <Box>
             <Heading size="lg" mb={1}>
-              Add New Blog
+              Edit Blog
             </Heading>
             <Text fontSize="sm" color={subtleText} maxW="600px">
-              Craft your HOI story with sections, rich text, SEO, and a live
-              preview tailored for your blog layout.
+              Update your HOI blog content, images, and SEO settings using the
+              same editor layout as Add Blog.
             </Text>
           </Box>
 
@@ -255,8 +344,9 @@ const AddBlog = () => {
             px={6}
             size="sm"
             onClick={handleSubmit(onSubmit)}
+            isLoading={isSubmitting}
           >
-            Save Blog
+            Save Changes
           </Button>
         </Flex>
 
@@ -325,7 +415,7 @@ const AddBlog = () => {
                       {...register("slug")}
                     />
                     <Text fontSize="xs" color={subtleText} mt={1}>
-                      Optional. Backend se auto-generate bhi ho sakta hai.
+                      Optional. Backend se auto-generate bhi ho sakta hai agar blank.
                     </Text>
                   </FormControl>
                 </Flex>
@@ -341,7 +431,6 @@ const AddBlog = () => {
                     borderRadius="lg"
                     borderColor={borderColor}
                     p={2}
-                    bg={useColorModeValue("gray.50", "gray.900")}
                   >
                     <Controller
                       name="introParagraph"
@@ -381,17 +470,14 @@ const AddBlog = () => {
                   </HStack>
                   <Heading size="sm">Feature & Gallery Images</Heading>
                   <Text fontSize="sm" color={subtleText}>
-                    Hero image + optional gallery for in-article visuals.
+                    Existing feature image dikh raha hai. New image select karoge
+                    to wo replace ho jayega.
                   </Text>
                 </Stack>
 
                 <Flex gap={4} direction={{ base: "column", md: "row" }}>
-                  <FormControl
-                    isRequired
-                    isInvalid={errors.featureImage}
-                    flex="1"
-                  >
-                    <FormLabel fontSize="sm">Feature Image</FormLabel>
+                  <FormControl flex="1">
+                    <FormLabel fontSize="sm">Feature Image (optional)</FormLabel>
                     <Input
                       type="file"
                       accept="image/*"
@@ -403,18 +489,11 @@ const AddBlog = () => {
                         const file = e.target.files?.[0];
                         if (file) {
                           setFeaturePreview(URL.createObjectURL(file));
-                        } else {
-                          setFeaturePreview(null);
                         }
                       }}
                     />
-                    {errors.featureImage && (
-                      <Text fontSize="xs" color="red.400" mt={1}>
-                        {errors.featureImage.message}
-                      </Text>
-                    )}
                     <Text fontSize="xs" color={subtleText} mt={1}>
-                      Recommended: 1200×600 px horizontal.
+                      If you don't upload, old image rahega.
                     </Text>
                   </FormControl>
 
@@ -429,8 +508,7 @@ const AddBlog = () => {
                       {...register("galleryImages")}
                     />
                     <Text fontSize="xs" color={subtleText} mt={1}>
-                      Ye images Heading 2 ke baad gallery section me use ho sakti
-                      hain.
+                      Naye gallery images add karne ke liye yahan se select karo.
                     </Text>
                   </FormControl>
                 </Flex>
@@ -470,7 +548,6 @@ const AddBlog = () => {
                       borderRadius="lg"
                       borderColor={borderColor}
                       p={2}
-                      bg={useColorModeValue("gray.50", "gray.900")}
                     >
                       <Controller
                         name="body2"
@@ -511,7 +588,6 @@ const AddBlog = () => {
                       borderRadius="lg"
                       borderColor={borderColor}
                       p={2}
-                      bg={useColorModeValue("gray.50", "gray.900")}
                     >
                       <Controller
                         name="body3"
@@ -552,7 +628,6 @@ const AddBlog = () => {
                       borderRadius="lg"
                       borderColor={borderColor}
                       p={2}
-                      bg={useColorModeValue("gray.50", "gray.900")}
                     >
                       <Controller
                         name="body4"
@@ -593,7 +668,6 @@ const AddBlog = () => {
                       borderRadius="lg"
                       borderColor={borderColor}
                       p={2}
-                      bg={useColorModeValue("gray.50", "gray.900")}
                     >
                       <Controller
                         name="body5"
@@ -633,7 +707,6 @@ const AddBlog = () => {
                     borderRadius="lg"
                     borderColor={borderColor}
                     p={2}
-                    bg={useColorModeValue("gray.50", "gray.900")}
                   >
                     <Controller
                       name="conclusion"
@@ -779,8 +852,9 @@ const AddBlog = () => {
                     type="submit"
                     borderRadius="full"
                     px={8}
+                    isLoading={isSubmitting}
                   >
-                    Save Blog
+                    Save Changes
                   </Button>
                 </Flex>
               </form>
@@ -822,7 +896,6 @@ const AddBlog = () => {
                 borderColor={borderColor}
                 borderRadius="xl"
                 overflow="hidden"
-                bg={useColorModeValue("white", "gray.900")}
               >
                 {/* Image */}
                 <Box
@@ -851,7 +924,7 @@ const AddBlog = () => {
                       <Icon as={FiImage} boxSize={6} />
                       <Text fontSize="xs">Feature image preview</Text>
                       <Text fontSize="xs" opacity={0.7}>
-                        Upload image to see here
+                        Existing feature image ya nayi upload yahan show hogi
                       </Text>
                     </Flex>
                   )}
@@ -934,4 +1007,4 @@ const AddBlog = () => {
   );
 };
 
-export default AddBlog;
+export default EditBlog;
