@@ -1,0 +1,225 @@
+.HeadHomes{
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 30px;
+  font-weight: 600;
+  color:black ;
+  margin-bottom: 30px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  border-bottom: 3px solid #d63384;
+    /* margin: 0px 728px 25px; */
+  text-transform: uppercase;
+
+}
+.HeadHome{
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 30px;
+  font-weight: 600;
+  color:black ;
+  margin-bottom: 30px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  border-bottom: 3px solid #d63384;
+    margin: 0px 728px 25px;
+  text-transform: uppercase;
+
+}
+.ParaHome{
+ font-family: 'Lato', 'Helvetica Neue', sans-serif;
+  font-size: 18px;
+  line-height: 1.9;
+  color: black;
+  margin-bottom: 20px;
+  max-width: 850px;
+  /* margin-left: auto; */
+  margin-right: auto;
+}
+.homePadding{
+  padding: 60px 40px;
+  background-color: #ffeeec;
+  background-image: url('../images/back1.png');
+}
+.HomePadding{
+  padding: 60px 40px;
+  background-color: #ffffff;
+  /* background-image: url('../images/back.png'); */
+}
+.HomeImg{
+  border: 3px solid #d63384;
+}
+
+
+/* *****************BLOGS******************* */
+/* Container Styles */
+.blogcardscontainer {
+  /* max-width: 1200px; */
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.mainheading {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 40px;
+}
+
+/* Grid Layout */
+.blogcardsgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+/* Individual Card Styles */
+.blogcard {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.blogcard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+      background-color: #ffeeec;
+}
+
+/* Image Section */
+.blogcardimage {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.blogcardimage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.blogcard:hover .blogcardimage img {
+  transform: scale(1.1);
+}
+
+/* Content Section */
+.blogcardcontent {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.blogcardheading {
+  font-size: 18px;
+   font-family: 'Playfair Display', Georgia, serif;
+  color: #222;
+  margin: 0 0 20px 0;
+  line-height: 1.4;
+  flex-grow: 1;
+  text-align: center;
+}
+
+/* Read More Button */
+.blogcardbutton {
+      margin: 0px 120px;
+  display: inline-block;
+  padding: 10px 24px;
+  background: #d63384;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  text-align: center;
+  transition: background 0.3s ease;
+  /* align-self: flex-start; */
+}
+.blogcardbutton1 {
+    margin: 40px 358px;
+  display: inline-block;
+  padding: 10px 24px;
+  background: #d63384;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  text-align: center;
+  transition: background 0.3s ease;
+  /* align-self: flex-start; */
+}
+
+.blogcardbutton1:hover {
+  background: #d63384;
+  color: #fff;
+}
+.blogcardbutton:hover {
+  background: #d63384;
+  color: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mainheading {
+    font-size: 2rem;
+  }
+
+  .blogcardsgrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+/**************Review******************* */
+.reviewcard {
+  /* max-width: 500px; */
+  height: 250px;
+  margin: auto;
+  padding: 40px 25px;
+  background: #fff;
+  border-radius: 10px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  font-family: "Poppins", sans-serif;
+}
+
+/* LEFT quote */
+.quoteleft {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 28px;
+  color: #d4005e;
+  font-weight: bold;
+}
+
+/* RIGHT quote */
+.quoteright {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 28px;
+  color: #d4005e;
+  font-weight: bold;
+}
+
+.reviewtext {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.author {
+  font-weight: 600;
+  color: #000;
+}
+
+/************UNDERLINE************ */
+/* .UnderHrLine{
+    border-bottom: 3px solid #d63384;
+    margin: 0px 728px;
+} */
