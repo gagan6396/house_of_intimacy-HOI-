@@ -97,7 +97,7 @@ export default function BlogCards() {
 
       {/* VIEW MORE BUTTON CENTERED */}
       <div className={Style.blogViewMoreWrapper}>
-        <Link to="/blogs" className={Style.blogcardbutton1}>
+        <Link to="/Blog" className={Style.blogcardbutton1}>
           View all blogs
         </Link>
       </div>
