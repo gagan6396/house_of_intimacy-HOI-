@@ -157,7 +157,7 @@ export default function Dashboard(props) {
               >
                 <Routes>
                   {getRoutes(routes)}
-                  <Routes
+                  <Route
                     path="/"
                     element={<Navigate to="/admin/admin_dashboard" replace />}
                   />
