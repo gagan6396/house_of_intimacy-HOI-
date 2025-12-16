@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../assets/styles/about.module.css';
-import Banner1 from '../../assets/images/Bannaer 01_V01.png';
-import Banner2 from '../../assets/images/Bannaer 02_V01.png';
+import Banner2 from '../../assets/images/Bannaer 01_V01.png';
+import Banner1 from '../../assets/images/Bannaer 02_V01.png';
 import Banner3 from '../../assets/images/Bannaer 03_V01.png';
 import Banner4 from '../../assets/images/Bannaer 04_V01.png';
 

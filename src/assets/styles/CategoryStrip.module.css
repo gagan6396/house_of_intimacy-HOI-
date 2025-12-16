@@ -91,3 +91,57 @@
     font-size: 13px;
   }
 }
+/* ***********RESPONSIVE********************* */
+/*-------------RESPONSIPAGE--------*/
+  @media (min-width: 1921px) and (max-width: 2561px) {
+}
+
+@media (min-width: 1536px) and (max-width: 1920px) {
+}
+ @media (max-width: 1229.98px) {
+
+  }
+  @media (max-width: 1169.98px) {
+
+  }
+  @media (max-width: 1055.98px) {
+  }
+  @media (max-width: 991.98px) {
+    
+  }
+  @media (max-width: 931.98px) {
+  
+}
+@media(max-width: 820.98px){
+   
+}
+@media(max-width: 799.98px){
+  
+}
+@media(max-width: 767.98px){
+     
+
+}
+@media(max-width: 799.98px){
+
+}
+@media(max-width: 575.98px){
+
+}
+@media(max-width: 538.98px){
+  
+}
+@media(max-width: 474.98px){
+}
+@media(max-width: 412.98px){
+   
+}
+@media(max-width: 390.98px){
+
+}
+@media(max-width: 375.98px){
+
+}
+@media(max-width: 360.98px){
+  
+}

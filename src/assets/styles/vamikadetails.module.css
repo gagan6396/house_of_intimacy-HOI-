@@ -98,3 +98,105 @@
   font-weight: 600;
   color: #000;
 }
+
+ /* *************RESPONSIVE******************************** */
+            @media (min-width: 1921px) and (max-width: 2561px) {
+}
+@media (min-width: 1536px) and (max-width: 1920px) {
+
+}
+@media (max-width: 1426.98px) {
+    .ParaHome {
+ font-size: 17px;
+    }
+}
+@media (max-width: 1350.98px) {
+    .ParaHome {
+ font-size: 17px;
+ margin-bottom: 0px;
+ 
+}
+.homePadding {
+  padding: 60px 40px 20px 40px;
+}
+.HomeImg {
+  padding-top: 40px;
+  border: none;
+}
+}
+@media (max-width: 1250.98px) {
+  .HomeImg {
+  padding-top: 80px;
+  }
+  .homePadding {
+  padding: 45px 40px 20px 40px;
+}
+  }
+  @media (max-width: 1226.98px){
+    .HeadHome {
+     font-size: 25px;
+    }
+    .ParaHome {
+     font-size: 15px;
+      padding-top: 10px ;
+    }
+    .HeadHomes {
+  font-size: 25px;
+  
+    }
+  }
+  @media (max-width: 1048.98px) {
+    .HeadHomes {
+      font-size: 23px;
+    }
+
+  }
+   @media (max-width: 1060.98px) {
+  }
+  @media (max-width: 1055.98px) {
+  
+}
+ @media (max-width: 991.98px) {
+  
+}
+  @media (max-width: 931.98px) {
+  
+}
+@media(max-width: 820.98px){
+   
+}
+@media(max-width: 799.98px){
+  
+}
+@media(max-width: 767.98px){
+     
+}
+@media(max-width: 799.98px){
+}
+@media(max-width: 575.98px){
+}
+@media(max-width: 538.98px){
+  
+}
+@media(max-width: 414.98px){
+  .homePadding {
+  padding: 45px 10px 20px 10px;
+}
+.HeadHomes {
+      font-size: 17px;
+      padding-bottom: 10px;
+    }
+    .HomeImg {
+  padding-top: 0px;
+  }
+}
+@media(max-width: 412.98px){
+   
+}
+@media(max-width: 390.98px){
+}
+@media(max-width: 375.98px){
+}
+@media(max-width: 360.98px){
+  
+}

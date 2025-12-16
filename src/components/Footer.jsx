@@ -21,8 +21,8 @@ export default function Footer() {
           <div className="col-lg-3 col-md-6 col-6">
             <h5 className={styles.heading}>Contact Us</h5>
             <ul className={styles.list}>
-              <li>Email: clientcare@linger.com</li>
-              <li>Phone: 0123-456-789</li>
+              <li><span className={styles.spanList}>Email:</span> clientcare@linger.com</li>
+              <li><span className={styles.spanList}>Phone:</span> 0123-456-789</li>
               <li>Mon–Thu: 9 AM - 7 PM</li>
               <li>Fri: 6 AM - 2 PM</li>
             </ul>

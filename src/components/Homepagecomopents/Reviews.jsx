@@ -2,15 +2,37 @@ import React from 'react';
 import Styles from '../../assets/styles/review.module.css';
 import Slider from 'react-slick';
 export const Reviewssection = () => {
-  const settings = {
-    className: 'center',
-    infinite: true,
-    centerPadding: '60px',
-    slidesToShow: 5,
-    swipeToSlide: true,
-    autoplay: true,
-    speed: 2000,
-    autoplaySpeed: 2000,
+ const settings = {
+  className: 'center',
+  infinite: true,
+  centerPadding: '60px',
+  slidesToShow: 5,
+  swipeToSlide: true,
+  autoplay: true,
+  speed: 2000,
+  autoplaySpeed: 2000,
+
+  responsive: [
+    {
+      breakpoint: 1200, // tablets / small laptop
+      settings: {
+        slidesToShow: 3,
+      },
+    },
+    {
+      breakpoint: 992, // tablets
+      settings: {
+        slidesToShow: 2,
+      },
+    },
+    {
+      breakpoint: 600, // mobile
+      settings: {
+        slidesToShow: 1,
+        centerPadding: "20px"
+      },
+    }
+  ],
 
     afterChange: function (index) {
       console.log(

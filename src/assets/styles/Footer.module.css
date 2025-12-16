@@ -9,7 +9,10 @@
   background: linear-gradient(135deg, #e91e63 0%, #d63384 100%) !important;
   color: #fff !important;
 }
-
+.spanList{
+  font-weight: 600;
+  color: #000;
+}
 /* Logo */
 .logo {
   height: 170px;
@@ -105,9 +108,74 @@
 }
 
 /* Responsive */
+ @media (min-width: 1921px) and (max-width: 2561px) {
+}
+@media (min-width: 1536px) and (max-width: 1920px) {
+
+}
+@media (max-width: 1479.98px) {
+   .dropdownMenu{
+     padding: 10px 0 !important;
+    min-width: 168px !important;
+   }
+   .nestedDropdownMenu {
+      min-width: 155px !important;
+   }
+
+  }
+@media (max-width: 1426.98px) {
+   
+  }
+  @media (max-width: 1294.98px) {
+   .Footer_dropdownMenu__wbDBA {
+        padding: 5px 0 !important;
+        min-width: 145px !important;
+   }
+   .categoryTitle {
+  padding: 10px 10px 10px 10px !important;
+   }
+   .dropdownMenu li::before {
+  left: 5px;
+  margin: 0 5px;
+   }
+    .nestedDropdownMenu {
+      min-width: 130px !important;
+   }
+   .nestedDropdownMenu li a {
+  padding: 8px 5px 8px 20px !important;
+}
+  }
+  @media (max-width: 1250.98px){
+    
+  }
+  @media (max-width: 1226.98px){
+  
+  }
+  @media (max-width: 1105.98px) {
+     .Footer_dropdownMenu__wbDBA {
+        min-width: 130px !important;
+   }
+  }
+  @media (max-width: 1055.98px) {
+  
+}
+ @media (max-width: 991.98px) {
+  
+}
+  @media (max-width: 931.98px) {
+  
+}
+@media(max-width: 820.98px){
+   
+}
 @media (max-width: 768px) {
+  .desc {
+    padding-right: 20px;
+   
+  }
   .logo {
-    height: 80px;
+    height: 155px;
+     width: 100% !important;
   }
 
   .newsletterSection input {
