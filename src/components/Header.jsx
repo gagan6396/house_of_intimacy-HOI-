@@ -113,6 +113,7 @@ const pantiesMega = {
 
 const navItems = [
   { label: 'NEW SEASON', path: '/new-season' },
+  { label: 'VAMIKA SPECIALS', path: '/specials' },
   { label: 'BRAS', path: '#', mega: BRAS_MEGA },
   { label: 'PANTIES', path: '#', mega: pantiesMega },
   { label: 'ATHLEISURE', path: '/athleisure' },
@@ -122,7 +123,8 @@ const navItems = [
   { label: 'SWIMWEAR', path: '/swimwear' },
   { label: 'SALE', path: '/sale' },
   { label: 'ACCESSORIES', path: '/accessories' },
-  { label: 'AMANTÉ SPECIALS', path: '/specials' },
+  { label: 'VAMIKA GALLERY', path: '/gallery' },
+  
 ];
 
 const Header = () => {

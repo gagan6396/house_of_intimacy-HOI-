@@ -40,7 +40,7 @@ export default function ProductSection() {
 
   const sliderSettings = {
     infinite: true,
-    speed: 4000,
+    speed: 8000,
     slidesToShow: 4,
     slidesToScroll: 1,
     autoplay: true,

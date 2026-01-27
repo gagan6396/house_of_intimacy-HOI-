@@ -9,7 +9,7 @@ export const Reviewssection = () => {
   slidesToShow: 5,
   swipeToSlide: true,
   autoplay: true,
-  speed: 2000,
+  speed: 5000,
   autoplaySpeed: 2000,
 
   responsive: [
