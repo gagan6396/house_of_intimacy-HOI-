@@ -1,4 +1,4 @@
-// src/pages/account/OrderDetails.jsx
+// src/pages/account/OrderDetails.jsx - UPDATED WITH INVOICE
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
@@ -8,10 +8,12 @@ import {
   FiCheckCircle,
   FiClock,
   FiXCircle,
-  FiCreditCard, // ⭐ NEW
-  FiMapPin, // ⭐ NEW
-  FiPhone, // ⭐ NEW
-  FiInfo, // ⭐ NEW
+  FiCreditCard,
+  FiMapPin,
+  FiPhone,
+  FiInfo,
+  FiDownload, // 🔥 NEW
+  FiFileText, // 🔥 NEW
 } from 'react-icons/fi';
 import axios from 'axios';
 import { useToast } from '@chakra-ui/react';
@@ -21,14 +23,12 @@ import styles from '../../assets/styles/account/OrderDetails.module.css';
 const baseUrl = process.env.REACT_APP_APIURL || 'http://localhost:8000/v1';
 const apiRoot = baseUrl.replace(/\/v1$/, '');
 
-// helper for image URL
 const getImageUrl = (url) => {
   if (!url) return '';
   if (url.startsWith('http')) return url;
   return `${apiRoot}${url}`;
 };
 
-// same status helper style as MyOrders
 const formatStatus = (statusRaw = '') => {
   const s = statusRaw.toUpperCase();
 
@@ -48,10 +48,12 @@ const formatStatus = (statusRaw = '') => {
 
 const CANCELLABLE_STATUSES = ['PLACED', 'CONFIRMED', 'PROCESSING'];
 
+// 🔥 Statuses where invoice is available
+const INVOICE_AVAILABLE_STATUSES = ['CONFIRMED', 'PROCESSING', 'SHIPPED', 'OUT_FOR_DELIVERY', 'DELIVERED'];
+
 const OrderDetails = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
-
   const toast = useToast();
 
   const [order, setOrder] = useState(null);
@@ -62,6 +64,9 @@ const OrderDetails = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
   const [cancelReasonText, setCancelReasonText] = useState('');
+
+  // 🔥 NEW: Invoice download state
+  const [downloadingInvoice, setDownloadingInvoice] = useState(false);
 
   const authToken =
     localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
@@ -109,7 +114,6 @@ const OrderDetails = () => {
     [order],
   );
 
-  // ⭐ NEW: status step ordering for timeline
   const stepOrder = {
     placed: 0,
     processing: 1,
@@ -193,7 +197,7 @@ const OrderDetails = () => {
   };
 
   const totals = getTotals();
-  const savings = totals.discount > 0 ? totals.discount : 0; // ⭐ NEW
+  const savings = totals.discount > 0 ? totals.discount : 0;
 
   const shippingAddress = useMemo(() => {
     if (!order) return null;
@@ -224,6 +228,13 @@ const OrderDetails = () => {
     return CANCELLABLE_STATUSES.includes(s);
   }, [order]);
 
+  // 🔥 NEW: Check if invoice is available
+  const isInvoiceAvailable = useMemo(() => {
+    if (!order) return false;
+    const s = (order.status || '').toUpperCase();
+    return INVOICE_AVAILABLE_STATUSES.includes(s);
+  }, [order]);
+
   const openCancelModal = () => {
     if (!canCancel || cancelling) return;
     setShowCancelModal(true);
@@ -236,7 +247,6 @@ const OrderDetails = () => {
     setCancelReasonText('');
   };
 
-  // 🔥 Updated with Toast
   const handleConfirmCancel = async () => {
     if (!order) return;
     if (!canCancel) return;
@@ -263,9 +273,7 @@ const OrderDetails = () => {
       };
 
       const res = await axios.patch(
-        `${baseUrl}/orders/${
-          order._id || order.orderId
-        }/request-cancel`,
+        `${baseUrl}/orders/${order._id || order.orderId}/request-cancel`,
         payload,
         {
           headers: {
@@ -303,6 +311,85 @@ const OrderDetails = () => {
     }
   };
 
+  // 🔥 NEW: Download invoice handler
+  const handleDownloadInvoice = async () => {
+    if (!order || !isInvoiceAvailable || downloadingInvoice) return;
+
+    try {
+      setDownloadingInvoice(true);
+
+      console.log('📥 Requesting invoice for order:', order._id);
+
+      const response = await axios.get(
+        `${baseUrl}/invoice/${order._id}/download`,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          responseType: 'blob', // Important for file download
+        }
+      );
+
+      console.log('✅ Invoice received, size:', response.data.size);
+
+      // Create blob URL for download
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      
+      const invoiceNumber = order.orderNumber || `INV${order._id.slice(-8).toUpperCase()}`;
+      link.setAttribute('download', `${invoiceNumber}.pdf`);
+      
+      // Trigger download
+      document.body.appendChild(link);
+      link.click();
+      
+      // Cleanup
+      setTimeout(() => {
+        link.parentNode.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }, 100);
+
+      toast({
+        title: 'Invoice Downloaded',
+        description: 'Your invoice has been downloaded successfully.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (err) {
+      console.error('Invoice download error:', err);
+      
+      let errorMessage = 'Failed to download invoice.';
+      
+      // Handle different error scenarios
+      if (err.response?.status === 400) {
+        // Status not eligible for invoice
+        const data = err.response.data;
+        errorMessage = data.message || 'Invoice not yet available. Please wait for order confirmation.';
+      } else if (err.response?.status === 404) {
+        errorMessage = 'Invoice not found.';
+      } else if (err.response?.status === 403) {
+        errorMessage = 'Access denied.';
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
+
+      toast({
+        title: 'Download Failed',
+        description: errorMessage,
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+        position: 'top',
+      });
+    } finally {
+      setDownloadingInvoice(false);
+    }
+  };
+
   return (
     <div className={styles.page}>
       <div className={styles.inner}>
@@ -323,6 +410,19 @@ const OrderDetails = () => {
               Track your order, view items and manage actions.
             </p>
           </div>
+
+          {/* 🔥 NEW: Invoice download button in header */}
+          {!loading && !error && order && isInvoiceAvailable && (
+            <button
+              type="button"
+              className={styles.invoiceBtn}
+              onClick={handleDownloadInvoice}
+              disabled={downloadingInvoice}
+            >
+              <FiDownload />
+              <span>{downloadingInvoice ? 'Downloading...' : 'Download Invoice'}</span>
+            </button>
+          )}
         </div>
 
         {/* Loading State */}
@@ -355,7 +455,6 @@ const OrderDetails = () => {
                       Placed on {getOrderDate()}
                     </div>
 
-                    {/* ⭐ NEW chips row */}
                     <div className={styles.summaryChips}>
                       <span className={`${styles.chip} ${styles.chipSoft}`}>
                         <FiPackage className={styles.chipIcon} />
@@ -367,6 +466,15 @@ const OrderDetails = () => {
                         >
                           <FiCreditCard className={styles.chipIcon} />
                           {getPaymentMethod()}
+                        </span>
+                      )}
+                      {/* 🔥 NEW: Invoice available chip */}
+                      {isInvoiceAvailable && (
+                        <span
+                          className={`${styles.chip} ${styles.chipSuccess}`}
+                        >
+                          <FiFileText className={styles.chipIcon} />
+                          Invoice Available
                         </span>
                       )}
                     </div>
@@ -384,7 +492,7 @@ const OrderDetails = () => {
                   </div>
                 </div>
 
-                {/* ⭐ NEW status timeline */}
+                {/* Status timeline */}
                 <div className={styles.statusTimeline}>
                   {timelineSteps.map((step, index) => {
                     const isCancelled = orderStatusInfo.key === 'cancelled';
@@ -413,7 +521,7 @@ const OrderDetails = () => {
                   })}
                 </div>
 
-                {/* totals */}
+                {/* Totals */}
                 <div className={styles.summaryDivider} />
 
                 <div className={styles.summaryRow}>
@@ -452,7 +560,6 @@ const OrderDetails = () => {
                   </span>
                 </div>
 
-                {/* ⭐ NEW savings pill */}
                 {savings > 0 && (
                   <div className={styles.savingsRow}>
                     <span className={styles.savingsLabel}>
@@ -463,6 +570,21 @@ const OrderDetails = () => {
                     </span>
                   </div>
                 )}
+
+                {/* 🔥 NEW: Invoice download button in summary */}
+                {isInvoiceAvailable && (
+                  <button
+                    type="button"
+                    className={styles.invoiceBtnSecondary}
+                    onClick={handleDownloadInvoice}
+                    disabled={downloadingInvoice}
+                  >
+                    <FiDownload />
+                    <span>
+                      {downloadingInvoice ? 'Downloading...' : 'Download Invoice (PDF)'}
+                    </span>
+                  </button>
+                )}
               </div>
 
               {/* ADDRESS */}
@@ -470,7 +592,6 @@ const OrderDetails = () => {
                 <div className={styles.cardTitleRow}>
                   <h2 className={styles.cardTitle}>Delivery Address</h2>
 
-                  {/* ⭐ NEW address tags */}
                   {shippingAddress && (
                     <div className={styles.addressTags}>
                       <span className={styles.addressTag}>
@@ -528,7 +649,7 @@ const OrderDetails = () => {
                 <h2 className={styles.cardTitle}>Order Actions</h2>
                 {order.cancelRequested && order.status !== 'CANCELLED' ? (
                   <p className={styles.cardText}>
-                    You’ve already requested cancellation. You will receive an
+                    You've already requested cancellation. You will receive an
                     email update soon.
                   </p>
                 ) : (
@@ -562,10 +683,9 @@ const OrderDetails = () => {
                   </p>
                 )}
 
-                {/* ⭐ NEW subtle info row */}
                 <p className={styles.supportText}>
                   <FiInfo className={styles.supportIcon} />
-                  Once your request is approved, we’ll send confirmation by
+                  Once your request is approved, we'll send confirmation by
                   email and SMS.
                 </p>
               </div>

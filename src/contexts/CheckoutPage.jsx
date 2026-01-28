@@ -114,6 +114,25 @@ function CheckoutPage() {
     fetchAll();
   }, [navigate]);
 
+  // ---------- LOAD RAZORPAY SCRIPT ----------
+  useEffect(() => {
+    const loadRazorpayScript = () => {
+      return new Promise((resolve) => {
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.onload = () => {
+          resolve(true);
+        };
+        script.onerror = () => {
+          resolve(false);
+        };
+        document.body.appendChild(script);
+      });
+    };
+
+    loadRazorpayScript();
+  }, []);
+
   // ---------- ORDER TOTALS ----------
   const subtotal = useMemo(() => {
     if (!cartItems || cartItems.length === 0) return 0;
@@ -368,6 +387,126 @@ function CheckoutPage() {
     }
   };
 
+  // ---------- RAZORPAY PAYMENT HANDLER ----------
+  const initializeRazorpayPayment = async (shippingAddress, itemsPayload) => {
+  try {
+    const token = getToken();
+    const headers = { Authorization: `Bearer ${token}` };
+
+    // 1️⃣ Create Razorpay Order
+    const orderResponse = await axios.post(
+      `${API_ROOT}/payment/create-order`,
+      { amount: grandTotal },
+      { headers }
+    );
+
+    const { id: razorpay_order_id, amount, currency } = orderResponse.data;
+
+    const options = {
+      key: 'rzp_test_S8pXl5qqvVLN0P',
+      amount,
+      currency,
+      name: 'House of Intimacy',
+      description: 'Order Payment',
+      order_id: razorpay_order_id,
+      prefill: {
+        name: fullName,
+        email,
+        contact: phone,
+      },
+      theme: { color: '#d63384' },
+
+      // 2️⃣ Payment Success Handler
+      handler: async function (response) {
+        try {
+          // 3️⃣ Verify payment
+          const verifyRes = await axios.post(
+            `${API_ROOT}/payment/verify-payment`,
+            {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            },
+            { headers }
+          );
+
+          if (!verifyRes.data.success) {
+            throw new Error('Payment verification failed');
+          }
+
+          // 4️⃣ CREATE ORDER WITH PAID STATUS ✅
+          const orderRes = await axios.post(
+            `${API_ROOT}/orders`,
+            {
+              items: itemsPayload,
+              shippingAddress,
+              paymentMethod: 'ONLINE',
+              paymentStatus: 'PAID',  // 🔥 FIXED - Payment is already verified
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+            },
+            { headers }
+          );
+
+          const dbOrder = orderRes.data;
+
+          clearCart?.();
+
+          toast({
+            title: 'Payment successful',
+            description: 'Order placed successfully 🎉',
+            status: 'success',
+            duration: 4000,
+            isClosable: true,
+            position: 'top',
+          });
+
+          navigate(`/order-success/${dbOrder._id}`);
+        } catch (err) {
+          console.error('Payment processing error:', err);
+          toast({
+            title: 'Payment verification failed',
+            description: err.response?.data?.message || 'Please contact support.',
+            status: 'error',
+            duration: 4000,
+            isClosable: true,
+            position: 'top',
+          });
+        } finally {
+          setPlacingOrder(false);
+        }
+      },
+
+      modal: {
+        ondismiss: () => {
+          setPlacingOrder(false);
+          toast({
+            title: 'Payment cancelled',
+            status: 'warning',
+            duration: 3000,
+            isClosable: true,
+            position: 'top',
+          });
+        },
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  } catch (err) {
+    console.error('Razorpay initialization error:', err);
+    setPlacingOrder(false);
+    toast({
+      title: 'Payment failed',
+      description: err.response?.data?.message || 'Unable to start payment',
+      status: 'error',
+      duration: 4000,
+      isClosable: true,
+      position: 'top',
+    });
+  }
+};
+
   // ---------- PLACE ORDER (BACKEND) ----------
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
@@ -444,6 +583,23 @@ function CheckoutPage() {
       return;
     }
 
+    setPlacingOrder(true);
+
+    // CHECK IF ONLINE PAYMENT
+    if (paymentMethod === 'upi' || paymentMethod === 'card') {
+      // Razorpay integration for online payment
+      if (!window.Razorpay) {
+        setError('Payment gateway not loaded. Please refresh and try again.');
+        setPlacingOrder(false);
+        return;
+      }
+
+      // Initialize Razorpay payment
+      await initializeRazorpayPayment(shippingAddress, itemsPayload);
+      return; // Don't proceed further, Razorpay will handle the rest
+    }
+
+    // COD PAYMENT - Direct order creation
     const token = getToken();
     if (!token) {
       navigate('/login');
@@ -451,19 +607,13 @@ function CheckoutPage() {
     }
     const headers = { Authorization: `Bearer ${token}` };
 
-    let paymentMethodForApi = 'COD';
-    if (paymentMethod === 'cod') paymentMethodForApi = 'COD';
-    else paymentMethodForApi = 'ONLINE';
-
     const orderPayload = {
       items: itemsPayload,
       shippingAddress,
-      paymentMethod: paymentMethodForApi,
+      paymentMethod: 'COD',
     };
 
     try {
-      setPlacingOrder(true);
-
       const res = await axios.post(`${API_ROOT}/orders`, orderPayload, {
         headers,
       });

@@ -712,3 +712,99 @@
     width: auto;
   }
 }
+
+
+/* Additional CSS for Invoice Buttons - Add to OrderDetails.module.css */
+
+/* 🔥 Invoice button in header */
+.invoiceBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #d63384 0%, #be2a72 100%);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(214, 51, 132, 0.3);
+  transition: all 0.2s ease;
+}
+
+.invoiceBtn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #be2a72 0%, #a62465 100%);
+  box-shadow: 0 6px 20px rgba(214, 51, 132, 0.4);
+  transform: translateY(-2px);
+}
+
+.invoiceBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.invoiceBtn svg {
+  font-size: 16px;
+}
+
+/* 🔥 Invoice button in summary card (secondary style) */
+.invoiceBtnSecondary {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  margin-top: 14px;
+  border-radius: 12px;
+  border: 2px solid #d63384;
+  background: #ffffff;
+  color: #d63384;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.invoiceBtnSecondary:hover:not(:disabled) {
+  background: #fdf2f8;
+  border-color: #be2a72;
+  color: #be2a72;
+  box-shadow: 0 4px 12px rgba(214, 51, 132, 0.15);
+  transform: translateY(-1px);
+}
+
+.invoiceBtnSecondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.invoiceBtnSecondary svg {
+  font-size: 16px;
+}
+
+/* 🔥 Success chip for invoice available */
+.chipSuccess {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .invoiceBtn {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+
+  .invoiceBtn span {
+    display: none;
+  }
+
+  .invoiceBtn svg {
+    margin: 0;
+  }
+}

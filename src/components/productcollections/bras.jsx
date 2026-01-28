@@ -1,5 +1,5 @@
 // src/components/BrasListing/BrasListing.jsx
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { FiHeart, FiShoppingBag } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +18,7 @@ import braletteImg from '../../assets/images/5.jpg';
 import fullFigureImg from '../../assets/images/17.jpg';
 import minimizerImg from '../../assets/images/19.jpg';
 import sportsImg from '../../assets/images/5.jpg';
-
+import { SidebarContext } from '../../contexts/SidebarContext';
 // ================== CONFIG ==================
 
 const baseUrl = process.env.REACT_APP_APIURL || 'http://localhost:8000/v1';
@@ -111,7 +111,7 @@ const BrasListing = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
+const { openQuickAdd } = useContext(SidebarContext);
   const [selectedType, setSelectedType] = useState('all');
   const [sortBy, setSortBy] = useState('featured');
   const [currentPage, setCurrentPage] = useState(1);
@@ -192,12 +192,36 @@ const BrasListing = () => {
     navigate(`/product/${product._id}`);
   };
 
-  const handleAddToBag = (event, product) => {
-    event.stopPropagation();
-    // 👉 here you can integrate CartContext later
-    // e.g. addToCart(product, selectedSize, quantity)
-    console.log('ADD TO BAG:', product.name);
-  };
+ const handleAddToBag = (event, product) => {
+  event.stopPropagation();
+
+  if (!openQuickAdd) {
+    console.error('SidebarContext missing');
+    return;
+  }
+
+  openQuickAdd({
+    ...product,
+
+    // ⭐ normalize for cart + quick add
+    _id: product._id,
+    id: product._id,
+
+    image: getImageUrl(
+      product.mainImage ||
+      (product.galleryImages && product.galleryImages[0])
+    ),
+
+    price: {
+      mrp: product.price?.mrp || 0,
+      sale: product.price?.sale || product.price?.mrp || 0,
+      sellingPrice:
+        product.price?.sale || product.price?.mrp || 0,
+      finalPrice:
+        product.price?.sale || product.price?.mrp || 0,
+    },
+  });
+};
 
   const handleWishlist = (event, product) => {
     event.stopPropagation();
