@@ -1,52 +1,54 @@
-// src/components/NewArrival/NewArrival.jsx
-import React, { useEffect, useState, useContext } from "react";
-import Slider from "react-slick";
-import axios from "axios";
-import { FiHeart, FiShoppingBag } from "react-icons/fi";
-import { FaHeart } from "react-icons/fa"; // filled heart
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useContext } from 'react';
+import Slider from 'react-slick';
+import axios from 'axios';
+import { FiHeart, FiShoppingBag } from 'react-icons/fi';
+import { FaHeart } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
-import styles from "../../assets/styles/LingerieSection.module.css";
+import styles from '../../assets/styles/LingerieSection.module.css';
 
-// Wishlist context
-import { WishlistContext } from "../../contexts/WishlistContext";
+// contexts
+import { WishlistContext } from '../../contexts/WishlistContext';
+import { SidebarContext } from '../../contexts/SidebarContext';
 
-// ---------- ASSETS ----------
-import heroVideoPoster from "../../assets/videos/IMG_3698.MP4";
-import heroVideo from "../../assets/videos/IMG_3698.MP4";
+// assets
+import heroVideoPoster from '../../assets/videos/IMG_3698.MP4';
+import heroVideo from '../../assets/videos/IMG_3698.MP4';
+import prodFallback from '../../assets/images/17.jpg';
 
-// fallback image if none available
-import prodFallback from "../../assets/images/17.jpg";
-
-// ---------- CONFIG ----------
-const BRAND_NAME = "Vamika";
-const baseUrl = process.env.REACT_APP_APIURL || "http://localhost:8000/v1";
-// for static files like /uploads/...
-const apiRoot = baseUrl.replace(/\/v1$/, "");
-
+// config
+const BRAND_NAME = 'Vamika';
+const baseUrl = process.env.REACT_APP_APIURL || 'http://localhost:8000/v1';
+const apiRoot = baseUrl.replace(/\/v1$/, '');
 const PRODUCTS_ENDPOINT = `${baseUrl}/products/brand/${encodeURIComponent(
   BRAND_NAME
 )}`;
 
-// ---------- HELPERS ----------
-const getDiscountPercent = (mrp, price) => {
-  if (!mrp || !price || mrp <= price) return 0;
-  return Math.round(((mrp - price) / mrp) * 100);
-};
-
+// helpers
 const getImageUrl = (path) => {
   if (!path) return prodFallback;
-  if (path.startsWith("http")) return path;
-  // 🔹 use apiRoot so /uploads/... works correctly
+  if (path.startsWith('http')) return path;
   return `${apiRoot}${path}`;
 };
 
-// ---------- CUSTOM ARROWS ----------
+const getUnitPrice = (item) =>
+  item?.price?.sellingPrice ||
+  item?.price?.sale ||
+  item?.price?.finalPrice ||
+  item?.price?.mrp ||
+  0;
+
+const getDiscountPercent = (mrp, sellingPrice) => {
+  if (!mrp || !sellingPrice || mrp <= sellingPrice) return 0;
+  return Math.round(((mrp - sellingPrice) / mrp) * 100);
+};
+
+// arrows
 const NextArrow = ({ style, onClick }) => (
   <button
     type="button"
     className={`${styles.arrowBtn} ${styles.nextArrow}`}
-    style={{ ...style }}
+    style={style}
     onClick={onClick}
   >
     &gt;
@@ -57,7 +59,7 @@ const PrevArrow = ({ style, onClick }) => (
   <button
     type="button"
     className={`${styles.arrowBtn} ${styles.prevArrow}`}
-    style={{ ...style }}
+    style={style}
     onClick={onClick}
   >
     &lt;
@@ -67,14 +69,12 @@ const PrevArrow = ({ style, onClick }) => (
 const NewArrival = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const navigate = useNavigate();
-
-  // wishlist from context
+  const sidebar = useContext(SidebarContext);
   const { wishlistItems, toggleWishlist } = useContext(WishlistContext);
 
-  // ---------- SLIDER SETTINGS ----------
   const settings = {
     dots: false,
     infinite: true,
@@ -82,31 +82,20 @@ const NewArrival = () => {
     slidesToShow: 4,
     slidesToScroll: 1,
     swipeToSlide: true,
-    autoplay: false, // autoplay OFF
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     responsive: [
       { breakpoint: 1280, settings: { slidesToShow: 3 } },
       { breakpoint: 992, settings: { slidesToShow: 2 } },
       { breakpoint: 768, settings: { slidesToShow: 1.5 } },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          centerMode: false,
-        },
-      },
+      { breakpoint: 480, settings: { slidesToShow: 1 } },
     ],
   };
 
-  // ---------- FETCH PRODUCTS ----------
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        setError("");
-
         const res = await axios.get(PRODUCTS_ENDPOINT);
         const backendProducts = res.data?.data || [];
 
@@ -115,42 +104,52 @@ const NewArrival = () => {
           const salePrice = prod.price?.sale || mrp;
           const colorsArray = Array.isArray(prod.colors) ? prod.colors : [];
 
-          // stock calculator
           let totalStock = 0;
-          if (typeof prod.totalStock === "number") {
-            totalStock = prod.totalStock;
-          } else if (typeof prod.stock === "number") {
-            totalStock = prod.stock;
-          } else if (Array.isArray(prod.sizes)) {
+          if (typeof prod.totalStock === 'number') totalStock = prod.totalStock;
+          else if (typeof prod.stock === 'number') totalStock = prod.stock;
+          else if (Array.isArray(prod.sizes)) {
             totalStock = prod.sizes.reduce(
               (sum, s) => sum + (s.stock || 0),
               0
             );
           }
 
-          const genderType = prod.gender || prod.genderType || "Unisex";
-
           return {
+            _id: prod._id,
             id: prod._id,
+
             brand: prod.brand || BRAND_NAME,
             name: prod.name,
-            description: prod.description || "",
-            mrp,
-            price: salePrice,
+            description: prod.description || '',
+
+            // 🔑 PRICE OBJECT (safe everywhere)
+            price: {
+              mrp,
+              sale: salePrice,
+              sellingPrice: salePrice,
+              finalPrice: salePrice,
+            },
+
+            mrp, // UI helper
+
             image: getImageUrl(
               prod.mainImage || (prod.galleryImages && prod.galleryImages[0])
             ),
+            mainImage:
+              prod.mainImage || (prod.galleryImages && prod.galleryImages[0]),
+
             colors: colorsArray,
+            sizes: prod.sizes || [],
             moreColors: colorsArray.length > 3 ? colorsArray.length - 3 : 0,
             stock: totalStock,
-            gender: genderType,
+            gender: prod.gender || prod.genderType || 'Unisex',
           };
         });
 
         setProducts(mapped);
       } catch (err) {
-        console.error("Error fetching Vamika products:", err);
-        setError("Failed to load products.");
+        console.error(err);
+        setError('Failed to load products.');
       } finally {
         setLoading(false);
       }
@@ -165,7 +164,7 @@ const NewArrival = () => {
         <h2 className={styles.title}>{BRAND_NAME}</h2>
 
         <div className={styles.contentRow}>
-          {/* LEFT VIDEO SECTION */}
+          {/* LEFT */}
           <div className={styles.leftPanel}>
             <div className={styles.heroCard}>
               <video
@@ -178,50 +177,38 @@ const NewArrival = () => {
               >
                 <source src={heroVideo} type="video/mp4" />
               </video>
-
-              <div className={styles.heroOverlay}></div>
-
-              {/* SHOP NOW NAVIGATES TO BRAND LISTING PAGE */}
+              <div className={styles.heroOverlay} />
               <button
-                type="button"
                 className={styles.heroBtn}
-                onClick={() => navigate("/products")}
+                onClick={() => navigate('/products')}
               >
                 Shop Now
               </button>
             </div>
           </div>
 
-          {/* RIGHT SLIDER */}
+          {/* RIGHT */}
           <div className={styles.sliderWrapper}>
-            {loading && (
-              <p className={styles.infoText}>Loading products...</p>
-            )}
-            {error && !loading && (
-              <p className={styles.errorText}>{error}</p>
-            )}
-            {!loading && !error && products.length === 0 && (
-              <p className={styles.infoText}>No products found.</p>
-            )}
+            {loading && <p className={styles.infoText}>Loading…</p>}
+            {error && <p className={styles.errorText}>{error}</p>}
 
-            {!loading && !error && products.length > 0 && (
+            {!loading && !error && (
               <Slider {...settings}>
                 {products.map((item) => {
-                  const discount = getDiscountPercent(item.mrp, item.price);
+                  const unitPrice = getUnitPrice(item);
+                  const discount = getDiscountPercent(item.mrp, unitPrice);
                   const isInWishlist = wishlistItems.includes(item.id);
 
                   return (
                     <div key={item.id} className={styles.slideOuter}>
-                      {/* FULL CARD CLICKABLE */}
                       <div
                         className={styles.productCard}
                         onClick={() => navigate(`/product/${item.id}`)}
-                        role="button"
                       >
-                        {/* WISHLIST BUTTON */}
+                        {/* wishlist */}
                         <button
                           className={`${styles.wishBtn} ${
-                            isInWishlist ? styles.wishBtnActive : ""
+                            isInWishlist ? styles.wishBtnActive : ''
                           }`}
                           onClick={(e) => {
                             e.stopPropagation();
@@ -243,13 +230,13 @@ const NewArrival = () => {
                           <div className={styles.brand}>{item.brand}</div>
                           <div className={styles.productName}>{item.name}</div>
 
-                          {/* price row */}
+                          {/* PRICE — SAFE */}
                           <div className={styles.priceRow}>
                             <span className={styles.currentPrice}>
-                              ₹ {item.price}
+                              ₹ {unitPrice}
                             </span>
 
-                            {item.mrp > 0 && (
+                            {item.mrp > unitPrice && (
                               <span className={styles.originalPrice}>
                                 ₹ {item.mrp}
                               </span>
@@ -262,7 +249,6 @@ const NewArrival = () => {
                             )}
                           </div>
 
-                          {/* stock + gender row */}
                           <div className={styles.metaRow}>
                             <span
                               className={`${styles.stockBadge} ${
@@ -272,26 +258,23 @@ const NewArrival = () => {
                               }`}
                             >
                               {item.stock > 0
-                                ? `Available Stock: ${item.stock}`
-                                : "Out of stock"}
+                                ? `Stock: ${item.stock}`
+                                : 'Out of stock'}
                             </span>
-
                             <span className={styles.genderTag}>
                               {item.gender}
                             </span>
                           </div>
 
-                          {/* colors + cart */}
                           <div className={styles.bottomRow}>
                             <div className={styles.colorRow}>
-                              {item.colors.slice(0, 3).map((c, idx) => (
+                              {item.colors.slice(0, 3).map((c, i) => (
                                 <span
-                                  key={idx}
+                                  key={i}
                                   className={styles.colorDot}
                                   style={{ backgroundColor: c }}
                                 />
                               ))}
-
                               {item.moreColors > 0 && (
                                 <span className={styles.moreColors}>
                                   +{item.moreColors}
@@ -303,7 +286,7 @@ const NewArrival = () => {
                               className={styles.cartBtn}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                // TODO: add-to-cart logic
+                                sidebar.openQuickAdd(item);
                               }}
                             >
                               <FiShoppingBag />

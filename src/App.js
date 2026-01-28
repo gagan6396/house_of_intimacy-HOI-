@@ -51,7 +51,8 @@ import OrderSuccess from 'pages/Checkout/OrderSuccess';
 import ScrollToTop from 'components/ScrollToTop';
 import { BlogDetails } from 'components/blogs/BlogDetails';
 import { AllBlogs } from 'components/blogs/AllBlogs';
-
+import { SidebarProvider } from 'contexts/SidebarContext';
+import QuickAddDrawer from 'components/cart/QuickAddDrawer';
 export default function Main() {
   const [currentTheme, setCurrentTheme] = useState(initialTheme);
   const location = useLocation();
@@ -69,6 +70,7 @@ export default function Main() {
   return (
     <ChakraProvider theme={currentTheme}>
       {/* ✅ Wrap whole app UI in Wishlist + Cart providers */}
+      <SidebarProvider>
       <WishlistProvider>
         <CartProvider>
           <div
@@ -180,13 +182,14 @@ export default function Main() {
                 />
               </Routes>
             </div>
-
+<QuickAddDrawer />
             <FixedPlugin />
 
             {!hideFooter && <Footer />}
           </div>
         </CartProvider>
       </WishlistProvider>
+      </SidebarProvider>
     </ChakraProvider>
   );
 }
