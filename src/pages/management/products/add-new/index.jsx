@@ -215,6 +215,7 @@ const AddProducts = () => {
     const formData = new FormData();
 
     // BASIC INFO
+    formData.append('productCode', data.productCode || '');
     formData.append('name', data.name || '');
     formData.append('slug', data.slug || '');
     formData.append('brand', data.brand || '');
@@ -397,6 +398,21 @@ const AddProducts = () => {
               </Text>
 
               <SimpleGrid columns={[1, 2]} gap={4}>
+              <FormControl isRequired isInvalid={errors.productCode}>
+  <FormLabel>Product Code</FormLabel>
+  <Input
+    placeholder="PC-HOI-0001"
+    {...register('productCode', {
+      required: 'Product Code is required',
+    })}
+  />
+  {errors.productCode && (
+    <Text fontSize="xs" color="red.400">
+      {errors.productCode.message}
+    </Text>
+  )}
+</FormControl>
+
                 <FormControl isRequired isInvalid={errors.name}>
                   <FormLabel>Product Name</FormLabel>
                   <Input
@@ -444,6 +460,7 @@ const AddProducts = () => {
                     {...register('category')}
                     placeholder="Select category"
                   >
+                  <option>Sports Bra</option>
                     <option>Bra</option>
                     <option>Panty</option>
                     <option>Brief</option>

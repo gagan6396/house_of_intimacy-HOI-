@@ -184,6 +184,7 @@ const EditProducts = () => {
         const p = res.data;
 
         // BASIC INFO
+        setValue('productCode', p.productCode || '');
         setValue('name', p.name || '');
         setValue('slug', p.slug || '');
         setValue('brand', p.brand || '');
@@ -558,6 +559,20 @@ const EditProducts = () => {
               </Text>
 
               <SimpleGrid columns={[1, 2]} gap={4}>
+                <FormControl isRequired isInvalid={errors.productCode}>
+                  <FormLabel>Product Code</FormLabel>
+                  <Input
+                    placeholder="PC-HOI-0001"
+                    {...register('productCode', {
+                      required: 'Product Code is required',
+                    })}
+                  />
+                  {errors.productCode && (
+                    <Text fontSize="xs" color="red.400">
+                      {errors.productCode.message}
+                    </Text>
+                  )}
+                </FormControl>
                 <FormControl isRequired isInvalid={errors.name}>
                   <FormLabel>Product Name</FormLabel>
                   <Input
@@ -605,6 +620,7 @@ const EditProducts = () => {
                     {...register('category')}
                     placeholder="Select category"
                   >
+                     <option>Sports Bra</option>
                     <option>Bra</option>
                     <option>Panty</option>
                     <option>Brief</option>
