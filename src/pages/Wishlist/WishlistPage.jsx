@@ -11,7 +11,6 @@ import { FiHeart, FiTrash2, FiArrowLeft } from 'react-icons/fi';
 const baseUrl = process.env.REACT_APP_APIURL || 'http://localhost:8000/v1';
 const apiRoot = baseUrl.replace(/\/v1$/, '');
 
-// helper: convert "/uploads/..." → full URL
 const getImageUrl = (url) => {
   if (!url) return '';
   if (url.startsWith('http')) return url;
@@ -19,12 +18,29 @@ const getImageUrl = (url) => {
 };
 
 function WishlistPage() {
-  const { wishlistItems, removeFromWishlist } = useContext(WishlistContext);
+  const { wishlistItems, removeFromWishlist, loadFromDatabase } =
+    useContext(WishlistContext);
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // 👉 Fetch products list once & then filter by wishlist IDs
+  // 🔥 Check if user is authenticated
+  const isAuthenticated = !!(
+    localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
+  );
+
+  // 🔥 Load wishlist from database on mount if authenticated (only once)
+  useEffect(() => {
+    const token =
+      localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+
+    if (token) {
+      loadFromDatabase();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty array - only run once on mount
+
+  // Fetch products list once & then filter by wishlist IDs
   useEffect(() => {
     if (!wishlistItems || wishlistItems.length === 0) {
       setAllProducts([]);
@@ -40,7 +56,7 @@ function WishlistPage() {
         const res = await axios.get(`${baseUrl}/products`, {
           params: {
             page: 1,
-            limit: 200, // adjust as per your expected max
+            limit: 200,
           },
         });
 
@@ -62,7 +78,6 @@ function WishlistPage() {
     };
   }, [wishlistItems]);
 
-  // 👉 Only keep products whose _id is in wishlistItems
   const products = useMemo(() => {
     if (!wishlistItems || wishlistItems.length === 0) return [];
     return allProducts.filter((p) => wishlistItems.includes(p._id));
@@ -73,7 +88,6 @@ function WishlistPage() {
     removeFromWishlist(id);
   };
 
-  // always go to /product/:id (matches ProductDetail.jsx)
   const handleCardClick = (product) => {
     navigate(`/product/${product._id}`);
   };
@@ -82,11 +96,9 @@ function WishlistPage() {
 
   return (
     <div className={styles.page}>
-      {/* Soft gradient strip */}
       <div className={styles.heroStrip} />
 
       <div className={`container ${styles.inner}`}>
-        {/* ---- Top Header ---- */}
         <header className={styles.header}>
           <div className={styles.headerLeft}>
             <button
@@ -119,32 +131,39 @@ function WishlistPage() {
                 </span>
               </div>
 
-              <p className={styles.subtitle}>
-                Wishlist is not saved permanently yet. Please
-                <button
-                  type="button"
-                  className={styles.linkButton}
-                  onClick={() => navigate('/login')}
-                >
-                  {' '}
-                  log in{' '}
-                </button>
-                or
-                <button
-                  type="button"
-                  className={styles.linkButton}
-                  onClick={() => navigate('/auth/create_new_user')}
-                >
-                  {' '}
-                  create an account{' '}
-                </button>
-                to save it across devices.
-              </p>
+              {!isAuthenticated && (
+                <p className={styles.subtitle}>
+                  Wishlist is not saved permanently yet. Please
+                  <button
+                    type="button"
+                    className={styles.linkButton}
+                    onClick={() => navigate('/login')}
+                  >
+                    {' '}
+                    log in{' '}
+                  </button>
+                  or
+                  <button
+                    type="button"
+                    className={styles.linkButton}
+                    onClick={() => navigate('/auth/create_new_user')}
+                  >
+                    {' '}
+                    create an account{' '}
+                  </button>
+                  to save it across devices.
+                </p>
+              )}
+
+              {isAuthenticated && (
+                <p className={styles.subtitle}>
+                  Your wishlist is saved and will sync across all your devices.
+                </p>
+              )}
             </div>
           </div>
         </header>
 
-        {/* ---- Toolbar ---- */}
         {hasItems && (
           <div className={styles.toolbar}>
             <div className={styles.toolbarLeft}>
@@ -165,7 +184,6 @@ function WishlistPage() {
           </div>
         )}
 
-        {/* ---- Loading ---- */}
         {loading && (
           <div className={styles.emptyState}>
             <div className={styles.emptyIconWrapper}>
@@ -179,7 +197,6 @@ function WishlistPage() {
           </div>
         )}
 
-        {/* ---- Empty State ---- */}
         {!loading && !hasItems && (
           <div className={styles.emptyState}>
             <div className={styles.emptyIconWrapper}>
@@ -200,7 +217,6 @@ function WishlistPage() {
           </div>
         )}
 
-        {/* ---- Wishlist Grid ---- */}
         {hasItems && (
           <div className={styles.grid}>
             {products.map((product) => {
@@ -211,11 +227,9 @@ function WishlistPage() {
                   getImageUrl(product.galleryImages[0])) ||
                 '';
 
-              // ---------- PRICE LOGIC (MRP + SALE + DISCOUNT) ----------
               const priceObj = product.price || {};
-
-              const mrp = priceObj.mrp ?? 0; // main MRP
-              const salePrice = priceObj.sale ?? mrp; // sale ya mrp
+              const mrp = priceObj.mrp ?? 0;
+              const salePrice = priceObj.sale ?? mrp;
               const discountPercent =
                 priceObj.discountPercent ??
                 (mrp && salePrice && mrp > salePrice
@@ -229,7 +243,6 @@ function WishlistPage() {
                 mrp !== null &&
                 salePrice !== mrp;
 
-              // ---------- SIZE / COLOR / DESC ----------
               const sizeText = product.defaultSize || product.size || '';
               const colorText = product.defaultColor || product.color || '';
               const brandText = product.brand || '';
@@ -242,7 +255,6 @@ function WishlistPage() {
                   className={styles.card}
                   onClick={() => handleCardClick(product)}
                 >
-                  {/* Badge */}
                   <div className={styles.ribbon}>
                     <span>Wishlist</span>
                   </div>
@@ -258,12 +270,10 @@ function WishlistPage() {
                       <div className={styles.imagePlaceholder}>No Image</div>
                     )}
 
-                    {/* Hover overlay */}
                     <div className={styles.overlay}>
                       <span className={styles.overlayText}>View Details</span>
                     </div>
 
-                    {/* Remove icon in corner */}
                     <button
                       type="button"
                       className={styles.iconRemove}
@@ -304,23 +314,19 @@ function WishlistPage() {
                       )}
                     </div>
 
-                    {/* PRICE BLOCK: MRP + SALE + DISCOUNT */}
                     <div className={styles.priceRow}>
-                      {/* SALE PRICE */}
                       {isOnSale && salePrice > 0 && (
                         <span className={styles.price}>
                           ₹ {Number(salePrice).toLocaleString('en-IN')}
                         </span>
                       )}
 
-                      {/* MRP (strike if on sale) */}
                       {mrp > 0 && (
                         <span className={isOnSale ? styles.mrp : styles.price}>
                           ₹ {Number(mrp).toLocaleString('en-IN')}
                         </span>
                       )}
 
-                      {/* DISCOUNT TAG */}
                       {discountPercent > 0 && (
                         <span className={styles.discountTag}>
                           {discountPercent}% OFF
@@ -343,7 +349,6 @@ function WishlistPage() {
           </div>
         )}
 
-        {/* ---- Popular Search (bottom) ---- */}
         <div className={styles.popularWrapper}>
           <div className={styles.popularTitle}>Popular searches</div>
           <div className={styles.popularLinks}>

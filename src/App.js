@@ -69,126 +69,124 @@ export default function Main() {
 
   return (
     <ChakraProvider theme={currentTheme}>
-      {/* ✅ Wrap whole app UI in Wishlist + Cart providers */}
       <SidebarProvider>
-      <WishlistProvider>
-        <CartProvider>
-          <div
-            style={{
-              minHeight: '100vh',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            {!hideHeader && <Header />}
-            <ScrollToTop />
-            <div style={{ flex: 1 }}>
-              <Routes>
-                <Route path="/product/:id" element={<ProductDetail />} />
-                <Route
-                  path="/checkout"
-                  element={
-                    <ProtectedRoute>
-                      <CheckoutPage />
-                    </ProtectedRoute>
-                  }
-                />
-                {/* Auth layout (register, forgot, etc) */}
-                <Route path="auth/*" element={<AuthLayout />} />
-                <Route path="/wishlist" element={<WishlistPage />} />
-                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                <Route path="/faq" element={<FAQ />} />
-                <Route path="/refund-policy" element={<RefundPolicy />} />
-                <Route path="/account/orders" element={<MyOrders />} />
-                <Route
-                  path="/account/orders/:orderId"
-                  element={<OrderDetails />}
-                />
-                <Route
-                  path="/order-success/:orderId"
-                  element={<OrderSuccess />}
-                />
-                <Route path="/Blog" element={<AllBlogs />} />
-                <Route path="/BlogDetails" element={<BlogDetails />} />
-                <Route path="/blog/:slug" element={<BlogDetails />} />
-                {/* 🔐 ADMIN LAYOUT – now uses AdminRoute */}
-                <Route
-                  path="admin/*"
-                  element={
-                    <AdminRoute>
-                      <AdminLayout
-                        theme={currentTheme}
-                        setTheme={setCurrentTheme}
-                      />
-                    </AdminRoute>
-                  }
-                />
-                {/* Login */}
-                <Route
-                  path="/login"
-                  element={
-                    <PublicRoute>
-                      <SignIn />
-                    </PublicRoute>
-                  }
-                />
-                {/* Register */}
-                <Route
-                  path="/auth/create_new_user"
-                  element={
-                    <PublicRoute>
-                      <CreateNewUser />
-                    </PublicRoute>
-                  }
-                />
-                {/* ✅ NEW: Verify Email (OTP) */}
-                <Route
-                  path="/auth/verify-email"
-                  element={
-                    <PublicRoute>
-                      <VerifyEmail />
-                    </PublicRoute>
-                  }
-                />
-                {/* Account pages (protected) */}
-                <Route
-                  path="/account/profile"
-                  element={
-                    <ProtectedRoute>
-                      <ProfilePage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/account/orders"
-                  element={
-                    <ProtectedRoute>
-                      <OrdersPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route path="/bras" element={<BraListing />} />
-                <Route path="/panties" element={<PantiesListing />} />
-                <Route path="/nightwear" element={<NightwearListing />} />
-                {/* HOME PAGE (public) */}
-                <Route path="/" element={<Home />} />
-                <Route path="/about-us" element={<Aboutus />} />
-                <Route path="/ContactUs" element={<ContactUs />} />
-                <Route path="/products" element={<AllProducts />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route
-                  path="/reset-password/:token"
-                  element={<ResetPassword />}
-                />
-              </Routes>
-            </div>
-<QuickAddDrawer />
-            <FixedPlugin />
+        <WishlistProvider>
+          <CartProvider>
+            <div
+              style={{
+                minHeight: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              {!hideHeader && <Header />}
+              <ScrollToTop />
+              <div style={{ flex: 1 }}>
+                <Routes>
+                  <Route path="/product/:id" element={<ProductDetail />} />
+                  <Route
+                    path="/checkout"
+                    element={
+                      <ProtectedRoute>
+                        <CheckoutPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route path="auth/*" element={<AuthLayout />} />
+                  <Route path="/wishlist" element={<WishlistPage />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                  <Route path="/faq" element={<FAQ />} />
+                  <Route path="/refund-policy" element={<RefundPolicy />} />
+                  <Route path="/account/orders" element={<MyOrders />} />
+                  <Route
+                    path="/account/orders/:orderId"
+                    element={<OrderDetails />}
+                  />
+                  <Route
+                    path="/order-success/:orderId"
+                    element={<OrderSuccess />}
+                  />
+                  <Route path="/Blog" element={<AllBlogs />} />
+                  <Route path="/BlogDetails" element={<BlogDetails />} />
+                  <Route path="/blog/:slug" element={<BlogDetails />} />
+                  {/* 🔐 ADMIN LAYOUT – now uses AdminRoute */}
+                  <Route
+                    path="admin/*"
+                    element={
+                      <AdminRoute>
+                        <AdminLayout
+                          theme={currentTheme}
+                          setTheme={setCurrentTheme}
+                        />
+                      </AdminRoute>
+                    }
+                  />
+                  {/* Login */}
+                  <Route
+                    path="/login"
+                    element={
+                      <PublicRoute>
+                        <SignIn />
+                      </PublicRoute>
+                    }
+                  />
+                  {/* Register */}
+                  <Route
+                    path="/auth/create_new_user"
+                    element={
+                      <PublicRoute>
+                        <CreateNewUser />
+                      </PublicRoute>
+                    }
+                  />
+                  {/* ✅ NEW: Verify Email (OTP) */}
+                  <Route
+                    path="/auth/verify-email"
+                    element={
+                      <PublicRoute>
+                        <VerifyEmail />
+                      </PublicRoute>
+                    }
+                  />
+                  {/* Account pages (protected) */}
+                  <Route
+                    path="/account/profile"
+                    element={
+                      <ProtectedRoute>
+                        <ProfilePage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/account/orders"
+                    element={
+                      <ProtectedRoute>
+                        <OrdersPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route path="/bras" element={<BraListing />} />
+                  <Route path="/panties" element={<PantiesListing />} />
+                  <Route path="/nightwear" element={<NightwearListing />} />
+                  {/* HOME PAGE (public) */}
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about-us" element={<Aboutus />} />
+                  <Route path="/ContactUs" element={<ContactUs />} />
+                  <Route path="/products" element={<AllProducts />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route
+                    path="/reset-password/:token"
+                    element={<ResetPassword />}
+                  />
+                </Routes>
+              </div>
+              <QuickAddDrawer />
+              <FixedPlugin />
 
-            {!hideFooter && <Footer />}
-          </div>
-        </CartProvider>
-      </WishlistProvider>
+              {!hideFooter && <Footer />}
+            </div>
+          </CartProvider>
+        </WishlistProvider>
       </SidebarProvider>
     </ChakraProvider>
   );

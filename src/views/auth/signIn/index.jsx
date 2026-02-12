@@ -1,5 +1,5 @@
 // src/views/auth/signIn.jsx
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
 import { Link, Text } from "@chakra-ui/react";
@@ -30,6 +30,7 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
 
 import axios from "axios";
+import { WishlistContext } from "../../../contexts/WishlistContext";
 
 const baseUrl = process.env.REACT_APP_APIURL || "http://localhost:8000/v1";
 
@@ -43,7 +44,10 @@ function SignIn() {
 
   const toast = useToast();
   const navigate = useNavigate();
-  const location = useLocation(); // ⭐ yaha se "from" milega
+  const location = useLocation();
+  
+  // 🔥 Get wishlist context
+  const { syncWithDatabase } = useContext(WishlistContext);
 
   const {
     register,
@@ -60,8 +64,6 @@ function SignIn() {
         password: values.password,
       });
 
-      // EXPECTED RESPONSE:
-      // { success: true, token: "...", user: { name, email, role } }
       const { token, user } = res.data || {};
 
       if (!token || !user) {
@@ -76,6 +78,9 @@ function SignIn() {
       storage.setItem("userName", user.name || "");
       storage.setItem("userEmail", user.email || "");
 
+      // 🔥 SYNC WISHLIST WITH DATABASE
+      await syncWithDatabase();
+
       toast({
         title: "Login successful",
         description:
@@ -89,15 +94,11 @@ function SignIn() {
 
       // 🧭 Redirect based on role + from state
       const role = (user.role || "").toLowerCase().trim();
-      const from = location.state?.from; // e.g. "/checkout"
+      const from = location.state?.from;
 
       if (role === "admin") {
-        // Admin ko hamesha dashboard pe le jao
         navigate("/admin/admin_dashboard", { replace: true });
       } else {
-        // Normal user:
-        // agar from mila (ProtectedRoute se) -> waha le jao (eg. /checkout)
-        // warna home page
         if (from) {
           navigate(from, { replace: true });
         } else {
