@@ -189,7 +189,10 @@ function ProductDetail() {
         setColorVariants(uniqueVariants);
 
         // Auto-select first color of current product
-        if (Array.isArray(currentProduct.colors) && currentProduct.colors.length > 0) {
+        if (
+          Array.isArray(currentProduct.colors) &&
+          currentProduct.colors.length > 0
+        ) {
           setSelectedColor(currentProduct.colors[0]);
         }
       }
@@ -319,7 +322,12 @@ function ProductDetail() {
       }
     } else {
       // Different product - navigate to it (auto-select will happen on load)
-      console.log('🎨 Switching to product:', variant.productId, 'with color:', variant.color);
+      console.log(
+        '🎨 Switching to product:',
+        variant.productId,
+        'with color:',
+        variant.color,
+      );
       navigate(`/product/${variant.productId}`);
     }
   };
@@ -355,9 +363,7 @@ function ProductDetail() {
     }
 
     try {
-      const res = await fetch(
-        `${baseUrl}/shipping/check-pincode/${clean}`,
-      );
+      const res = await fetch(`${baseUrl}/shipping/check-pincode/${clean}`);
       const data = await res.json();
 
       setIsDehradunPincode(data.codAllowed);
@@ -702,9 +708,7 @@ function ProductDetail() {
             <div className={styles.section} id="color-section">
               <div className={styles.sectionLabelRow}>
                 <div>
-                  <span className={styles.sectionLabel}>
-                    Available Colors
-                  </span>
+                  <span className={styles.sectionLabel}>Available Colors</span>
                   {selectedColor && (
                     <span className={styles.sectionSubLabel}>
                       {' '}
@@ -791,8 +795,8 @@ function ProductDetail() {
                     typeof size === 'string'
                       ? null
                       : typeof size.stock === 'number'
-                      ? size.stock
-                      : null;
+                        ? size.stock
+                        : null;
 
                   const isDisabled = stock === 0;
                   const isActive = selectedSize === label;

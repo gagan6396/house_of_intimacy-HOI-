@@ -21,10 +21,9 @@ const BRAND_NAME = 'Vamika';
 const baseUrl = process.env.REACT_APP_APIURL || 'http://localhost:8000/v1';
 const apiRoot = baseUrl.replace(/\/v1$/, '');
 const PRODUCTS_ENDPOINT = `${baseUrl}/products/brand/${encodeURIComponent(
-  BRAND_NAME
+  BRAND_NAME,
 )}`;
 
-// ⭐⭐ Color mapping - same as ProductDetail.jsx
 const COLOR_MAP = {
   Black: '#000000',
   Purple: '#800080',
@@ -53,7 +52,6 @@ const decodeColor = (value) => {
   return str || '#e5e5e5';
 };
 
-// helpers
 const getImageUrl = (path) => {
   if (!path) return prodFallback;
   if (path.startsWith('http')) return path;
@@ -107,12 +105,11 @@ const getBaseCode = (code) => {
   return code;
 };
 
-
 const NewArrival = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [allProducts, setAllProducts] = useState([]); // ⭐ Store all products for variant lookup
+  const [allProducts, setAllProducts] = useState([]); 
 
   const navigate = useNavigate();
   const sidebar = useContext(SidebarContext);
@@ -135,41 +132,39 @@ const NewArrival = () => {
     ],
   };
 
-  // ⭐⭐ Function to get color variants for a product
-  // FIX: allProductsList must be the RAW backend data (with productCode field)
+  
   const getColorVariants = (currentProduct, allProductsList) => {
-  if (!currentProduct?.productCode) return [];
+    if (!currentProduct?.productCode) return [];
 
-  const baseCode = getBaseCode(currentProduct.productCode);
+    const baseCode = getBaseCode(currentProduct.productCode);
 
-  const sameBaseProducts = allProductsList.filter((p) => {
-    if (!p.productCode) return false;
+    const sameBaseProducts = allProductsList.filter((p) => {
+      if (!p.productCode) return false;
 
-    const pBase = getBaseCode(p.productCode);
+      const pBase = getBaseCode(p.productCode);
 
-    return pBase === baseCode;
-  });
+      return pBase === baseCode;
+    });
 
-  const colorMap = new Map();
+    const colorMap = new Map();
 
-  sameBaseProducts.forEach((product) => {
-    if (Array.isArray(product.colors)) {
-      product.colors.forEach((color) => {
-        if (color && !colorMap.has(color)) {
-          colorMap.set(color, {
-            color,
-            productId: product._id,
-            isCurrentProduct:
-              String(product._id) === String(currentProduct._id),
-          });
-        }
-      });
-    }
-  });
+    sameBaseProducts.forEach((product) => {
+      if (Array.isArray(product.colors)) {
+        product.colors.forEach((color) => {
+          if (color && !colorMap.has(color)) {
+            colorMap.set(color, {
+              color,
+              productId: product._id,
+              isCurrentProduct:
+                String(product._id) === String(currentProduct._id),
+            });
+          }
+        });
+      }
+    });
 
-  return Array.from(colorMap.values());
-};
-
+    return Array.from(colorMap.values());
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -178,7 +173,7 @@ const NewArrival = () => {
         const res = await axios.get(PRODUCTS_ENDPOINT);
         const backendProducts = res.data?.data || [];
 
-        setAllProducts(backendProducts); // ⭐ Store RAW backend products (has productCode)
+        setAllProducts(backendProducts); 
 
         const mapped = backendProducts.map((prod) => {
           const mrp = prod.price?.mrp || 0;
@@ -189,10 +184,7 @@ const NewArrival = () => {
           if (typeof prod.totalStock === 'number') totalStock = prod.totalStock;
           else if (typeof prod.stock === 'number') totalStock = prod.stock;
           else if (Array.isArray(prod.sizes)) {
-            totalStock = prod.sizes.reduce(
-              (sum, s) => sum + (s.stock || 0),
-              0
-            );
+            totalStock = prod.sizes.reduce((sum, s) => sum + (s.stock || 0), 0);
           }
 
           return {
@@ -204,26 +196,19 @@ const NewArrival = () => {
             description: prod.description || '',
             category: prod.category,
             subcategory: prod.subcategory,
-
-            // ✅ FIX: productCode add kiya — getColorVariants ke liye ZARURI hai
             productCode: prod.productCode || null,
-
-            // 🔑 PRICE OBJECT (safe everywhere)
             price: {
               mrp,
               sale: salePrice,
               sellingPrice: salePrice,
               finalPrice: salePrice,
             },
-
-            mrp, // UI helper
-
+            mrp, 
             image: getImageUrl(
-              prod.mainImage || (prod.galleryImages && prod.galleryImages[0])
+              prod.mainImage || (prod.galleryImages && prod.galleryImages[0]),
             ),
             mainImage:
               prod.mainImage || (prod.galleryImages && prod.galleryImages[0]),
-
             colors: colorsArray,
             sizes: prod.sizes || [],
             stock: totalStock,
@@ -243,10 +228,14 @@ const NewArrival = () => {
     fetchProducts();
   }, []);
 
-  // ⭐⭐ Handle color variant click
   const handleColorVariantClick = (e, variant) => {
     e.stopPropagation();
-    console.log('🎨 Switching to product:', variant.productId, 'with color:', variant.color);
+    console.log(
+      '🎨 Switching to product:',
+      variant.productId,
+      'with color:',
+      variant.color,
+    );
     navigate(`/product/${variant.productId}`);
   };
 
@@ -290,11 +279,7 @@ const NewArrival = () => {
                   const unitPrice = getUnitPrice(item);
                   const discount = getDiscountPercent(item.mrp, unitPrice);
                   const isInWishlist = wishlistItems.includes(item.id);
-
-                  // ⭐⭐ Get all color variants using RAW allProducts data
-                  // item mein productCode hai (fix ke baad), allProducts mein bhi hai
                   const colorVariants = getColorVariants(item, allProducts);
-
                   return (
                     <div key={item.id} className={styles.slideOuter}>
                       <div
@@ -365,36 +350,42 @@ const NewArrival = () => {
                           <div className={styles.bottomRow}>
                             {/* ⭐⭐ UPDATED: Show all color variants across same base-code products */}
                             <div className={styles.colorRow}>
-                              {colorVariants.length > 0 ? (
-                                colorVariants.map((variant, i) => {
-                                  const bg = decodeColor(variant.color);
-                                  return (
-                                    <span
-                                      key={i}
-                                      className={`${styles.colorDot} ${
-                                        variant.isCurrentProduct
-                                          ? styles.colorDotCurrentProduct
-                                          : styles.colorDotOtherProduct
-                                      }`}
-                                      style={{ backgroundColor: bg }}
-                                      title={`${variant.color}${
-                                        variant.isCurrentProduct ? '' : ' (different product)'
-                                      }`}
-                                      onClick={(e) => handleColorVariantClick(e, variant)}
-                                    />
-                                  );
-                                })
-                              ) : (
-                                // Fallback: show current product colors only
-                                item.colors.slice(0, 3).map((c, i) => (
-                                  <span
-                                    key={i}
-                                    className={styles.colorDot}
-                                    style={{ backgroundColor: decodeColor(c) }}
-                                    title={c}
-                                  />
-                                ))
-                              )}
+                              {colorVariants.length > 0
+                                ? colorVariants.map((variant, i) => {
+                                    const bg = decodeColor(variant.color);
+                                    return (
+                                      <span
+                                        key={i}
+                                        className={`${styles.colorDot} ${
+                                          variant.isCurrentProduct
+                                            ? styles.colorDotCurrentProduct
+                                            : styles.colorDotOtherProduct
+                                        }`}
+                                        style={{ backgroundColor: bg }}
+                                        title={`${variant.color}${
+                                          variant.isCurrentProduct
+                                            ? ''
+                                            : ' (different product)'
+                                        }`}
+                                        onClick={(e) =>
+                                          handleColorVariantClick(e, variant)
+                                        }
+                                      />
+                                    );
+                                  })
+                                : // Fallback: show current product colors only
+                                  item.colors
+                                    .slice(0, 3)
+                                    .map((c, i) => (
+                                      <span
+                                        key={i}
+                                        className={styles.colorDot}
+                                        style={{
+                                          backgroundColor: decodeColor(c),
+                                        }}
+                                        title={c}
+                                      />
+                                    ))}
                             </div>
 
                             <button
@@ -412,7 +403,7 @@ const NewArrival = () => {
                     </div>
                   );
                 })}
-            </Slider>
+              </Slider>
             )}
           </div>
         </div>
