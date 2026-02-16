@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -9,168 +9,127 @@ import {
   Stack,
   Divider,
   Spinner,
-  useToast,
   Tag,
   TagLabel,
   SimpleGrid,
   Icon,
   useColorModeValue,
-} from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { FiMail, FiPhone, FiMapPin, FiUser } from 'react-icons/fi';
+} from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { FiMail, FiPhone, FiMapPin, FiUser } from "react-icons/fi";
 
-const baseUrl = process.env.REACT_APP_APIURL || 'http://localhost:8000/v1';
+const baseUrl = process.env.REACT_APP_APIURL || "http://localhost:8000/v1";
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const toast = useToast();
   const navigate = useNavigate();
 
-  // 🎨 Colors (ALL HOOKS MUST BE HERE — TOP LEVEL ONLY)
-  const pageBg = useColorModeValue('gray.50', 'gray.900');
-  const cardBg = useColorModeValue('white', 'gray.800');
-  const labelColor = useColorModeValue('gray.500', 'gray.400');
-  const valueColor = useColorModeValue('gray.900', 'whiteAlpha.900');
-  const accent = useColorModeValue('pink.500', 'pink.300');
-  const cardBorderColor = useColorModeValue('gray.100', 'whiteAlpha.200');
+  const pageBg = useColorModeValue("gray.50", "gray.900");
+  const cardBg = useColorModeValue("white", "gray.800");
+  const labelColor = useColorModeValue("gray.500", "gray.400");
+  const valueColor = useColorModeValue("gray.900", "whiteAlpha.900");
+  const accent = useColorModeValue("pink.500", "pink.300");
+  const cardBorderColor = useColorModeValue("gray.100", "whiteAlpha.200");
 
   useEffect(() => {
     const token =
-      localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+      localStorage.getItem("authToken") ||
+      sessionStorage.getItem("authToken");
 
     if (!token) {
-      navigate('/login');
+      navigate("/login");
       return;
     }
 
     const fetchProfile = async () => {
       try {
         const res = await axios.get(`${baseUrl}/users/userdata`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
-
         setUser(res.data.user);
-      } catch (err) {
-        console.error('Profile load error:', err);
-
-        if (err.response?.status === 401) {
-          localStorage.removeItem('authToken');
-          sessionStorage.removeItem('authToken');
-          localStorage.removeItem('userName');
-
-          toast({
-            title: 'Session expired',
-            description: 'Please log in again.',
-            status: 'warning',
-            duration: 3000,
-          });
-
-          navigate('/login');
-        } else {
-          toast({
-            title: 'Failed to load profile',
-            description: err.response?.data?.message || 'Something went wrong.',
-            status: 'error',
-            duration: 3000,
-          });
-        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchProfile();
-  }, [navigate, toast]);
+  }, [navigate]);
 
-  // 🔄 Loading UI
   if (loading) {
     return (
-      <Flex minH="70vh" align="center" justify="center" bg={pageBg} px={4}>
-        <Stack align="center" spacing={3}>
+      <Flex minH="70vh" align="center" justify="center" bg={pageBg}>
+        <Stack align="center">
           <Spinner size="lg" />
-          <Text color="gray.500">Loading your profile...</Text>
+          <Text fontSize="sm" color="gray.500">
+            Loading your profile...
+          </Text>
         </Stack>
       </Flex>
     );
   }
 
-  // ❌ No user
-  if (!user) {
-    return (
-      <Flex minH="70vh" align="center" justify="center" bg={pageBg} px={4}>
-        <Box textAlign="center">
-          <Heading fontSize="xl" mb={2}>
-            No Profile Found
-          </Heading>
-          <Text color="gray.500">
-            We couldn&apos;t load your profile details right now.
-          </Text>
-        </Box>
-      </Flex>
-    );
-  }
+  if (!user) return null;
 
   return (
-    <Box
-      bg={pageBg}
-      pt={{ base: '20px', md: '20px' }} // header ki height ke hisaab se
-      pb={10}
-      px={{ base: 2, md: 2 }}
-    >
+    <Box bg={pageBg} py={{ base: 6, md: 10 }} px={{ base: 4, md: 6 }}>
       <Box maxW="1200px" mx="auto">
-        {/* Page heading */}
-        <Flex justify="space-between" align="center" mb={6}>
+        {/* Heading */}
+        <Flex
+          direction={{ base: "column", md: "row" }}
+          justify="space-between"
+          align={{ base: "flex-start", md: "center" }}
+          gap={4}
+          mb={8}
+        >
           <Box>
-            <Heading fontSize={{ base: '2xl', md: '3xl' }}>My Profile</Heading>
-            <Text color="gray.500" mt={1}>
+            <Heading fontSize={{ base: "xl", md: "3xl" }}>
+              My Profile
+            </Heading>
+            <Text fontSize="sm" color="gray.500">
               Manage your personal information and account details.
             </Text>
           </Box>
         </Flex>
 
-        {/* Main Profile Card */}
+        {/* Card */}
         <Box
           bg={cardBg}
           borderRadius="2xl"
           boxShadow="xl"
-          overflow="hidden"
           borderWidth="1px"
           borderColor={cardBorderColor}
+          overflow="hidden"
         >
-          {/* Top Banner */}
+          {/* Gradient Header */}
           <Box
             bgGradient="linear(to-r, pink.500, purple.500)"
             px={{ base: 6, md: 8 }}
-            py={6}
+            py={{ base: 6, md: 8 }}
           >
             <Flex
-              direction={{ base: 'column', md: 'row' }}
-              align={{ base: 'flex-start', md: 'center' }}
-              gap={5}
+              direction={{ base: "column", md: "row" }}
+              align="center"
+              gap={6}
+              textAlign={{ base: "center", md: "left" }}
             >
               <Avatar
                 name={user.name}
-                size="xl"
-                bg="whiteAlpha.800"
-                color="pink.500"
-                boxShadow="lg"
-                border="3px solid rgba(255,255,255,0.7)"
+                size={{ base: "lg", md: "xl" }}
                 src={user.profileimage || undefined}
+                border="3px solid rgba(255,255,255,0.7)"
               />
 
-              <Box color="white">
+              <Box color="white" w="100%">
                 <Flex
-                  align={{ base: 'flex-start', md: 'center' }}
+                  direction={{ base: "column", sm: "row" }}
+                  align="center"
                   gap={3}
-                  mb={1}
-                  direction={{ base: 'column', md: 'row' }}
+                  mb={2}
+                  justify={{ base: "center", md: "flex-start" }}
                 >
-                  <Heading fontSize={{ base: 'xl', md: '2xl' }}>
+                  <Heading fontSize={{ base: "lg", md: "2xl" }}>
                     {user.name}
                   </Heading>
 
@@ -178,7 +137,6 @@ export default function ProfilePage() {
                     <Tag
                       size="sm"
                       borderRadius="full"
-                      variant="solid"
                       bg="whiteAlpha.900"
                       color="pink.600"
                     >
@@ -189,22 +147,16 @@ export default function ProfilePage() {
                   )}
                 </Flex>
 
+                {/* FIXED ALIGNMENT */}
                 <Flex
-                  direction={{ base: 'column', sm: 'row' }}
-                  gap={{ base: 1, sm: 4 }}
-                  fontSize="sm"
-                  opacity={0.9}
+                  direction={{ base: "column", sm: "row" }}
+                  gap={{ base: 2, sm: 6 }}
+                  align="center"
+                  justify={{ base: "center", md: "flex-start" }}
                 >
-                  <Flex align="center" gap={2}>
-                    <Icon as={FiMail} />
-                    <Text>{user.email}</Text>
-                  </Flex>
-
+                  <InfoInline icon={FiMail} value={user.email} />
                   {user.phone && (
-                    <Flex align="center" gap={2}>
-                      <Icon as={FiPhone} />
-                      <Text>{user.phone}</Text>
-                    </Flex>
+                    <InfoInline icon={FiPhone} value={user.phone} />
                   )}
                 </Flex>
               </Box>
@@ -212,100 +164,65 @@ export default function ProfilePage() {
           </Box>
 
           {/* Body */}
-          <Box px={{ base: 6, md: 8 }} py={6}>
-            {/* Info grid */}
+          <Box px={{ base: 6, md: 8 }} py={{ base: 6, md: 8 }}>
             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-              <Box>
-                <Text
-                  fontSize="xs"
-                  textTransform="uppercase"
-                  color={labelColor}
-                  mb={1}
-                >
-                  Full Name
-                </Text>
-                <Flex align="center" gap={2}>
-                  <Icon as={FiUser} color={accent} />
-                  <Text fontWeight="600" color={valueColor}>
-                    {user.name}
-                  </Text>
-                </Flex>
-              </Box>
+              <ProfileField
+                label="Full Name"
+                icon={FiUser}
+                value={user.name}
+                accent={accent}
+                valueColor={valueColor}
+                labelColor={labelColor}
+              />
 
-              <Box>
-                <Text
-                  fontSize="xs"
-                  textTransform="uppercase"
-                  color={labelColor}
-                >
-                  Email
-                </Text>
-                <Flex align="center" gap={2}>
-                  <Icon as={FiMail} color={accent} />
-                  <Text fontWeight="500" color={valueColor}>
-                    {user.email}
-                  </Text>
-                </Flex>
-              </Box>
+              <ProfileField
+                label="Email"
+                icon={FiMail}
+                value={user.email}
+                accent={accent}
+                valueColor={valueColor}
+                labelColor={labelColor}
+              />
 
-              <Box>
-                <Text
-                  fontSize="xs"
-                  textTransform="uppercase"
-                  color={labelColor}
-                  mb={1}
-                >
-                  Phone
-                </Text>
-                <Flex align="center" gap={2}>
-                  <Icon as={FiPhone} color={accent} />
-                  <Text fontWeight="500" color={valueColor}>
-                    {user.phone || 'Not added yet'}
-                  </Text>
-                </Flex>
-              </Box>
+              <ProfileField
+                label="Phone"
+                icon={FiPhone}
+                value={user.phone || "Not added yet"}
+                accent={accent}
+                valueColor={valueColor}
+                labelColor={labelColor}
+              />
 
-              <Box>
-                <Text
-                  fontSize="xs"
-                  textTransform="uppercase"
-                  color={labelColor}
-                  mb={1}
-                >
-                  Address
-                </Text>
-                <Flex align="flex-start" gap={2}>
-                  <Icon as={FiMapPin} mt={0.5} color={accent} />
-                  <Text fontWeight="500" color={valueColor}>
-                    {user.address || 'Not added yet'}
-                  </Text>
-                </Flex>
-              </Box>
+              <ProfileField
+                label="Address"
+                icon={FiMapPin}
+                value={user.address || "Not added yet"}
+                accent={accent}
+                valueColor={valueColor}
+                labelColor={labelColor}
+              />
             </SimpleGrid>
 
-            <Divider my={6} />
+            <Divider my={8} />
 
-            {/* Actions */}
             <Flex
-              direction={{ base: 'column', sm: 'row' }}
+              direction={{ base: "column", sm: "row" }}
               justify="space-between"
-              align={{ base: 'stretch', sm: 'center' }}
-              gap={3}
+              align={{ base: "stretch", sm: "center" }}
+              gap={4}
             >
               <Text fontSize="sm" color="gray.500">
-                Keep your profile information up to date for a better HOI
-                experience.
+                Keep your profile information up to date.
               </Text>
 
               <Button
-                variant="solid"
+                onClick={() => navigate("/edit-profile")}
                 borderRadius="full"
-                px={6}
+                w={{ base: "100%", sm: "auto" }}
+                px={8}
                 bg={accent}
-                _hover={{ bg: 'pink.600' }}
+                _hover={{ bg: "pink.600" }}
                 color="white"
-                fontWeight="600"
-                fontSize="sm"
               >
                 Edit Profile
               </Button>
@@ -313,6 +230,61 @@ export default function ProfilePage() {
           </Box>
         </Box>
       </Box>
+    </Box>
+  );
+}
+
+/* 🔥 PERFECT INLINE ALIGNMENT */
+function InfoInline({ icon, value }) {
+  return (
+    <Flex align="center" gap={2}>
+      <Icon as={icon} boxSize="14px" />
+      <Text
+        fontSize="sm"
+        lineHeight="1"
+        m="0"
+        display="flex"
+        alignItems="center"
+      >
+        {value}
+      </Text>
+    </Flex>
+  );
+}
+
+/* 🔥 FIELD COMPONENT */
+function ProfileField({
+  label,
+  icon,
+  value,
+  accent,
+  valueColor,
+  labelColor,
+}) {
+  return (
+    <Box>
+      <Text
+        fontSize="xs"
+        textTransform="uppercase"
+        color={labelColor}
+        mb={1}
+      >
+        {label}
+      </Text>
+
+      <Flex align="center" gap={2}>
+        <Icon as={icon} boxSize="14px" color={accent} />
+        <Text
+          fontWeight="500"
+          color={valueColor}
+          lineHeight="1"
+          m="0"
+          display="flex"
+          alignItems="center"
+        >
+          {value}
+        </Text>
+      </Flex>
     </Box>
   );
 }

@@ -53,6 +53,7 @@ import { BlogDetails } from 'components/blogs/BlogDetails';
 import { AllBlogs } from 'components/blogs/AllBlogs';
 import { SidebarProvider } from 'contexts/SidebarContext';
 import QuickAddDrawer from 'components/cart/QuickAddDrawer';
+import EditProfile from 'views/account/EditProfile/EditProfile';
 export default function Main() {
   const [currentTheme, setCurrentTheme] = useState(initialTheme);
   const location = useLocation();
@@ -109,6 +110,7 @@ export default function Main() {
                   <Route path="/Blog" element={<AllBlogs />} />
                   <Route path="/BlogDetails" element={<BlogDetails />} />
                   <Route path="/blog/:slug" element={<BlogDetails />} />
+                  <Route path="/edit-profile" element={<EditProfile />} />
                   {/* 🔐 ADMIN LAYOUT – now uses AdminRoute */}
                   <Route
                     path="admin/*"
