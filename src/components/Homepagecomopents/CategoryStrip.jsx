@@ -3,15 +3,15 @@ import React from 'react';
 import styles from '../../assets/styles/CategoryStrip.module.css';
 
 // 👉 import your images
-import braImg from '../../assets/images/17.jpg';
-import pantiesImg from '../../assets/images/17.jpg';
-import nightwearImg from '../../assets/images/5.jpg';
-import activewearImg from '../../assets/images/17.jpg';
-import swimwearImg from '../../assets/images/5.jpg';
-import shapewearImg from '../../assets/images/17.jpg';
-import layeringImg from '../../assets/images/19.jpg';
-import accessoriesImg from '../../assets/images/5.jpg';
-import saleImg from '../../assets/images/17.jpg';
+import braImg from '../../assets/images/2.webp';
+import pantiesImg from '../../assets/images/3.webp';
+import nightwearImg from '../../assets/images/4.webp';
+import activewearImg from '../../assets/images/5.webp';
+import swimwearImg from '../../assets/images/6.webp';
+import shapewearImg from '../../assets/images/7.webp';
+import layeringImg from '../../assets/images/8.webp';
+import accessoriesImg from '../../assets/images/10.webp';
+import saleImg from '../../assets/images/9.webp';
 import { Link } from 'react-router-dom';
 
 const categories = [
