@@ -38,17 +38,14 @@ const COLOR_MAP = {
 
 const decodeColor = (value) => {
   if (!value) return '#e5e5e5';
-
   const str = String(value).trim();
   const hexRegex = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/;
   if (hexRegex.test(str)) return str;
-
   const lower = str.toLowerCase();
   const matchedKey = Object.keys(COLOR_MAP).find(
     (k) => k.toLowerCase() === lower,
   );
   if (matchedKey) return COLOR_MAP[matchedKey];
-
   return str || '#e5e5e5';
 };
 
@@ -95,13 +92,8 @@ const PrevArrow = ({ style, onClick }) => (
 
 const getBaseCode = (code) => {
   if (!code) return null;
-
   const parts = code.split('-');
-
-  if (parts.length >= 2) {
-    return `${parts[0]}-${parts[1]}`;
-  }
-
+  if (parts.length >= 2) return `${parts[0]}-${parts[1]}`;
   return code;
 };
 
@@ -109,7 +101,7 @@ const NewArrival = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [allProducts, setAllProducts] = useState([]); 
+  const [allProducts, setAllProducts] = useState([]);
 
   const navigate = useNavigate();
   const sidebar = useContext(SidebarContext);
@@ -125,29 +117,35 @@ const NewArrival = () => {
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     responsive: [
-      { breakpoint: 1280, settings: { slidesToShow: 3 } },
-      { breakpoint: 992, settings: { slidesToShow: 2 } },
-      { breakpoint: 768, settings: { slidesToShow: 1.5 } },
-      { breakpoint: 480, settings: { slidesToShow: 1 } },
+      {
+        breakpoint: 1280,
+        settings: { slidesToShow: 3, slidesToScroll: 1 },
+      },
+      {
+        breakpoint: 992,
+        settings: { slidesToShow: 2, slidesToScroll: 1 },
+      },
+      {
+        // Tablet portrait — show 1.5 cards (peek effect)
+        breakpoint: 768,
+        settings: { slidesToShow: 1, slidesToScroll: 1, centerMode: false },
+      },
+      {
+        // Mobile — 1 full card
+        breakpoint: 480,
+        settings: { slidesToShow: 1, slidesToScroll: 1, centerMode: false },
+      },
     ],
   };
 
-  
   const getColorVariants = (currentProduct, allProductsList) => {
     if (!currentProduct?.productCode) return [];
-
     const baseCode = getBaseCode(currentProduct.productCode);
-
     const sameBaseProducts = allProductsList.filter((p) => {
       if (!p.productCode) return false;
-
-      const pBase = getBaseCode(p.productCode);
-
-      return pBase === baseCode;
+      return getBaseCode(p.productCode) === baseCode;
     });
-
     const colorMap = new Map();
-
     sameBaseProducts.forEach((product) => {
       if (Array.isArray(product.colors)) {
         product.colors.forEach((color) => {
@@ -162,7 +160,6 @@ const NewArrival = () => {
         });
       }
     });
-
     return Array.from(colorMap.values());
   };
 
@@ -172,8 +169,7 @@ const NewArrival = () => {
         setLoading(true);
         const res = await axios.get(PRODUCTS_ENDPOINT);
         const backendProducts = res.data?.data || [];
-
-        setAllProducts(backendProducts); 
+        setAllProducts(backendProducts);
 
         const mapped = backendProducts.map((prod) => {
           const mrp = prod.price?.mrp || 0;
@@ -190,7 +186,6 @@ const NewArrival = () => {
           return {
             _id: prod._id,
             id: prod._id,
-
             brand: prod.brand || BRAND_NAME,
             name: prod.name,
             description: prod.description || '',
@@ -203,7 +198,7 @@ const NewArrival = () => {
               sellingPrice: salePrice,
               finalPrice: salePrice,
             },
-            mrp, 
+            mrp,
             image: getImageUrl(
               prod.mainImage || (prod.galleryImages && prod.galleryImages[0]),
             ),
@@ -230,12 +225,6 @@ const NewArrival = () => {
 
   const handleColorVariantClick = (e, variant) => {
     e.stopPropagation();
-    console.log(
-      '🎨 Switching to product:',
-      variant.productId,
-      'with color:',
-      variant.color,
-    );
     navigate(`/product/${variant.productId}`);
   };
 
@@ -280,6 +269,7 @@ const NewArrival = () => {
                   const discount = getDiscountPercent(item.mrp, unitPrice);
                   const isInWishlist = wishlistItems.includes(item.id);
                   const colorVariants = getColorVariants(item, allProducts);
+
                   return (
                     <div key={item.id} className={styles.slideOuter}>
                       <div
@@ -311,18 +301,15 @@ const NewArrival = () => {
                           <div className={styles.brand}>{item.brand}</div>
                           <div className={styles.productName}>{item.name}</div>
 
-                          {/* PRICE — SAFE */}
                           <div className={styles.priceRow}>
                             <span className={styles.currentPrice}>
                               ₹ {unitPrice}
                             </span>
-
                             {item.mrp > unitPrice && (
                               <span className={styles.originalPrice}>
                                 ₹ {item.mrp}
                               </span>
                             )}
-
                             {discount > 0 && (
                               <span className={styles.discountTag}>
                                 {discount}% OFF
@@ -348,7 +335,6 @@ const NewArrival = () => {
                           </div>
 
                           <div className={styles.bottomRow}>
-                            {/* ⭐⭐ UPDATED: Show all color variants across same base-code products */}
                             <div className={styles.colorRow}>
                               {colorVariants.length > 0
                                 ? colorVariants.map((variant, i) => {
@@ -373,19 +359,16 @@ const NewArrival = () => {
                                       />
                                     );
                                   })
-                                : // Fallback: show current product colors only
-                                  item.colors
-                                    .slice(0, 3)
-                                    .map((c, i) => (
-                                      <span
-                                        key={i}
-                                        className={styles.colorDot}
-                                        style={{
-                                          backgroundColor: decodeColor(c),
-                                        }}
-                                        title={c}
-                                      />
-                                    ))}
+                                : item.colors.slice(0, 3).map((c, i) => (
+                                    <span
+                                      key={i}
+                                      className={styles.colorDot}
+                                      style={{
+                                        backgroundColor: decodeColor(c),
+                                      }}
+                                      title={c}
+                                    />
+                                  ))}
                             </div>
 
                             <button
