@@ -1,4 +1,6 @@
-/* src/assets/styles/LingerieSection.module.css */
+/* =============================================
+   LingerieSection.module.css
+   ============================================= */
 
 .section {
   padding: 40px 40px 60px;
@@ -25,6 +27,7 @@
   gap: 16px;
 }
 
+/* ── LEFT PANEL ── */
 .leftPanel {
   flex: 0 0 28%;
   max-width: 28%;
@@ -33,7 +36,7 @@
 
 .heroCard {
   position: relative;
-  border-radius: 40px 0px 40px 0px;
+  border-radius: 40px 0 40px 0;
   overflow: hidden;
   height: 526px;
 }
@@ -48,8 +51,9 @@
 .heroOverlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 10% 10%, rgba(0,0,0,0.18), transparent 50%),
-    linear-gradient(to top, rgba(0,0,0,0.2), transparent);
+  background:
+    radial-gradient(circle at 10% 10%, rgba(0,0,0,.18), transparent 50%),
+    linear-gradient(to top, rgba(0,0,0,.2), transparent);
 }
 
 .heroBtn {
@@ -60,47 +64,51 @@
   padding: 10px 40px;
   border-radius: 999px;
   border: none;
-  outline: none;
   font-size: 14px;
   font-weight: 500;
   background: #5a002c;
-  color: #ffffff;
+  color: #fff;
   cursor: pointer;
   white-space: nowrap;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition: background .2s, box-shadow .2s;
 }
-
 .heroBtn:hover {
   background: #77023c;
-  transform: translateX(-50%) translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  box-shadow: 0 6px 18px rgba(0,0,0,.3);
 }
 
+/* ── RIGHT PANEL ── */
 .sliderWrapper {
   flex: 1;
   min-width: 0;
   position: relative;
+  /* critical: clip the peek overflow */
+  overflow: hidden;
 }
 
+/* ── SLIDE ITEM ── */
 .slideOuter {
   padding: 0 8px;
   box-sizing: border-box;
+  /* must fill slick height */
+  height: 100%;
 }
 
+/* ── PRODUCT CARD ── */
 .productCard {
   position: relative;
-  background: #ffffff;
-  border-radius: 30px 0px 30px 0px;
+  background: #fff;
+  border-radius: 30px 0 30px 0;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 16px rgba(0,0,0,.06);
   display: flex;
   flex-direction: column;
+  height: 100%;          /* fill slideOuter */
   cursor: pointer;
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition: box-shadow .2s, transform .2s;
 }
-
 .productCard:hover {
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 24px rgba(0,0,0,.1);
   transform: translateY(-2px);
 }
 
@@ -110,7 +118,6 @@
   overflow: hidden;
   flex-shrink: 0;
 }
-
 .productImage {
   width: 100%;
   height: 100%;
@@ -129,11 +136,10 @@
 .brand {
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: .2em;
   text-transform: uppercase;
   color: #a58c7c;
 }
-
 .productName {
   font-size: 15px;
   line-height: 1.4;
@@ -153,24 +159,9 @@
   margin-top: 6px;
   flex-wrap: wrap;
 }
-
-.currentPrice {
-  font-weight: 600;
-  font-size: 14px;
-  color: #1f1f1f;
-}
-
-.originalPrice {
-  font-size: 13px;
-  color: #999;
-  text-decoration: line-through;
-}
-
-.discountTag {
-  font-size: 12px;
-  font-weight: 600;
-  color: #d32f2f;
-}
+.currentPrice  { font-weight: 600; font-size: 14px; color: #1f1f1f; }
+.originalPrice { font-size: 13px; color: #999; text-decoration: line-through; }
+.discountTag   { font-size: 12px; font-weight: 600; color: #d32f2f; }
 
 .metaRow {
   display: flex;
@@ -181,7 +172,6 @@
   gap: 6px;
   flex-wrap: wrap;
 }
-
 .stockBadge {
   font-size: 11px;
   padding: 2px 8px;
@@ -190,26 +180,15 @@
   white-space: nowrap;
   font-weight: 500;
 }
-
-.inStock {
-  background-color: #e6f8ea;
-  border-color: #4caf50;
-  color: #256029;
-}
-
-.outOfStock {
-  background-color: #fdecea;
-  border-color: #f44336;
-  color: #b71c1c;
-}
-
-.genderTag {
+.inStock    { background: #e6f8ea; border-color: #4caf50; color: #256029; }
+.outOfStock { background: #fdecea; border-color: #f44336; color: #b71c1c; }
+.genderTag  {
   font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: .04em;
   padding: 2px 8px;
   border-radius: 999px;
-  background-color: #f3f3f3;
+  background: #f3f3f3;
   color: #555;
 }
 
@@ -220,162 +199,108 @@
   margin-top: auto;
   padding-top: 8px;
 }
-
 .colorRow {
   display: flex;
   align-items: center;
   gap: 5px;
   flex-wrap: wrap;
 }
-
 .colorDot {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 1px solid rgba(0,0,0,0.18);
+  border: 1px solid rgba(0,0,0,.18);
   cursor: pointer;
   flex-shrink: 0;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform .15s, box-shadow .15s;
 }
+.colorDot:hover { transform: scale(1.2); box-shadow: 0 2px 6px rgba(0,0,0,.2); }
+.colorDotCurrentProduct { border: 2px solid #5a002c; box-shadow: 0 0 0 1px #5a002c; }
+.colorDotOtherProduct   { opacity: .75; }
 
-.colorDot:hover {
-  transform: scale(1.2);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-
-.colorDotCurrentProduct {
-  border: 2px solid #5a002c;
-  box-shadow: 0 0 0 1px #5a002c;
-}
-
-.colorDotOtherProduct {
-  opacity: 0.75;
-}
-
-.moreColors {
-  font-size: 11px;
-  color: #555;
-}
-
+/* Wishlist btn */
 .wishBtn {
   position: absolute;
-  right: 12px;
-  top: 12px;
+  right: 12px; top: 12px;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 32px; height: 32px;
   border: none;
-  background: rgba(255,255,255,0.92);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: rgba(255,255,255,.92);
+  display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   z-index: 2;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform .2s, box-shadow .2s;
 }
+.wishBtn svg   { font-size: 17px; color: #b02e50; }
+.wishBtnActive { background: rgba(255,225,232,.95); }
+.wishBtn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,.18); }
 
-.wishBtn svg {
-  font-size: 17px;
-  color: #b02e50;
-}
-
-.wishBtnActive {
-  background: rgba(255,225,232,0.95);
-}
-
-.wishBtn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.18);
-}
-
+/* Cart btn */
 .cartBtn {
   border-radius: 50%;
-  width: 34px;
-  height: 34px;
+  width: 34px; height: 34px;
   border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   background: #f5e7de;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: background .2s, transform .2s;
 }
+.cartBtn svg   { font-size: 17px; color: #41162a; }
+.cartBtn:hover { background: #e3c7b7; transform: translateY(-1px); }
 
-.cartBtn svg {
-  font-size: 17px;
-  color: #41162a;
-}
+.infoText  { text-align: center; color: #888; padding: 40px 0; }
+.errorText { text-align: center; color: #d32f2f; padding: 40px 0; }
 
-.cartBtn:hover {
-  background: #e3c7b7;
-  transform: translateY(-1px);
-}
-
-.infoText {
-  text-align: center;
-  color: #888;
-  padding: 40px 0;
-}
-
-.errorText {
-  text-align: center;
-  color: #d32f2f;
-  padding: 40px 0;
-}
-
-/* ---- SLICK OVERRIDES ---- */
-.sliderWrapper :global(.slick-list) {
-  padding-right: 20px;
-  overflow: hidden;
-}
-
-.sliderWrapper :global(.slick-track) {
-  display: flex !important;
-  align-items: stretch;
-}
-
-.sliderWrapper :global(.slick-slide) {
-  height: auto;
-  float: none !important;
-  display: flex !important;
-  flex-direction: column;
-}
-
-.sliderWrapper :global(.slick-slide > div) {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.sliderWrapper :global(.slick-arrow) {
-  display: none !important;
-}
-
-.arrowBtn {
+/* ── Custom arrow buttons ── */
+.prevArrow,
+.nextArrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 32px; height: 32px;
   border: none;
-  background: #ffffff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.14);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,.14);
+  display: flex; align-items: center; justify-content: center;
   font-size: 14px;
   cursor: pointer;
-  z-index: 5;
+  z-index: 10;
 }
-
 .prevArrow { left: -14px; }
 .nextArrow { right: 4px; }
+.prevArrow:hover,
+.nextArrow:hover { box-shadow: 0 6px 16px rgba(0,0,0,.2); }
 
-/* ======================
-   RESPONSIVE BREAKPOINTS
-   ====================== */
+/* ── SLICK global overrides via :global ──
+   These target slick's generated class names.
+   Using :global ensures they survive CSS Module hashing. */
+
+/* Make track a flex row so all slides stretch equally */
+:global(.slick-track) {
+  display: flex !important;
+}
+:global(.slick-slide) {
+  height: auto !important;    /* let flex control height */
+}
+:global(.slick-slide > div) {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+/* hide slick's own arrows */
+:global(.slick-arrow) {
+  display: none !important;
+}
+/* hide dots (we already set dots:false but just in case) */
+:global(.slick-dots) {
+  display: none !important;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
 
 @media (max-width: 1559px) {
   .leftPanel { flex: 0 0 26%; max-width: 26%; }
@@ -388,26 +313,32 @@
   .productImageWrap { height: 260px; }
 }
 
-/* Tablet landscape — stack, 2 slides side by side */
+/* Tablet landscape — stacked layout, 2 cards visible */
 @media (max-width: 992px) {
   .section { padding: 28px 20px 40px; }
-  .title { font-size: 26px; margin-bottom: 18px; }
-  .contentRow { flex-direction: column; gap: 20px; }
-  .leftPanel { flex: unset; max-width: 100%; min-width: unset; width: 100%; }
+  .title  { font-size: 26px; margin-bottom: 18px; }
+  .contentRow {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .leftPanel {
+    flex: unset;
+    max-width: 100%;
+    min-width: unset;
+    width: 100%;
+  }
   .heroCard { height: 300px; border-radius: 28px 0 28px 0; }
-  .sliderWrapper { width: 100%; }
-  .sliderWrapper :global(.slick-list) { padding-right: 60px; }
-  .prevArrow { left: 2px; }
-  .nextArrow { right: 2px; }
+  .sliderWrapper { width: 100%; overflow: hidden; }
   .productImageWrap { height: 260px; }
+  .prevArrow { left: 4px; }
+  .nextArrow { right: 4px; }
 }
 
-/* Tablet portrait — 1 slide + peek */
+/* Tablet portrait — 1 card + small peek */
 @media (max-width: 768px) {
   .section { padding: 24px 16px 36px; }
-  .title { font-size: 24px; margin-bottom: 16px; }
+  .title  { font-size: 24px; margin-bottom: 16px; }
   .heroCard { height: 260px; }
-  .sliderWrapper :global(.slick-list) { padding-right: 80px; }
   .slideOuter { padding: 0 6px; }
   .productImageWrap { height: 280px; }
   .productBody { padding: 12px 14px 14px; }
@@ -415,51 +346,41 @@
   .brand { font-size: 12px; }
 }
 
-/* Large mobile */
 @media (max-width: 600px) {
-  .heroCard { border-radius: 20px 0 20px 0; height: 230px; }
+  .heroCard   { height: 230px; border-radius: 20px 0 20px 0; }
   .productCard { border-radius: 20px 0 20px 0; }
-  .sliderWrapper :global(.slick-list) { padding-right: 50px; }
   .productImageWrap { height: 260px; }
 }
 
-/* Mobile — 1 full card */
+/* Mobile — 1 full-width card */
 @media (max-width: 480px) {
   .section { padding: 20px 14px 32px; }
-  .title { font-size: 22px; margin-bottom: 14px; }
+  .title  { font-size: 22px; margin-bottom: 14px; }
   .heroCard { height: 210px; border-radius: 18px 0 18px 0; }
-  .heroBtn { font-size: 13px; padding: 9px 28px; bottom: 16px; }
-
-  /* No peek on small mobile — full card is better UX */
-  .sliderWrapper :global(.slick-list) { padding-right: 0 !important; }
-
+  .heroBtn  { font-size: 13px; padding: 9px 28px; bottom: 16px; }
   .slideOuter { padding: 0 4px; }
   .productCard { border-radius: 18px 0 18px 0; }
   .productImageWrap { height: 300px; }
   .productBody { padding: 12px 14px 14px; }
-  .brand { font-size: 11px; letter-spacing: 0.15em; }
+  .brand { font-size: 11px; letter-spacing: .15em; }
   .productName { font-size: 14px; }
   .currentPrice { font-size: 14px; }
   .originalPrice { font-size: 12px; }
   .discountTag { font-size: 11px; }
   .stockBadge { font-size: 11px; }
-  .genderTag { font-size: 10px; padding: 2px 7px; }
-  .colorDot { width: 18px; height: 18px; }
-
-  .wishBtn { width: 30px; height: 30px; right: 10px; top: 10px; }
+  .genderTag  { font-size: 10px; padding: 2px 7px; }
+  .colorDot   { width: 18px; height: 18px; }
+  .wishBtn    { width: 30px; height: 30px; right: 10px; top: 10px; }
   .wishBtn svg { font-size: 15px; }
-  .cartBtn { width: 32px; height: 32px; }
+  .cartBtn    { width: 32px; height: 32px; }
   .cartBtn svg { font-size: 15px; }
-
-  .arrowBtn { width: 26px; height: 26px; font-size: 12px; }
-  .prevArrow { left: -6px; }
-  .nextArrow { right: -6px; }
+  .prevArrow  { left: -6px; }
+  .nextArrow  { right: -6px; }
 }
 
-/* Very small phones */
 @media (max-width: 360px) {
   .section { padding: 16px 10px 28px; }
-  .title { font-size: 20px; }
+  .title  { font-size: 20px; }
   .heroCard { height: 190px; }
   .productImageWrap { height: 260px; }
   .productBody { padding: 10px 12px 12px; }

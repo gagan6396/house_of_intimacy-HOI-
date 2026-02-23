@@ -20,33 +20,20 @@ import prodFallback from '../../assets/images/17.jpg';
 const BRAND_NAME = 'Vamika';
 const baseUrl = process.env.REACT_APP_APIURL || 'http://localhost:8000/v1';
 const apiRoot = baseUrl.replace(/\/v1$/, '');
-const PRODUCTS_ENDPOINT = `${baseUrl}/products/brand/${encodeURIComponent(
-  BRAND_NAME,
-)}`;
+const PRODUCTS_ENDPOINT = `${baseUrl}/products/brand/${encodeURIComponent(BRAND_NAME)}`;
 
 const COLOR_MAP = {
-  Black: '#000000',
-  Purple: '#800080',
-  White: '#ffffff',
-  Red: '#ef4444',
-  Blue: '#3b82f6',
-  Green: '#22c55e',
-  Nude: '#F5D0C5',
-  Pink: '#ec4899',
-  Yellow: '#facc15',
+  Black: '#000000', Purple: '#800080', White: '#ffffff', Red: '#ef4444',
+  Blue: '#3b82f6', Green: '#22c55e', Nude: '#F5D0C5', Pink: '#ec4899', Yellow: '#facc15',
 };
 
 const decodeColor = (value) => {
   if (!value) return '#e5e5e5';
   const str = String(value).trim();
-  const hexRegex = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/;
-  if (hexRegex.test(str)) return str;
+  if (/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(str)) return str;
   const lower = str.toLowerCase();
-  const matchedKey = Object.keys(COLOR_MAP).find(
-    (k) => k.toLowerCase() === lower,
-  );
-  if (matchedKey) return COLOR_MAP[matchedKey];
-  return str || '#e5e5e5';
+  const key = Object.keys(COLOR_MAP).find((k) => k.toLowerCase() === lower);
+  return key ? COLOR_MAP[key] : str || '#e5e5e5';
 };
 
 const getImageUrl = (path) => {
@@ -56,45 +43,46 @@ const getImageUrl = (path) => {
 };
 
 const getUnitPrice = (item) =>
-  item?.price?.sellingPrice ||
-  item?.price?.sale ||
-  item?.price?.finalPrice ||
-  item?.price?.mrp ||
-  0;
+  item?.price?.sellingPrice || item?.price?.sale || item?.price?.finalPrice || item?.price?.mrp || 0;
 
 const getDiscountPercent = (mrp, sellingPrice) => {
   if (!mrp || !sellingPrice || mrp <= sellingPrice) return 0;
   return Math.round(((mrp - sellingPrice) / mrp) * 100);
 };
 
-// arrows
-const NextArrow = ({ style, onClick }) => (
-  <button
-    type="button"
-    className={`${styles.arrowBtn} ${styles.nextArrow}`}
-    style={style}
-    onClick={onClick}
-  >
-    &gt;
-  </button>
+const NextArrow = ({ onClick }) => (
+  <button type="button" className={styles.nextArrow} onClick={onClick}>&gt;</button>
 );
-
-const PrevArrow = ({ style, onClick }) => (
-  <button
-    type="button"
-    className={`${styles.arrowBtn} ${styles.prevArrow}`}
-    style={style}
-    onClick={onClick}
-  >
-    &lt;
-  </button>
+const PrevArrow = ({ onClick }) => (
+  <button type="button" className={styles.prevArrow} onClick={onClick}>&lt;</button>
 );
 
 const getBaseCode = (code) => {
   if (!code) return null;
   const parts = code.split('-');
-  if (parts.length >= 2) return `${parts[0]}-${parts[1]}`;
-  return code;
+  return parts.length >= 2 ? `${parts[0]}-${parts[1]}` : code;
+};
+
+// ─── useWindowWidth hook ────────────────────────────────────────────
+const useWindowWidth = () => {
+  const [width, setWidth] = useState(
+    typeof window !== 'undefined' ? window.innerWidth : 1200
+  );
+  useEffect(() => {
+    const handler = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+  return width;
+};
+
+// ─── get slidesToShow based on actual window width ──────────────────
+const getSlidesToShow = (width) => {
+  if (width <= 480) return 1;
+  if (width <= 768) return 1;
+  if (width <= 992) return 2;
+  if (width <= 1280) return 3;
+  return 4;
 };
 
 const NewArrival = () => {
@@ -106,59 +94,39 @@ const NewArrival = () => {
   const navigate = useNavigate();
   const sidebar = useContext(SidebarContext);
   const { wishlistItems, toggleWishlist } = useContext(WishlistContext);
+  const windowWidth = useWindowWidth();
+  const slidesToShow = getSlidesToShow(windowWidth);
 
+  // ── Slider settings ─────────────────────────────────────────────
   const settings = {
     dots: false,
     infinite: true,
-    speed: 800,
-    slidesToShow: 4,
+    speed: 600,
+    slidesToShow,
     slidesToScroll: 1,
     swipeToSlide: true,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
-    responsive: [
-      {
-        breakpoint: 1280,
-        settings: { slidesToShow: 3, slidesToScroll: 1 },
-      },
-      {
-        breakpoint: 992,
-        settings: { slidesToShow: 2, slidesToScroll: 1 },
-      },
-      {
-        // Tablet portrait — show 1.5 cards (peek effect)
-        breakpoint: 768,
-        settings: { slidesToShow: 1, slidesToScroll: 1, centerMode: false },
-      },
-      {
-        // Mobile — 1 full card
-        breakpoint: 480,
-        settings: { slidesToShow: 1, slidesToScroll: 1, centerMode: false },
-      },
-    ],
+    // NO responsive array — we control it via hook above
   };
 
   const getColorVariants = (currentProduct, allProductsList) => {
     if (!currentProduct?.productCode) return [];
     const baseCode = getBaseCode(currentProduct.productCode);
-    const sameBaseProducts = allProductsList.filter((p) => {
-      if (!p.productCode) return false;
-      return getBaseCode(p.productCode) === baseCode;
-    });
+    const sameBase = allProductsList.filter(
+      (p) => p.productCode && getBaseCode(p.productCode) === baseCode
+    );
     const colorMap = new Map();
-    sameBaseProducts.forEach((product) => {
-      if (Array.isArray(product.colors)) {
-        product.colors.forEach((color) => {
-          if (color && !colorMap.has(color)) {
-            colorMap.set(color, {
-              color,
-              productId: product._id,
-              isCurrentProduct:
-                String(product._id) === String(currentProduct._id),
-            });
-          }
-        });
-      }
+    sameBase.forEach((product) => {
+      (product.colors || []).forEach((color) => {
+        if (color && !colorMap.has(color)) {
+          colorMap.set(color, {
+            color,
+            productId: product._id,
+            isCurrentProduct: String(product._id) === String(currentProduct._id),
+          });
+        }
+      });
     });
     return Array.from(colorMap.values());
   };
@@ -174,43 +142,29 @@ const NewArrival = () => {
         const mapped = backendProducts.map((prod) => {
           const mrp = prod.price?.mrp || 0;
           const salePrice = prod.price?.sale || mrp;
-          const colorsArray = Array.isArray(prod.colors) ? prod.colors : [];
-
           let totalStock = 0;
           if (typeof prod.totalStock === 'number') totalStock = prod.totalStock;
           else if (typeof prod.stock === 'number') totalStock = prod.stock;
-          else if (Array.isArray(prod.sizes)) {
-            totalStock = prod.sizes.reduce((sum, s) => sum + (s.stock || 0), 0);
-          }
+          else if (Array.isArray(prod.sizes))
+            totalStock = prod.sizes.reduce((s, x) => s + (x.stock || 0), 0);
 
           return {
-            _id: prod._id,
-            id: prod._id,
+            _id: prod._id, id: prod._id,
             brand: prod.brand || BRAND_NAME,
             name: prod.name,
             description: prod.description || '',
-            category: prod.category,
-            subcategory: prod.subcategory,
+            category: prod.category, subcategory: prod.subcategory,
             productCode: prod.productCode || null,
-            price: {
-              mrp,
-              sale: salePrice,
-              sellingPrice: salePrice,
-              finalPrice: salePrice,
-            },
+            price: { mrp, sale: salePrice, sellingPrice: salePrice, finalPrice: salePrice },
             mrp,
-            image: getImageUrl(
-              prod.mainImage || (prod.galleryImages && prod.galleryImages[0]),
-            ),
-            mainImage:
-              prod.mainImage || (prod.galleryImages && prod.galleryImages[0]),
-            colors: colorsArray,
+            image: getImageUrl(prod.mainImage || (prod.galleryImages && prod.galleryImages[0])),
+            mainImage: prod.mainImage || (prod.galleryImages && prod.galleryImages[0]),
+            colors: Array.isArray(prod.colors) ? prod.colors : [],
             sizes: prod.sizes || [],
             stock: totalStock,
             gender: prod.gender || prod.genderType || 'Unisex',
           };
         });
-
         setProducts(mapped);
       } catch (err) {
         console.error(err);
@@ -219,7 +173,6 @@ const NewArrival = () => {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
 
@@ -237,21 +190,11 @@ const NewArrival = () => {
           {/* LEFT */}
           <div className={styles.leftPanel}>
             <div className={styles.heroCard}>
-              <video
-                className={styles.heroVideo}
-                autoPlay
-                muted
-                loop
-                playsInline
-                poster={heroVideoPoster}
-              >
+              <video className={styles.heroVideo} autoPlay muted loop playsInline poster={heroVideoPoster}>
                 <source src={heroVideo} type="video/mp4" />
               </video>
               <div className={styles.heroOverlay} />
-              <button
-                className={styles.heroBtn}
-                onClick={() => navigate('/products')}
-              >
+              <button className={styles.heroBtn} onClick={() => navigate('/products')}>
                 Shop Now
               </button>
             </div>
@@ -276,25 +219,15 @@ const NewArrival = () => {
                         className={styles.productCard}
                         onClick={() => navigate(`/product/${item.id}`)}
                       >
-                        {/* wishlist */}
                         <button
-                          className={`${styles.wishBtn} ${
-                            isInWishlist ? styles.wishBtnActive : ''
-                          }`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleWishlist(item.id);
-                          }}
+                          className={`${styles.wishBtn} ${isInWishlist ? styles.wishBtnActive : ''}`}
+                          onClick={(e) => { e.stopPropagation(); toggleWishlist(item.id); }}
                         >
                           {isInWishlist ? <FaHeart /> : <FiHeart />}
                         </button>
 
                         <div className={styles.productImageWrap}>
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className={styles.productImage}
-                          />
+                          <img src={item.image} alt={item.name} className={styles.productImage} />
                         </div>
 
                         <div className={styles.productBody}>
@@ -302,81 +235,46 @@ const NewArrival = () => {
                           <div className={styles.productName}>{item.name}</div>
 
                           <div className={styles.priceRow}>
-                            <span className={styles.currentPrice}>
-                              ₹ {unitPrice}
-                            </span>
+                            <span className={styles.currentPrice}>₹ {unitPrice}</span>
                             {item.mrp > unitPrice && (
-                              <span className={styles.originalPrice}>
-                                ₹ {item.mrp}
-                              </span>
+                              <span className={styles.originalPrice}>₹ {item.mrp}</span>
                             )}
                             {discount > 0 && (
-                              <span className={styles.discountTag}>
-                                {discount}% OFF
-                              </span>
+                              <span className={styles.discountTag}>{discount}% OFF</span>
                             )}
                           </div>
 
                           <div className={styles.metaRow}>
-                            <span
-                              className={`${styles.stockBadge} ${
-                                item.stock > 0
-                                  ? styles.inStock
-                                  : styles.outOfStock
-                              }`}
-                            >
-                              {item.stock > 0
-                                ? `Stock: ${item.stock}`
-                                : 'Out of stock'}
+                            <span className={`${styles.stockBadge} ${item.stock > 0 ? styles.inStock : styles.outOfStock}`}>
+                              {item.stock > 0 ? `Stock: ${item.stock}` : 'Out of stock'}
                             </span>
-                            <span className={styles.genderTag}>
-                              {item.gender}
-                            </span>
+                            <span className={styles.genderTag}>{item.gender}</span>
                           </div>
 
                           <div className={styles.bottomRow}>
                             <div className={styles.colorRow}>
                               {colorVariants.length > 0
-                                ? colorVariants.map((variant, i) => {
-                                    const bg = decodeColor(variant.color);
-                                    return (
-                                      <span
-                                        key={i}
-                                        className={`${styles.colorDot} ${
-                                          variant.isCurrentProduct
-                                            ? styles.colorDotCurrentProduct
-                                            : styles.colorDotOtherProduct
-                                        }`}
-                                        style={{ backgroundColor: bg }}
-                                        title={`${variant.color}${
-                                          variant.isCurrentProduct
-                                            ? ''
-                                            : ' (different product)'
-                                        }`}
-                                        onClick={(e) =>
-                                          handleColorVariantClick(e, variant)
-                                        }
-                                      />
-                                    );
-                                  })
+                                ? colorVariants.map((variant, i) => (
+                                    <span
+                                      key={i}
+                                      className={`${styles.colorDot} ${variant.isCurrentProduct ? styles.colorDotCurrentProduct : styles.colorDotOtherProduct}`}
+                                      style={{ backgroundColor: decodeColor(variant.color) }}
+                                      title={variant.color}
+                                      onClick={(e) => handleColorVariantClick(e, variant)}
+                                    />
+                                  ))
                                 : item.colors.slice(0, 3).map((c, i) => (
                                     <span
                                       key={i}
                                       className={styles.colorDot}
-                                      style={{
-                                        backgroundColor: decodeColor(c),
-                                      }}
+                                      style={{ backgroundColor: decodeColor(c) }}
                                       title={c}
                                     />
                                   ))}
                             </div>
-
                             <button
                               className={styles.cartBtn}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                sidebar.openQuickAdd(item);
-                              }}
+                              onClick={(e) => { e.stopPropagation(); sidebar.openQuickAdd(item); }}
                             >
                               <FiShoppingBag />
                             </button>
