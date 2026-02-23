@@ -1,4 +1,4 @@
-/* src/components/ShopByCategory/ShopByCategory.module.css */
+/* src/assets/styles/ShopByCategory.module.css */
 
 .sectionWrapper {
   padding: 60px 16px;
@@ -8,7 +8,6 @@
 .innerContainer {
   margin: 0 auto;
   background-color: #5b0427;
-  /* deep wine background */
   border-radius: 72px 0px 0px 0px;
   padding: 40px 40px 32px;
   position: relative;
@@ -20,12 +19,8 @@
   font-size: 28px;
   font-weight: 200;
   margin-bottom: 32px;
+  color: #fff;
 }
-
-.card {
-  cursor: pointer;
-}
-
 
 /* Tabs row */
 .tabsRow {
@@ -52,64 +47,35 @@
   opacity: 0.7;
   transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s ease;
 }
+.tabBtnActive { opacity: 1; color: #ffffff; transform: translateY(-2px); }
+.tabBtn:hover { opacity: 1; }
 
-.tabBtnActive {
-  opacity: 1;
-  color: #ffffff;
-  transform: translateY(-2px);
-}
-
-.tabBtn:hover {
-  opacity: 1;
-}
-
-/* Default icon (pink) */
 .tabIcon {
-  width: 42px;
-  height: 42px;
+  width: 42px; height: 42px;
   object-fit: contain;
-  margin-right: 6px;
   transition: 0.3s ease;
   filter: brightness(0) saturate(100%) invert(22%) sepia(56%) saturate(4030%) hue-rotate(310deg) brightness(95%) contrast(90%);
 }
-
-/* Active icon (gold) */
 .tabIconActive {
   filter: brightness(0) saturate(0%) invert(93%) sepia(13%) saturate(575%) hue-rotate(355deg) brightness(85%) contrast(95%);
 }
-
-.tabLabel {
-  font-weight: 500;
-}
+.tabLabel { font-weight: 500; }
 
 /* Slider wrapper */
-.sliderWrapper {
-  margin-top: 10px;
-  position: relative;
+.sliderWrapper { margin-top: 10px; position: relative; }
+.cardsTrack { width: 100%; }
 
-
-}
-
-/* react-slick wrapper */
-.cardsTrack {
-  width: 100%;
-}
-
-/* Remove default slick arrow icons */
 :global(.slick-prev:before),
-:global(.slick-next:before) {
-  display: none;
-}
+:global(.slick-next:before) { display: none; }
 
-/* Navigation arrows (custom) */
+/* Arrows */
 .navArrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   border: none;
   background-color: #ffffff;
-  width: 42px;
-  height: 42px;
+  width: 42px; height: 42px;
   border-radius: 999px;
   font-size: 18px;
   display: flex;
@@ -119,73 +85,40 @@
   opacity: 0.9;
   z-index: 2;
 }
+.navArrow:hover { opacity: 1; }
+.navPrev { left: 18px; }
+.navNext { right: 10px; }
 
-.navArrow:hover {
-  opacity: 1;
-}
-
-.navPrev {
-  left: 18px;
-}
-
-.navNext {
-  right: 10px;
-}
-
-/* Each slide content */
+/* Card */
 .card {
   height: 550px;
   background-color: palevioletred;
   border-radius: 62px 0px 62px 0px;
   overflow: hidden;
   display: flex !important;
-  /* react-slick uses display:block, override */
   flex-direction: column;
+  cursor: pointer;
 }
 
-/* Add horizontal padding to each slide */
-:global(.slick-slide) {
-  padding: 0 10px;
-  /* 10px left + 10px right = 20px gap between cards */
-}
+:global(.slick-slide) { padding: 0 10px; }
+.cardsTrack { width: 100%; margin: 0 -10px; }
 
-/* Compensate padding so the slider edges align with container */
-.cardsTrack {
-  width: 100%;
-  margin: 0 -10px;
-  /* negate slide padding at edges */
-}
-
-.cardImageWrap {
-  flex: 1;
-  overflow: hidden;
-}
-
+.cardImageWrap { flex: 1; overflow: hidden; }
 .cardImage {
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   object-fit: cover;
   object-position: top;
-  /* 👈 IMPORTANT: crop only from bottom */
   display: block;
   transition: transform 0.3s ease;
 }
+.card:hover .cardImage { transform: scale(1.03); }
 
-
-.card:hover .cardImage {
-  transform: scale(1.03);
-}
-
-/* card CTA at bottom */
 .cardLink {
   border: none;
-  background: linear-gradient(to right,
-      rgba(0, 0, 0, 0.55),
-      rgba(0, 0, 0, 0.25));
+  background: linear-gradient(to right, rgba(0,0,0,0.55), rgba(0,0,0,0.25));
   color: #ffffff;
   font-size: 15px;
   letter-spacing: 0.07em;
-  text-transform: none;
   padding: 14px 18px;
   align-items: center;
   justify-content: center;
@@ -194,18 +127,18 @@
   width: 100%;
   display: flex;
 }
+.cardArrow { font-size: 14px; }
 
-.cardArrow {
+/* Loading / Error / Empty */
+.loadingText, .errorText, .emptyText {
+  text-align: center;
+  padding: 40px;
+  color: rgba(255,255,255,0.7);
   font-size: 14px;
 }
 
-/* View All button */
-.viewAllWrap {
-  margin-top: 28px;
-  display: flex;
-  justify-content: center;
-}
-
+/* View All */
+.viewAllWrap { margin-top: 28px; display: flex; justify-content: center; }
 .viewAllBtn {
   border-radius: 999px;
   padding: 10px 28px;
@@ -219,30 +152,67 @@
   gap: 8px;
   cursor: pointer;
 }
+.viewAllBtn:hover { filter: brightness(0.97); }
+.viewAllArrow { font-size: 13px; }
 
-.viewAllBtn:hover {
-  filter: brightness(0.97);
+/* =====================
+   RESPONSIVE
+   ===================== */
+
+@media (max-width: 1280px) {
+  .card { height: 480px; }
 }
 
-.viewAllArrow {
-  font-size: 13px;
+@media (max-width: 1024px) {
+  .innerContainer { padding: 32px 28px 28px; }
+  .card { height: 440px; border-radius: 48px 0 48px 0; }
+  .tabsRow { gap: 20px; }
 }
 
-/* Responsive */
 @media (max-width: 992px) {
+  .innerContainer { padding: 32px 16px 24px; }
+  .card { height: 400px; }
+  .navPrev { left: 8px; }
+  .navNext { right: 8px; }
+  .navArrow { width: 36px; height: 36px; font-size: 16px; }
+}
+
+@media (max-width: 768px) {
+  .sectionWrapper { padding: 40px 12px; }
   .innerContainer {
-    padding: 32px 10px 24px 10px;
+    border-radius: 40px 0 0 0;
+    padding: 28px 14px 24px;
   }
-
-
+  .heading { font-size: 22px; margin-bottom: 24px; }
+  .tabsRow { gap: 12px; }
+  .tabBtn { font-size: 11px; padding: 4px 8px; gap: 6px; }
+  .tabIcon { width: 34px; height: 34px; }
+  .card { height: 380px; border-radius: 36px 0 36px 0; }
+  .cardLink { font-size: 13px; padding: 12px 14px; }
+  :global(.slick-slide) { padding: 0 6px; }
+  .cardsTrack { margin: 0 -6px; }
 }
 
 @media (max-width: 600px) {
-  .heading {
-    font-size: 22px;
+  .sectionWrapper { padding: 32px 10px; }
+  .innerContainer {
+    border-radius: 28px 0 0 0;
+    padding: 24px 12px 20px;
   }
+  .heading { font-size: 20px; margin-bottom: 20px; }
+  .tabsRow { gap: 8px; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; padding-bottom: 4px; }
+  .tabBtn { flex-shrink: 0; font-size: 10px; padding: 4px 6px; }
+  .tabIcon { width: 28px; height: 28px; }
+  .card { height: 360px; border-radius: 28px 0 28px 0; margin: 0 4px; }
+  .navArrow { width: 30px; height: 30px; font-size: 14px; }
+  .navPrev { left: 4px; }
+  .navNext { right: 4px; }
+  .viewAllBtn { font-size: 13px; padding: 9px 22px; }
+}
 
-  .card {
-    margin: 0 4px;
-  }
+@media (max-width: 400px) {
+  .heading { font-size: 18px; }
+  .card { height: 320px; border-radius: 22px 0 22px 0; }
+  .tabIcon { width: 24px; height: 24px; }
+  .tabBtn { font-size: 9px; }
 }
