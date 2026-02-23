@@ -29,16 +29,16 @@
 
 /* ── LEFT PANEL ── */
 .leftPanel {
-  flex: 0 0 28%;
-  max-width: 28%;
-  min-width: 220px;
+  flex: 0 0 20%;
+  max-width: 20%;
+  min-width: 180px;
 }
 
 .heroCard {
   position: relative;
   border-radius: 40px 0 40px 0;
   overflow: hidden;
-  height: 526px;
+  height: 500px;
 }
 
 .heroVideo {
@@ -303,12 +303,12 @@
    ============================================================ */
 
 @media (max-width: 1559px) {
-  .leftPanel { flex: 0 0 26%; max-width: 26%; }
+  .leftPanel { flex: 0 0 20%; max-width: 20%; }
 }
 
 @media (max-width: 1280px) {
   .section { padding: 36px 28px 50px; }
-  .leftPanel { flex: 0 0 30%; max-width: 30%; min-width: 200px; }
+  .leftPanel { flex: 0 0 22%; max-width: 22%; min-width: 180px; }
   .heroCard { height: 460px; }
   .productImageWrap { height: 260px; }
 }
