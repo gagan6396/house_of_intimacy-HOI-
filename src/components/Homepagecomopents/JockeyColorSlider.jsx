@@ -95,15 +95,15 @@ const JockeyColorSlider = () => {
     COLORS.length === 1 ? 0 : (activeColorIndex / (COLORS.length - 1)) * 100;
 
   const settings = {
-    infinite: productsToShow.length > slidesToShow,
-    slidesToShow,
-    slidesToScroll: 1,
-    speed: 400,
-    arrows: true,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    // NO responsive array — hook controls everything
-  };
+  infinite: productsToShow.length > slidesToShow,
+  slidesToShow,
+  slidesToScroll: 1,
+  speed: 400,
+  arrows: true,
+  lazyLoad: "ondemand", // ✅ ADD THIS LINE
+  nextArrow: <NextArrow />,
+  prevArrow: <PrevArrow />,
+};
 
   const handleCardClick = (productId) => navigate(`/product/${productId}`);
 
@@ -133,7 +133,7 @@ const JockeyColorSlider = () => {
                 <div className={styles.card}>
                   <div className={styles.cardImageWrap}>
                     {p.gender && <span className={styles.genderBadge}>{p.gender}</span>}
-                    <img src={getImageUrl(p.mainImage || p.galleryImages?.[0])} alt={p.name} className={styles.cardImage} />
+                    <img src={getImageUrl(p.mainImage || p.galleryImages?.[0])} alt={p.name} className={styles.cardImage}  loading="lazy" />
                   </div>
                 </div>
                 <div className={styles.cardInfo}>

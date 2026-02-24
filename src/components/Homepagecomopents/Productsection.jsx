@@ -96,6 +96,7 @@ export default function ProductSection() {
     cssEase: 'ease-in-out',
     pauseOnHover: true,
     swipeToSlide: true,
+    lazyLoad: "ondemand",
   };
 
   return (

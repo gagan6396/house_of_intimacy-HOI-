@@ -99,16 +99,16 @@ const NewArrival = () => {
 
   // ── Slider settings ─────────────────────────────────────────────
   const settings = {
-    dots: false,
-    infinite: true,
-    speed: 600,
-    slidesToShow,
-    slidesToScroll: 1,
-    swipeToSlide: true,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    // NO responsive array — we control it via hook above
-  };
+  dots: false,
+  infinite: true,
+  speed: 600,
+  slidesToShow,
+  slidesToScroll: 1,
+  swipeToSlide: true,
+  lazyLoad: "ondemand", // ✅ Added
+  nextArrow: <NextArrow />,
+  prevArrow: <PrevArrow />,
+};
 
   const getColorVariants = (currentProduct, allProductsList) => {
     if (!currentProduct?.productCode) return [];
@@ -227,7 +227,7 @@ const NewArrival = () => {
                         </button>
 
                         <div className={styles.productImageWrap}>
-                          <img src={item.image} alt={item.name} className={styles.productImage} />
+                          <img src={item.image} alt={item.name} className={styles.productImage} loading="lazy" />
                         </div>
 
                         <div className={styles.productBody}>

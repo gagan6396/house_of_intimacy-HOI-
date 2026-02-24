@@ -33,7 +33,7 @@ const BlogCard = ({ image, heading, link, date, para }) => {
         {/* IMAGE + OVERLAY DATE */}
         <div className={Style.blogcardimage}>
           <span className={Style.dateBadge}>{formattedDate}</span>
-          <img src={image} alt={heading} />
+          <img src={image} alt={heading}   loading="lazy"/>
         </div>
 
         {/* CONTENT BELOW IMAGE */}

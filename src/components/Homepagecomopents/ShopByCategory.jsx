@@ -1,5 +1,5 @@
 // src/components/ShopByCategory/ShopByCategory.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Slider from "react-slick";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -70,32 +70,36 @@ const ShopByCategory = () => {
   const currentTab = TABS.find((t) => t.id === activeTab);
   const items      = itemsByTab[activeTab] || [];
 
-  const fetchTabProducts = async (tabObj) => {
-    if (!tabObj || itemsByTab[tabObj.id]?.length) return;
-    try {
-      setLoadingTab(tabObj.id);
-      setErrorTab(null);
-      const res = await axios.get(PRODUCTS_ENDPOINT, {
-        params: { page: 1, limit: 10, category: tabObj.category },
-      });
-      const mapped = (res?.data?.data || []).map((p) => ({
-        id: p._id,
-        title: p.name,
-        image: getImageUrl(p.mainImage || p.galleryImages?.[0]),
-        slug: p.slug,
-      }));
-      setItemsByTab((prev) => ({ ...prev, [tabObj.id]: mapped }));
-    } catch (err) {
-      console.error("ShopByCategory fetch error:", err);
-      setErrorTab(tabObj.id);
-    } finally {
-      setLoadingTab(null);
-    }
-  };
+  const fetchTabProducts = useCallback(async (tabObj) => {
+  if (!tabObj || itemsByTab[tabObj.id]?.length) return;
+
+  try {
+    setLoadingTab(tabObj.id);
+    setErrorTab(null);
+
+    const res = await axios.get(PRODUCTS_ENDPOINT, {
+      params: { page: 1, limit: 10, category: tabObj.category },
+    });
+
+    const mapped = (res?.data?.data || []).map((p) => ({
+      id: p._id,
+      title: p.name,
+      image: getImageUrl(p.mainImage || p.galleryImages?.[0]),
+      slug: p.slug,
+    }));
+
+    setItemsByTab((prev) => ({ ...prev, [tabObj.id]: mapped }));
+  } catch (err) {
+    console.error("ShopByCategory fetch error:", err);
+    setErrorTab(tabObj.id);
+  } finally {
+    setLoadingTab(null);
+  }
+}, [itemsByTab]);
 
   useEffect(() => {
-    fetchTabProducts(TABS.find((t) => t.id === "bras"));
-  }, []);
+  fetchTabProducts(TABS.find((t) => t.id === "bras"));
+}, [fetchTabProducts]);
 
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
@@ -111,6 +115,7 @@ const ShopByCategory = () => {
     swipeToSlide: true,
     autoplay: windowWidth <= 993,
     autoplaySpeed: 4500,
+    lazyLoad: "ondemand",
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     // NO responsive array
@@ -150,7 +155,7 @@ const ShopByCategory = () => {
               {items.map((item) => (
                 <div key={item.id} className={styles.card} onClick={() => navigate(`/product/${item.id}`)} style={{ cursor: "pointer" }}>
                   <div className={styles.cardImageWrap}>
-                    <img src={item.image} alt={item.title} className={styles.cardImage} />
+                    <img src={item.image} alt={item.title} className={styles.cardImage} loading="lazy" />
                   </div>
                   <button type="button" className={styles.cardLink}>
                     {item.title}<span className={styles.cardArrow}>↗</span>
