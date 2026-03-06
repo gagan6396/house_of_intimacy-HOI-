@@ -8,8 +8,8 @@ export const Reviewssection = () => {
   slidesToShow: 5,
   slidesToScroll: 1,
   autoplay: true,
-  speed: 800,
-  autoplaySpeed: 2500,
+  speed: 2000,
+  autoplaySpeed: 3500,
   arrows: false,
   dots: false,
 
