@@ -1,116 +1,156 @@
-import React from "react";
-import Slider from "react-slick";
-import styles from "../../assets/styles/review.module.css";
+import React from 'react';
+import Styles from '../../assets/styles/review.module.css';
+import Slider from 'react-slick';
+export const Reviewssection = () => {
+ const settings = {
+  className: 'center',
+  infinite: true,
+  centerPadding: '60px',
+  slidesToShow: 5,
+  swipeToSlide: true,
+  autoplay: true,
+  speed: 5000,
+  autoplaySpeed: 2000,
 
-const reviews = [
-{
-text:"Vamika – House of Intimacy is one of the best innerwear stores I've visited! They have a premium collection from brands like Jockey, Amanté, Enamor, and Bodycare, and the quality is truly impressive.",
-author:"ARUN NEGI"
-},
-{
-text:"Clean shop, polite staff and great brands. I went to buy for my sister and they guided me very well.",
-author:"POOJA TARIYAL"
-},
-{
-text:"Loved the variety here! From everyday innerwear to premium collection, everything is neatly arranged.",
-author:"JYOTI PANDEY"
-},
-{
-text:"House of Intimacy is now my go-to lingerie store. Quality is genuine and prices are fair.",
-author:"ASTHA"
-},
-{
-text:"Best innerwear store for women! Stylish designs and premium ranges too.",
-author:"PRACHI PANT"
-}
-];
+  responsive: [
+    {
+      breakpoint: 1200, // tablets / small laptop
+      settings: {
+        slidesToShow: 3,
+      },
+    },
+    {
+      breakpoint: 992, // tablets
+      settings: {
+        slidesToShow: 2,
+      },
+    },
+    {
+      breakpoint: 600, // mobile
+      settings: {
+        slidesToShow: 1,
+        centerPadding: "20px"
+      },
+    }
+  ],
 
-const StarRating = () => {
-return (
-<div className={styles.stars}>
-{[1,2,3,4,5].map((i)=>(
-<span key={i}>★</span>
-))}
-</div>
-)
-}
-
-const ReviewCard = ({text,author}) => {
-return(
-<div className={styles.reviewCard}>
-
-<div className={styles.quote}>“</div>
-
-<StarRating/>
-
-<p className={styles.reviewText}>{text}</p>
-
-<div className={styles.author}>
-<span className={styles.line}></span>
-{author}
-</div>
-
-</div>
-)
-}
-
-const Reviewssection = () => {
-
-const settings = {
-dots:false,
-infinite:true,
-speed:600,
-slidesToShow:4,
-slidesToScroll:1,
-autoplay:true,
-autoplaySpeed:3500,
-arrows:false,
-responsive:[
-{
-breakpoint:1200,
-settings:{
-slidesToShow:3
-}
-},
-{
-breakpoint:992,
-settings:{
-slidesToShow:2
-}
-},
-{
-breakpoint:768,
-settings:{
-slidesToShow:1
-}
-}
-]
-}
-
-return (
-
-<section className={styles.section}>
-
-<div className={styles.container}>
-
-<h2 className={styles.title}>Words of Love</h2>
-
-<Slider {...settings}>
-
-{reviews.map((review,index)=>(
-<div key={index} className={styles.slide}>
-<ReviewCard {...review}/>
-</div>
-))}
-
-</Slider>
-
-</div>
-
-</section>
-
-)
-
-}
-
-export default Reviewssection
+    afterChange: function (index) {
+      console.log(
+        `Slider Changed to: ${index + 1}, background: #222; color: #bada55`,
+      );
+    },
+  };
+  return (
+    <>
+      <section className={Styles.homePadding}>
+        <div className="slider-container">
+          <h1 className={Styles.HeadHome}>Customer Love</h1>
+          {/* <div className={Styles.UnderHrLine}></div> */}
+          <Slider {...settings}>
+            <div className={Styles.Reviews}>
+              <div className={Styles.reviewcard}>
+                <span className={Styles.quoteleft}>❝</span>
+                <p className={Styles.reviewtext}>
+                  Vamika – House of Intimacy is one of the best innerwear stores
+                  I’ve visited! They have a premium collection from brands like
+                  Jockey, Amanté, Enamor, and Bodycare, and the quality is truly
+                  impressive.
+                </p>
+                <p className={Styles.author}>- ARUN NEGI</p>
+                <span className={Styles.quoteright}>❞</span>
+              </div>
+            </div>
+            <div className={Styles.Reviews}>
+              <div className={Styles.reviewcard}>
+                <span className={Styles.quoteleft}>❝</span>
+                <p className={Styles.reviewtext}>
+                  Clean shop, polite staff and great brands." I went to buy for
+                  my sister and they guided me very well. They also have a small
+                  but nice men’s section with Jockey products. Overall, very
+                  trustworthy and customer-friendly store.
+                </p>
+                <p className={Styles.author}>- POOJA TARIYAL</p>
+                <span className={Styles.quoteright}>❞</span>
+              </div>
+            </div>
+            <div className={Styles.Reviews}>
+              <div className={Styles.reviewcard}>
+                <span className={Styles.quoteleft}>❝</span>
+                <p className={Styles.reviewtext}>
+                  Loved the variety here! From everyday innerwear to premium
+                  collection, everything is neatly arranged. The fitting
+                  guidance was very helpful. Perfect place for women's innerwear
+                  in the area.
+                </p>
+                <p className={Styles.author}>- JYOTI PANDEY</p>
+                <span className={Styles.quoteright}>❞</span>
+              </div>
+            </div>
+            <div className={Styles.Reviews}>
+              <div className={Styles.reviewcard}>
+                <span className={Styles.quoteleft}>❝</span>
+                <p className={Styles.reviewtext}>
+                  House of Intimacy is now my go-to lingerie store." Quality is
+                  genuine, prices are fair and the staff is extremely
+                  respectful. They have all sizes available in Enamor, Amanté
+                  and Bodycare. Shopping here feels comfortable and hassle-free.
+                </p>
+                <p className={Styles.author}>- ASTHA</p>
+                <span className={Styles.quoteright}>❞</span>
+              </div>
+            </div>
+            <div className={Styles.Reviews}>
+              <div className={Styles.reviewcard}>
+                <span className={Styles.quoteleft}>❝</span>
+                <p className={Styles.reviewtext}>
+                  The products of vamika itself is truly blessings for all girls
+                  where your inner make you feel more beautiful
+                </p>
+                <p className={Styles.author}>- ROSTIKA KHADGI</p>
+                <span className={Styles.quoteright}>❞</span>
+              </div>
+            </div>
+            <div className={Styles.Reviews}>
+              <div className={Styles.reviewcard}>
+                <span className={Styles.quoteleft}>❝</span>
+                <p className={Styles.reviewtext}>
+                  "Best innerwear store for women!" They have stylish designs,
+                  everyday essentials, and premium ranges too. Also noticed a
+                  men’s section with Jockey. Overall a great store.
+                </p>
+                <p className={Styles.author}>- PRACHI PANT</p>
+                <span className={Styles.quoteright}>❞</span>
+              </div>
+            </div>
+            <div className={Styles.Reviews}>
+              <div className={Styles.reviewcard}>
+                <span className={Styles.quoteleft}>❝</span>
+                <p className={Styles.reviewtext}>
+                  "Superb quality and genuine products." I bought Amanté and
+                  Bodycare items from here — both were authentic and reasonably
+                  priced. The store is well-organized and the staff is very
+                  polite.
+                </p>
+                <p className={Styles.author}>- SHRIOSHI DOBHAL</p>
+                <span className={Styles.quoteright}>❞</span>
+              </div>
+            </div>
+            <div className={Styles.Reviews}>
+              <div className={Styles.reviewcard}>
+                <span className={Styles.quoteleft}>❝</span>
+                <p className={Styles.reviewtext}>
+                  Superb quality and genuine products." I bought Amanté and
+                  Bodycare items from here — both were authentic and reasonably
+                  priced. The store is well-organized and the staff is very
+                  polite.
+                </p>
+                <p className={Styles.author}>- MANSHA NEGI</p>
+                <span className={Styles.quoteright}>❞</span>
+              </div>
+            </div>
+          </Slider>
+        </div>
+      </section>
+    </>
+  );
+};

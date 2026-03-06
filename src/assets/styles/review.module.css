@@ -1,88 +1,174 @@
-.section{
-padding:80px 0;
-background:linear-gradient(120deg,#3c0c1d,#1a050c);
-}
-
-.container{
-max-width:1300px;
-margin:auto;
-padding:0 20px;
-}
-
-.title{
-text-align:center;
-color:#fff;
-font-size:42px;
-margin-bottom:50px;
-font-family:serif;
-}
-
-.slide{
-padding:10px;
-}
-
-.reviewCard{
-
-background:#fff;
-padding:30px;
-border-radius:6px;
-height:100%;
-
-box-shadow:0 10px 25px rgba(0,0,0,0.25);
-
-display:flex;
-flex-direction:column;
-justify-content:space-between;
+.HeadHomes {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 30px;
+  font-weight: 600;
+  color: black;
+  margin-bottom: 30px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  border-bottom: 3px solid #d63384;
+  /* margin: 0px 728px 25px; */
+  text-transform: uppercase;
 
 }
 
-.quote{
-font-size:50px;
-color:#c0365a;
-opacity:.2;
-}
-
-.stars{
-color:#c9a84c;
-margin-bottom:10px;
-}
-
-.reviewText{
-
-font-size:15px;
-line-height:1.7;
-color:#333;
-
-word-break:normal;
-overflow-wrap:break-word;
+.HeadHome {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 30px;
+  font-weight: 600;
+  color: black;
+  margin-bottom: 30px;
+  letter-spacing: 0.5px;
+  text-align: center;
+  /* border-bottom: 3px solid #d63384; */
+  /* margin: 0px 728px 25px; */
+  text-transform: uppercase;
 
 }
 
-.author{
-
-margin-top:20px;
-font-size:12px;
-letter-spacing:2px;
-color:#8b1a3a;
-display:flex;
-align-items:center;
-gap:10px;
-
+.ParaHome {
+  font-family: 'Lato', 'Helvetica Neue', sans-serif;
+  font-size: 18px;
+  line-height: 1.9;
+  color: black;
+  margin-bottom: 20px;
+  max-width: 850px;
+  /* margin-left: auto; */
+  margin-right: auto;
 }
 
-.line{
-width:25px;
-height:1px;
-background:#c9a84c;
+.homePadding {
+  padding: 60px 40px;
+  background-color: #ffeeec;
+  background-image: url('../images/back1.png');
 }
 
-/* IMPORTANT slick fixes */
-
-:global(.slick-slide){
-height:auto;
-display:flex;
+.HomePadding {
+  padding: 60px 40px;
+  background-color: #ffffff;
+  /* background-image: url('../images/back.png'); */
 }
 
-:global(.slick-slide > div){
-width:100%;
+.HomeImg {
+  border: 3px solid #d63384;
+}
+
+/**************Review******************* */
+.reviewcard {
+  /* max-width: 500px; */
+  height: 310px;
+  margin: auto;
+  padding: 40px 25px;
+  background: #fff;
+  border-radius: 10px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  font-family: "Poppins", sans-serif;
+}
+
+/* LEFT quote */
+.quoteleft {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 28px;
+  color: #d4005e;
+  font-weight: bold;
+}
+
+/* RIGHT quote */
+.quoteright {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 28px;
+  color: #d4005e;
+  font-weight: bold;
+}
+
+.reviewtext {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.author {
+  font-weight: 600;
+  color: #000;
+}
+
+/************UNDERLINE************ */
+/* .UnderHrLine{
+    border-bottom: 3px solid #d63384;
+    margin: 0px 728px;
+} */
+
+ /* *************RESPONSIVE******************************** */
+            @media (min-width: 1921px) and (max-width: 2561px) {
+}
+@media (min-width: 1536px) and (max-width: 1920px) {
+
+}
+@media (max-width: 1426.98px) {
+    .reviewtext {
+  font-size: 15px;
+    }
+  }
+  @media (max-width: 1250.98px){
+    .reviewcard {
+  /* max-width: 500px; */
+  height: 350px;
+  padding:25px 20px;
+    }
+  }
+  @media (max-width: 1226.98px){
+  
+  }
+  @media (max-width: 1169.98px) {
+  }
+  @media (max-width: 1055.98px) {
+  
+}
+ @media (max-width: 991.98px) {
+  
+}
+  @media (max-width: 931.98px) {
+  
+}
+@media(max-width: 820.98px){
+   
+}
+@media(max-width: 799.98px){
+  
+}
+@media(max-width: 767.98px){
+     
+}
+@media(max-width: 799.98px){
+}
+@media(max-width: 575.98px){
+}
+@media(max-width: 538.98px){
+  
+}
+@media(max-width: 414.98px){
+  .reviewtext {
+  text-align: center;
+  padding-top: 30px;
+    }
+    .reviewcard {
+  height: 300px;
+    }
+}
+@media(max-width: 412.98px){
+   
+}
+@media(max-width: 390.98px){
+}
+@media(max-width: 375.98px){
+}
+@media(max-width: 360.98px){
+  
 }
