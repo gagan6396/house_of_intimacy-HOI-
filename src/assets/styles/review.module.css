@@ -1,15 +1,13 @@
-.HeadHomes {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 30px;
-  font-weight: 600;
-  color: black;
-  margin-bottom: 30px;
-  letter-spacing: 0.5px;
-  text-align: center;
-  border-bottom: 3px solid #d63384;
-  /* margin: 0px 728px 25px; */
-  text-transform: uppercase;
+/* ===== REVIEWS SECTION ===== */
+.homePadding {
+  padding: 60px 40px;
+  background-color: #ffeeec;
+  background-image: url('../images/back1.png');
+  overflow: hidden; /* IMPORTANT - clips slider edges */
+}
 
+.sliderWrapper {
+  overflow: hidden;
 }
 
 .HeadHome {
@@ -20,155 +18,148 @@
   margin-bottom: 30px;
   letter-spacing: 0.5px;
   text-align: center;
-  /* border-bottom: 3px solid #d63384; */
-  /* margin: 0px 728px 25px; */
   text-transform: uppercase;
-
 }
 
-.ParaHome {
-  font-family: 'Lato', 'Helvetica Neue', sans-serif;
-  font-size: 18px;
-  line-height: 1.9;
-  color: black;
-  margin-bottom: 20px;
-  max-width: 850px;
-  /* margin-left: auto; */
-  margin-right: auto;
+/* Gap between cards */
+.Reviews {
+  padding: 0 10px;
+  box-sizing: border-box;
 }
 
-.homePadding {
-  padding: 60px 40px;
-  background-color: #ffeeec;
-  background-image: url('../images/back1.png');
-}
-
-.HomePadding {
-  padding: 60px 40px;
-  background-color: #ffffff;
-  /* background-image: url('../images/back.png'); */
-}
-
-.HomeImg {
-  border: 3px solid #d63384;
-}
-
-/**************Review******************* */
 .reviewcard {
-  /* max-width: 500px; */
-  height: 310px;
-  margin: auto;
-  padding: 40px 25px;
+  height: auto;
+  min-height: 260px;
+  padding: 45px 25px 35px;
   background: #fff;
   border-radius: 10px;
   text-align: center;
   position: relative;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
+  width: 100% !important;  /* IMPORTANT */
 }
 
-/* LEFT quote */
 .quoteleft {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  font-size: 28px;
+  top: 15px;
+  left: 15px;
+  font-size: 26px;
   color: #d4005e;
   font-weight: bold;
+  line-height: 1;
 }
 
-/* RIGHT quote */
 .quoteright {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
-  font-size: 28px;
+  bottom: 15px;
+  right: 15px;
+  font-size: 26px;
   color: #d4005e;
   font-weight: bold;
+  line-height: 1;
 }
 
 .reviewtext {
-  font-size: 16px;
-  line-height: 1.6;
-  margin-bottom: 15px;
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 12px;
   color: #333;
 }
 
 .author {
   font-weight: 600;
   color: #000;
+  font-size: 13px;
+  letter-spacing: 0.5px;
 }
 
-/************UNDERLINE************ */
-/* .UnderHrLine{
-    border-bottom: 3px solid #d63384;
-    margin: 0px 728px;
-} */
+/* ===== RESPONSIVE ===== */
 
- /* *************RESPONSIVE******************************** */
-            @media (min-width: 1921px) and (max-width: 2561px) {
+@media (max-width: 1600px) {
+  .reviewtext { font-size: 14px; }
+  .Reviews { padding: 0 8px; }
 }
-@media (min-width: 1536px) and (max-width: 1920px) {
 
+@media (max-width: 1440px) {
+  .homePadding { padding: 55px 35px; }
+  .reviewcard { min-height: 250px; padding: 40px 22px 30px; }
 }
-@media (max-width: 1426.98px) {
-    .reviewtext {
-  font-size: 15px;
-    }
+
+@media (max-width: 1280px) {
+  .reviewtext { font-size: 13.5px; }
+}
+
+@media (max-width: 1200px) {
+  /* 3 cards */
+  .homePadding { padding: 50px 30px; }
+  .reviewcard { padding: 38px 20px 28px; }
+}
+
+@media (max-width: 992px) {
+  /* 2 cards */
+  .homePadding { padding: 50px 25px; }
+  .HeadHome { font-size: 26px; }
+  .reviewcard { min-height: 240px; }
+  .reviewtext { font-size: 13px; }
+}
+
+@media (max-width: 768px) {
+  /* 1 card - MOBILE starts */
+  .homePadding { padding: 40px 10px; }  /* less side padding so card is full width */
+  .HeadHome { font-size: 24px; margin-bottom: 20px; }
+  .Reviews { padding: 0 6px; }
+  .reviewcard {
+    min-height: 220px;
+    padding: 40px 20px 30px;
+    margin: 0 auto;
   }
-  @media (max-width: 1250.98px){
-    .reviewcard {
-  /* max-width: 500px; */
-  height: 350px;
-  padding:25px 20px;
-    }
-  }
-  @media (max-width: 1226.98px){
-  
-  }
-  @media (max-width: 1169.98px) {
-  }
-  @media (max-width: 1055.98px) {
-  
+  .reviewtext { font-size: 14px; }
 }
- @media (max-width: 991.98px) {
-  
+
+@media (max-width: 576px) {
+  .homePadding { padding: 35px 8px; }
+  .HeadHome { font-size: 22px; }
+  .Reviews { padding: 0 5px; }
+  .reviewcard { padding: 38px 18px 28px; min-height: 200px; }
+  .reviewtext { font-size: 13.5px; }
 }
-  @media (max-width: 931.98px) {
-  
+
+@media (max-width: 480px) {
+  .homePadding { padding: 30px 6px; }
+  .reviewcard { padding: 35px 16px 28px; }
+  .reviewtext { font-size: 13px; }
 }
-@media(max-width: 820.98px){
-   
+
+@media (max-width: 414px) {
+  .homePadding { padding: 28px 5px; }
+  .HeadHome { font-size: 20px; }
+  .reviewcard { padding: 32px 15px 26px; }
+  .reviewtext { font-size: 13px; padding-top: 5px; }
+  .author { font-size: 12px; }
+  .quoteleft, .quoteright { font-size: 22px; }
 }
-@media(max-width: 799.98px){
-  
+
+@media (max-width: 390px) {
+  .reviewcard { padding: 30px 14px 24px; }
+  .reviewtext { font-size: 12.5px; }
 }
-@media(max-width: 767.98px){
-     
+
+@media (max-width: 375px) {
+  .reviewcard { padding: 28px 13px 22px; }
+  .reviewtext { font-size: 12px; }
 }
-@media(max-width: 799.98px){
+
+@media (max-width: 360px) {
+  .homePadding { padding: 25px 4px; }
+  .HeadHome { font-size: 18px; }
+  .reviewtext { font-size: 12px; }
+  .quoteleft, .quoteright { font-size: 20px; }
 }
-@media(max-width: 575.98px){
-}
-@media(max-width: 538.98px){
-  
-}
-@media(max-width: 414.98px){
-  .reviewtext {
-  text-align: center;
-  padding-top: 30px;
-    }
-    .reviewcard {
-  height: 300px;
-    }
-}
-@media(max-width: 412.98px){
-   
-}
-@media(max-width: 390.98px){
-}
-@media(max-width: 375.98px){
-}
-@media(max-width: 360.98px){
-  
+
+@media (max-width: 320px) {
+  .homePadding { padding: 22px 3px; }
+  .reviewcard { padding: 26px 12px 20px; }
+  .reviewtext { font-size: 11.5px; }
 }
