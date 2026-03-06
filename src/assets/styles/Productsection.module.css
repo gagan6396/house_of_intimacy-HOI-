@@ -109,7 +109,7 @@
 /* Image */
 .imgWrap {
   width: 100%;
-  height: 320px;
+  height: 650px;
   overflow: hidden;
   position: relative;
   background: #fdf0f3;
@@ -226,7 +226,7 @@
     padding: 0;
   }
   .title    { font-size: 34px; }
-  .imgWrap  { height: 280px; }
+  .imgWrap  { height: 630px; }
   .card     { margin: 0 6px; }
   .sliderBox { width: 100%; }
 }
@@ -235,7 +235,7 @@
 @media (max-width: 767px) {
   .section  { padding: 36px 16px; }
   .title    { font-size: 30px; }
-  .imgWrap  { height: 260px; }
+  .imgWrap  { height: 452px; }
   .name     { font-size: 13px; }
   .priceNow { font-size: 15px; }
   .card     { margin: 0 5px; border-radius: 16px; }
@@ -245,14 +245,14 @@
 @media (max-width: 640px) {
   .section { padding: 32px 14px; }
   .title   { font-size: 28px; }
-  .imgWrap { height: 280px; }
+  .imgWrap { height: 420px; }
 }
 
 /* Mobile — 1 card */
 @media (max-width: 575px) {
   .section    { padding: 28px 12px; }
   .title      { font-size: 26px; }
-  .imgWrap    { height: 300px; }
+  .imgWrap    { height: 500px; }
   .card       { margin: 0 3px; border-radius: 18px; }
   .info       { padding: 13px 15px 15px; }
   .row        { margin-bottom: 40px; }
@@ -263,19 +263,19 @@
 @media (max-width: 480px) {
   .section { padding: 24px 10px; }
   .title   { font-size: 24px; }
-  .imgWrap { height: 280px; }
+  .imgWrap { height: 480px; }
 }
 
 @media (max-width: 420px) {
   .title   { font-size: 22px; }
-  .imgWrap { height: 265px; }
+  .imgWrap { height: 465px; }
   .name    { font-size: 13px; }
 }
 
 @media (max-width: 380px) {
   .section  { padding: 20px 10px; }
   .title    { font-size: 20px; }
-  .imgWrap  { height: 248px; }
+  .imgWrap  { height: 448px; }
   .brand    { font-size: 9px; }
   .priceNow { font-size: 14px; }
   .card     { border-radius: 14px; }
@@ -283,7 +283,7 @@
 
 @media (max-width: 360px) {
   .title   { font-size: 18px; }
-  .imgWrap { height: 230px; }
+  .imgWrap { height: 430px; }
   .info    { padding: 10px 12px 12px; }
   .name    { font-size: 12px; }
 }
