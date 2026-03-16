@@ -1,8 +1,6 @@
 // src/components/CategoryStrip.jsx
 import React from 'react';
 import styles from '../../assets/styles/CategoryStrip.module.css';
-
-// 👉 import your images
 import braImg from '../../assets/images/2.png';
 import pantiesImg from '../../assets/images/3.png';
 import nightwearImg from '../../assets/images/4.png';
