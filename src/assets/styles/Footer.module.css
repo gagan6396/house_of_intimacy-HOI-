@@ -38,7 +38,9 @@
   margin-right: auto;
 }
 
-/* Social Links */
+/* ===========================
+   SOCIAL LINKS
+   =========================== */
 .socialLinks {
   display: flex;
   justify-content: center;
@@ -55,20 +57,25 @@
   background: #fff;
   border: 2px solid #e91e63;
   border-radius: 50%;
-  font-size: 18px;
+  color: #e91e63;
   text-decoration: none;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(233, 30, 99, 0.15);
+  flex-shrink: 0;
+}
+
+.socialIcon svg {
+  width: 18px;
+  height: 18px;
+  transition: all 0.3s ease;
+  display: block;
 }
 
 .socialIcon:hover {
   background: #e91e63;
+  color: #fff;
   transform: translateY(-3px);
   box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
-}
-
-.socialIcon:hover {
-  filter: brightness(0) invert(1);
 }
 
 /* ===========================
@@ -377,51 +384,60 @@
   .footer {
     padding: 70px 0 30px;
   }
-  
+
   .logo {
     height: 180px;
     max-width: 250px;
   }
-  
+
   .tagline {
     font-size: 18px;
   }
-  
-  .socialIcon {
-    width: 50px;
-    height: 50px;
-    font-size: 22px;
+
+  .socialLinks {
+    gap: 14px;
   }
-  
+
+  .socialIcon {
+    width: 54px;
+    height: 54px;
+    border-width: 2.5px;
+  }
+
+  .socialIcon svg {
+    width: 24px;
+    height: 24px;
+  }
+
   .sectionTitle {
     font-size: 22px;
     margin-bottom: 25px;
   }
-  
+
   .infoItem a,
   .linkList a,
   .shopList a {
     font-size: 18px;
   }
-  
+
   .newsletterCard {
     padding: 50px;
   }
-  
+
   .newsletterTitle {
     font-size: 36px;
   }
-  
+
   .newsletterSubtitle {
     font-size: 18px;
   }
-  
+
   .emailInput,
   .subscribeBtn {
     font-size: 18px;
     padding: 18px 28px;
   }
-  
+
   .badge {
     font-size: 16px;
     padding: 12px 24px;
@@ -433,30 +449,38 @@
   .footer {
     padding: 60px 0 25px;
   }
-  
+
   .logo {
     height: 160px;
     max-width: 220px;
   }
-  
+
   .tagline {
     font-size: 16px;
   }
-  
-  .socialIcon {
-    width: 45px;
-    height: 45px;
-    font-size: 20px;
+
+  .socialLinks {
+    gap: 12px;
   }
-  
+
+  .socialIcon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .socialIcon svg {
+    width: 22px;
+    height: 22px;
+  }
+
   .sectionTitle {
     font-size: 18px;
   }
-  
+
   .newsletterCard {
     padding: 35px;
   }
-  
+
   .newsletterTitle {
     font-size: 28px;
   }
@@ -467,16 +491,26 @@
   .footer {
     padding: 55px 0 22px;
   }
-  
+
   .logo {
     height: 145px;
     max-width: 210px;
   }
-  
+
+  .socialIcon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .socialIcon svg {
+    width: 20px;
+    height: 20px;
+  }
+
   .newsletterCard {
     padding: 32px;
   }
-  
+
   .newsletterTitle {
     font-size: 26px;
   }
@@ -487,12 +521,22 @@
   .footer {
     padding: 50px 0 20px;
   }
-  
+
   .logo {
     height: 140px;
     max-width: 200px;
   }
-  
+
+  .socialIcon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .socialIcon svg {
+    width: 19px;
+    height: 19px;
+  }
+
   .newsletterTitle {
     font-size: 24px;
   }
@@ -503,41 +547,51 @@
   .footer {
     padding: 45px 0 18px;
   }
-  
+
   .logo {
     height: 130px;
     max-width: 180px;
   }
-  
+
+  .socialIcon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .socialIcon svg {
+    width: 16px;
+    height: 16px;
+  }
+
   .sectionTitle {
     font-size: 15px;
     margin-bottom: 18px;
   }
-  
+
   .infoItem a,
   .linkList a,
   .shopList a {
     font-size: 13px;
   }
-  
+
   .newsletterCard {
     padding: 28px;
   }
-  
+
   .newsletterTitle {
     font-size: 22px;
   }
-  
+
   .newsletterSubtitle {
     font-size: 13px;
   }
-  
+
   .emailInput,
   .subscribeBtn {
     padding: 12px 20px;
     font-size: 13px;
   }
-  
+
   .badge {
     font-size: 12px;
     padding: 8px 16px;
@@ -549,16 +603,26 @@
   .footer {
     padding: 40px 0 18px;
   }
-  
+
   .logo {
     height: 120px;
     max-width: 170px;
   }
-  
+
+  .socialIcon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .socialIcon svg {
+    width: 17px;
+    height: 17px;
+  }
+
   .newsletterCard {
     padding: 25px;
   }
-  
+
   .newsletterTitle {
     font-size: 20px;
   }
@@ -569,80 +633,88 @@
   .footer {
     padding: 40px 0 16px;
   }
-  
+
   .mainContent {
     margin-bottom: 25px;
   }
-  
+
   .logo {
     height: 110px;
     max-width: 160px;
   }
-  
+
   .tagline {
     font-size: 13px;
   }
-  
+
+  .socialLinks {
+    gap: 9px;
+  }
+
   .socialIcon {
     width: 38px;
     height: 38px;
-    font-size: 17px;
   }
-  
+
+  .socialIcon svg {
+    width: 17px;
+    height: 17px;
+  }
+
   .sectionTitle {
     font-size: 15px;
     margin-bottom: 16px;
   }
-  
+
   .infoItem a,
   .linkList a {
     font-size: 13px;
   }
-  
+
   .shopList a {
     font-size: 13px;
     padding: 5px 10px;
     min-width: 130px;
   }
-  
+
   .newsletterCard {
     padding: 22px;
   }
-  
+
   .newsletterTitle {
     font-size: 19px;
   }
-  
+
   .newsletterSubtitle {
     font-size: 13px;
     margin-bottom: 16px;
   }
-  
+
   .discountBadge {
     font-size: 14px;
     padding: 6px 16px;
   }
-  
+
   .emailInput {
     padding: 11px 18px;
     font-size: 13px;
   }
-  
+
   .subscribeBtn {
     padding: 11px 24px;
     font-size: 13px;
   }
-  
+
   .trustBadges {
     gap: 15px;
     padding: 20px 0;
   }
-  
+
   .badge {
     font-size: 12px;
     padding: 8px 14px;
   }
-  
+
   .badge span:first-child {
     font-size: 15px;
   }
@@ -653,124 +725,128 @@
   .footer {
     padding: 35px 0 15px;
   }
-  
+
   .mainContent {
     margin-bottom: 20px;
   }
-  
+
   .logo {
     height: 100px;
     max-width: 140px;
   }
-  
+
   .tagline {
     font-size: 12px;
     margin-bottom: 15px;
   }
-  
+
   .socialLinks {
     gap: 8px;
   }
-  
+
   .socialIcon {
     width: 36px;
     height: 36px;
-    font-size: 16px;
   }
-  
+
+  .socialIcon svg {
+    width: 16px;
+    height: 16px;
+  }
+
   .sectionTitle {
     font-size: 14px;
     margin-bottom: 14px;
   }
-  
+
   .sectionTitle .icon {
     font-size: 16px;
   }
-  
+
   .infoItem .label {
     font-size: 11px;
   }
-  
+
   .infoItem a,
   .linkList a {
     font-size: 12px;
   }
-  
+
   .hourLine {
     font-size: 12px;
   }
-  
+
   .shopList a {
     font-size: 12px;
     padding: 5px 10px;
     min-width: 120px;
   }
-  
+
   .newsletterCard {
     padding: 20px;
     border-radius: 12px;
     margin: 20px 0;
   }
-  
+
   .newsletterHeader {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
     margin-bottom: 10px;
   }
-  
+
   .discountBadge {
     font-size: 13px;
     padding: 6px 14px;
   }
-  
+
   .newsletterTitle {
     font-size: 17px;
   }
-  
+
   .newsletterSubtitle {
     font-size: 12px;
     margin-bottom: 14px;
   }
-  
+
   .newsletterForm {
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .emailInput {
     width: 100%;
     padding: 10px 16px;
     font-size: 12px;
   }
-  
+
   .subscribeBtn {
     width: 100%;
     padding: 10px 20px;
     font-size: 12px;
   }
-  
+
   .trustBadges {
     gap: 10px;
     padding: 18px 0;
   }
-  
+
   .badge {
     font-size: 11px;
     padding: 7px 12px;
   }
-  
+
   .badge span:first-child {
     font-size: 14px;
   }
-  
+
   .footerBottom {
     flex-direction: column;
     text-align: center;
     padding: 15px 0 0;
     gap: 10px;
   }
-  
+
   .copyright,
   .bottomLinks a {
     font-size: 12px;
@@ -782,59 +858,67 @@
   .footer {
     padding: 30px 0 12px;
   }
-  
+
   .mainContent {
     margin-bottom: 18px;
   }
-  
+
   .logo {
     height: 90px;
     max-width: 130px;
   }
-  
+
   .tagline {
     font-size: 11px;
   }
-  
+
+  .socialLinks {
+    gap: 7px;
+  }
+
   .socialIcon {
     width: 34px;
     height: 34px;
-    font-size: 15px;
   }
-  
+
+  .socialIcon svg {
+    width: 15px;
+    height: 15px;
+  }
+
   .sectionTitle {
     font-size: 13px;
     margin-bottom: 12px;
   }
-  
+
   .infoItem a,
   .linkList a {
     font-size: 11px;
   }
-  
+
   .shopList a {
     font-size: 11px;
     padding: 4px 8px;
     min-width: 110px;
   }
-  
+
   .newsletterCard {
     padding: 16px;
   }
-  
+
   .newsletterTitle {
     font-size: 15px;
   }
-  
+
   .newsletterSubtitle {
     font-size: 11px;
   }
-  
+
   .trustBadges {
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .badge {
     width: 100%;
     max-width: 280px;
@@ -847,197 +931,209 @@
   .footer {
     padding: 25px 0 10px;
   }
-  
+
   .mainContent {
     margin-bottom: 15px;
   }
-  
+
   .logo {
     height: 80px;
     max-width: 120px;
     margin-bottom: 10px;
   }
-  
+
   .tagline {
     font-size: 10px;
     margin-bottom: 12px;
   }
-  
+
   .socialLinks {
     gap: 6px;
   }
-  
+
   .socialIcon {
     width: 32px;
     height: 32px;
-    font-size: 14px;
   }
-  
+
+  .socialIcon svg {
+    width: 14px;
+    height: 14px;
+  }
+
   .sectionTitle {
     font-size: 12px;
     margin-bottom: 10px;
     gap: 6px;
   }
-  
+
   .sectionTitle .icon {
     font-size: 14px;
   }
-  
+
   .contactInfo {
     gap: 10px;
   }
-  
+
   .infoItem .label {
     font-size: 10px;
   }
-  
+
   .infoItem a {
     font-size: 10px;
   }
-  
+
   .hourLine {
     font-size: 10px;
   }
-  
+
   .linkList {
     gap: 8px;
   }
-  
+
   .linkList a {
     font-size: 10px;
   }
-  
+
   .shopList {
     gap: 6px;
   }
-  
+
   .shopList a {
     font-size: 10px;
     padding: 4px 8px;
     min-width: 100px;
   }
-  
+
   .newsletterCard {
     padding: 14px;
     border-radius: 10px;
     margin: 15px 0;
   }
-  
+
   .newsletterHeader {
     gap: 8px;
     margin-bottom: 8px;
   }
-  
+
   .discountBadge {
     font-size: 11px;
     padding: 4px 12px;
   }
-  
+
   .newsletterTitle {
     font-size: 13px;
   }
-  
+
   .newsletterSubtitle {
     font-size: 10px;
     margin-bottom: 12px;
   }
-  
+
   .newsletterForm {
     gap: 8px;
   }
-  
+
   .emailInput {
     padding: 9px 14px;
     font-size: 11px;
   }
-  
+
   .subscribeBtn {
     padding: 9px 18px;
     font-size: 11px;
   }
-  
+
   .trustBadges {
     padding: 15px 0;
     gap: 6px;
   }
-  
+
   .badge {
     font-size: 10px;
     padding: 6px 10px;
   }
-  
+
   .badge span:first-child {
     font-size: 12px;
   }
-  
+
   .footerBottom {
     padding: 12px 0 0;
   }
-  
+
   .copyright,
   .bottomLinks a {
     font-size: 10px;
   }
-  
+
   .bottomLinks {
     gap: 8px;
   }
 }
 
-/* Extra Small Mobile (below 375px) */
+/* Extra Small Mobile (375px - 479px) */
 @media (max-width: 374px) {
   .footer {
     padding: 22px 0 10px;
   }
-  
+
   .logo {
     height: 70px;
     max-width: 110px;
   }
-  
+
   .tagline {
     font-size: 9px;
   }
-  
+
+  .socialLinks {
+    gap: 5px;
+  }
+
   .socialIcon {
     width: 30px;
     height: 30px;
-    font-size: 13px;
   }
-  
+
+  .socialIcon svg {
+    width: 13px;
+    height: 13px;
+  }
+
   .sectionTitle {
     font-size: 11px;
   }
-  
+
   .infoItem a,
   .linkList a,
   .shopList a {
     font-size: 9px;
   }
-  
+
   .newsletterCard {
     padding: 12px;
   }
-  
+
   .discountBadge {
     font-size: 10px;
     padding: 3px 10px;
   }
-  
+
   .newsletterTitle {
     font-size: 12px;
   }
-  
+
   .newsletterSubtitle {
     font-size: 9px;
   }
-  
+
   .emailInput,
   .subscribeBtn {
     font-size: 10px;
     padding: 8px 12px;
   }
-  
+
   .badge {
     font-size: 9px;
     padding: 5px 8px;
@@ -1049,13 +1145,32 @@
   .footer {
     padding: 20px 0 8px;
   }
-  
+
   .logo {
     height: 65px;
     max-width: 100px;
   }
-  
+
+  .socialLinks {
+    gap: 4px;
+  }
+
+  .socialIcon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .socialIcon svg {
+    width: 12px;
+    height: 12px;
+  }
+
   .newsletterCard {
     padding: 10px;
+  }
+
+  .badge {
+    font-size: 8px;
+    padding: 4px 7px;
   }
 }
