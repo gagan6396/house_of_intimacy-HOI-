@@ -297,8 +297,8 @@ const AddBlog = () => {
                   </HStack>
                   <Heading size="sm">Title & Intro</Heading>
                   <Text fontSize="sm" color={subtleText}>
-                    Main heading, URL slug, aur intro paragraph yahan se set
-                    karo.
+                    Set the main heading, URL slug, and intro paragraph for your
+                    blog post.
                   </Text>
                 </Stack>
 
@@ -333,7 +333,8 @@ const AddBlog = () => {
                       {...register('slug')}
                     />
                     <Text fontSize="xs" color={subtleText} mt={1}>
-                      Optional. Backend se auto-generate bhi ho sakta hai.
+                      Optional. The backend can automatically generate the slug
+                      if left empty.
                     </Text>
                   </FormControl>
                 </Flex>
@@ -443,8 +444,8 @@ const AddBlog = () => {
                       {...register('galleryImages')}
                     />
                     <Text fontSize="xs" color={subtleText} mt={1}>
-                      Ye images Heading 2 ke baad gallery section me use ho
-                      sakti hain.
+                      These images may appear in the gallery section after
+                      Heading 2 in the blog article.
                     </Text>
                   </FormControl>
                 </Flex>
@@ -465,8 +466,8 @@ const AddBlog = () => {
                   </HStack>
                   <Heading size="sm">Content Blocks</Heading>
                   <Text fontSize="sm" color={subtleText}>
-                    Har section ke liye ek heading (H2/H3/H4/H5) aur ek rich
-                    text body.
+                    Each section includes a heading (H2/H3/H4/H5) and a rich
+                    text content block.
                   </Text>
                 </Stack>
 
@@ -699,8 +700,8 @@ const AddBlog = () => {
                   </HStack>
                   <Heading size="sm">SEO & Meta</Heading>
                   <Text fontSize="sm" color={subtleText}>
-                    SEO title, meta tags, keywords aur schema markup yahan se
-                    control karo.
+                    Configure SEO title, meta tags, keywords, and schema markup
+                    for this blog post.
                   </Text>
                 </Stack>
 
@@ -714,7 +715,8 @@ const AddBlog = () => {
                       {...register('seoTitle')}
                     />
                     <Text fontSize="xs" color={subtleText} mt={1}>
-                      Search engines par dikhne wala main SEO title.
+                      This is the main SEO title that appears in search engine
+                      results.
                     </Text>
                   </FormControl>
 
@@ -728,7 +730,8 @@ const AddBlog = () => {
                       {...register('seoDescription')}
                     />
                     <Text fontSize="xs" color={subtleText} mt={1}>
-                      Search result snippet ke liye ~150–160 characters.
+                      Recommended length: around 150–160 characters for search
+                      result snippets.
                     </Text>
                   </FormControl>
                 </Flex>
@@ -743,7 +746,8 @@ const AddBlog = () => {
                       {...register('metaTitle')}
                     />
                     <Text fontSize="xs" color={subtleText} mt={1}>
-                      Browser tab title. SEO title jaisa bhi rakh sakte ho.
+                      This will appear as the browser tab title. It can be the
+                      same as the SEO title.
                     </Text>
                   </FormControl>
 
@@ -757,7 +761,8 @@ const AddBlog = () => {
                       {...register('metaDescription')}
                     />
                     <Text fontSize="xs" color={subtleText} mt={1}>
-                      &lt;meta name=&quot;description&quot;&gt; ke liye text.
+                      &lt;meta name=&quot;description&quot;&gt; This text will
+                      be used for the HTML meta description tag.
                     </Text>
                   </FormControl>
                 </Flex>
@@ -792,7 +797,8 @@ const AddBlog = () => {
                     {...register('schemaMarkup')}
                   />
                   <Text fontSize="xs" color={subtleText} mt={1}>
-                    Raw JSON-LD paste karo (Google rich results ke liye).
+                    Paste raw JSON-LD schema markup here for Google rich
+                    results.
                   </Text>
                 </FormControl>
 

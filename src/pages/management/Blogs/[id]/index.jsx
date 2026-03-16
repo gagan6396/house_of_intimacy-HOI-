@@ -387,8 +387,7 @@ const EditBlog = () => {
                   </HStack>
                   <Heading size="sm">Title & Intro</Heading>
                   <Text fontSize="sm" color={subtleText}>
-                    Main heading, URL slug, aur intro paragraph yahan se set
-                    karo.
+                    Set the main heading, URL slug, and intro paragraph for this blog post.
                   </Text>
                 </Stack>
 
@@ -423,8 +422,7 @@ const EditBlog = () => {
                       {...register('slug')}
                     />
                     <Text fontSize="xs" color={subtleText} mt={1}>
-                      Optional. Backend se auto-generate bhi ho sakta hai agar
-                      blank.
+                       Optional. If left blank, the backend can automatically generate the slug.
                     </Text>
                   </FormControl>
                 </Flex>
@@ -483,8 +481,7 @@ const EditBlog = () => {
                   </HStack>
                   <Heading size="sm">Feature & Gallery Images</Heading>
                   <Text fontSize="sm" color={subtleText}>
-                    Existing feature image dikh raha hai. New image select
-                    karoge to wo replace ho jayega.
+                    The existing feature image is shown. Uploading a new image will replace the current one.
                   </Text>
                 </Stack>
 
@@ -508,7 +505,7 @@ const EditBlog = () => {
                       }}
                     />
                     <Text fontSize="xs" color={subtleText} mt={1}>
-                      If you don't upload, old image rahega.
+                      If you do not upload a new image, the existing image will remain.
                     </Text>
                   </FormControl>
 
@@ -525,8 +522,7 @@ const EditBlog = () => {
                       {...register('galleryImages')}
                     />
                     <Text fontSize="xs" color={subtleText} mt={1}>
-                      Naye gallery images add karne ke liye yahan se select
-                      karo.
+                        Select images here to add new gallery images to the blog.
                     </Text>
                   </FormControl>
                 </Flex>
@@ -547,8 +543,7 @@ const EditBlog = () => {
                   </HStack>
                   <Heading size="sm">Content Blocks</Heading>
                   <Text fontSize="sm" color={subtleText}>
-                    Har section ke liye ek heading (H2/H3/H4/H5) aur ek rich
-                    text body.
+                    Each section contains a heading (H2/H3/H4/H5) and a rich text content block.
                   </Text>
                 </Stack>
 
@@ -776,8 +771,7 @@ const EditBlog = () => {
                   </HStack>
                   <Heading size="sm">SEO & Meta</Heading>
                   <Text fontSize="sm" color={subtleText}>
-                    SEO title, meta tags, keywords aur schema markup yahan se
-                    control karo.
+                    Configure the SEO title, meta tags, keywords, and schema markup for this blog post.
                   </Text>
                 </Stack>
 
@@ -791,7 +785,7 @@ const EditBlog = () => {
                       {...register('seoTitle')}
                     />
                     <Text fontSize="xs" color={subtleText} mt={1}>
-                      Search engines par dikhne wala main SEO title.
+                        This is the main SEO title that appears in search engine results.
                     </Text>
                   </FormControl>
 
@@ -805,7 +799,7 @@ const EditBlog = () => {
                       {...register('seoDescription')}
                     />
                     <Text fontSize="xs" color={subtleText} mt={1}>
-                      Search result snippet ke liye ~150–160 characters.
+                     Recommended length: around 150–160 characters for search result snippets.
                     </Text>
                   </FormControl>
                 </Flex>
@@ -820,7 +814,7 @@ const EditBlog = () => {
                       {...register('metaTitle')}
                     />
                     <Text fontSize="xs" color={subtleText} mt={1}>
-                      Browser tab title. SEO title jaisa bhi rakh sakte ho.
+                       This appears as the browser tab title. It can be the same as the SEO title.
                     </Text>
                   </FormControl>
 
@@ -834,7 +828,7 @@ const EditBlog = () => {
                       {...register('metaDescription')}
                     />
                     <Text fontSize="xs" color={subtleText} mt={1}>
-                      &lt;meta name=&quot;description&quot;&gt; ke liye text.
+                      &lt;meta name=&quot;description&quot;&gt;  This text will be used for the HTML meta description tag.
                     </Text>
                   </FormControl>
                 </Flex>
@@ -869,7 +863,7 @@ const EditBlog = () => {
                     {...register('schemaMarkup')}
                   />
                   <Text fontSize="xs" color={subtleText} mt={1}>
-                    Raw JSON-LD paste karo (Google rich results ke liye).
+                    Paste raw JSON-LD schema markup here for Google rich results.
                   </Text>
                 </FormControl>
 
@@ -952,7 +946,7 @@ const EditBlog = () => {
                       <Icon as={FiImage} boxSize={6} />
                       <Text fontSize="xs">Feature image preview</Text>
                       <Text fontSize="xs" opacity={0.7}>
-                        Existing feature image ya nayi upload yahan show hogi
+                        The existing or newly uploaded feature image will appear here.
                       </Text>
                     </Flex>
                   )}

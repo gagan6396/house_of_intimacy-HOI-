@@ -526,7 +526,7 @@ const EditProducts = () => {
               Update Product
             </Heading>
             <Text fontSize="sm" color="gray.500">
-              Existing product details edit karo aur save karo.
+              Edit the existing product details and save the changes.
             </Text>
           </Box>
 
@@ -561,7 +561,7 @@ const EditProducts = () => {
                 Basic Information
               </Heading>
               <Text fontSize="sm" color="gray.500" mb={4}>
-                Product ka naam, category, brand etc.
+                 Enter the product name, category, brand and other basic details.
               </Text>
 
               <SimpleGrid columns={[1, 2]} gap={4}>
@@ -701,8 +701,7 @@ const EditProducts = () => {
                 Images
               </Heading>
               <Text fontSize="sm" color="gray.500" mb={4}>
-                Main image product thumbnail ke liye use hogi, gallery detail
-                page ke liye.
+The main image will be used as the product thumbnail, and gallery images will appear on the product detail page.
               </Text>
 
               <SimpleGrid columns={[1, 2]} gap={4}>
@@ -756,16 +755,15 @@ const EditProducts = () => {
                 Colors & Sizes
               </Heading>
               <Text fontSize="sm" color="gray.500" mb={4}>
-                Multiple colors & per-size stock set kar sakte ho.
+                You can add multiple colors and set stock for each size.
               </Text>
 
               {/* 🎨 COLOR PICKER + OPTIONS + INPUT (SAME AS ADD FORM) */}
               <FormControl mb={4}>
                 <FormLabel>Colors</FormLabel>
                 <Text fontSize="xs" color="gray.500" mb={2}>
-                  Color plate se pick karo, quick colors pe click karo ya manual
-                  color type karo. Jo add karoge woh hex/code ke form me save
-                  hoga.
+                   Pick a color from the color picker, choose from quick colors, or type a color manually.
+  The selected color will be saved in hex/code format.
                 </Text>
 
                 {/* Hidden field – RHF ke liye actual value */}
@@ -872,7 +870,7 @@ const EditProducts = () => {
 
                       {selectedColors.length === 0 && (
                         <Text fontSize="xs" color="gray.400">
-                          Abhi koi color add nahi hua hai.
+                          No colors have been added yet.
                         </Text>
                       )}
 
@@ -969,7 +967,7 @@ const EditProducts = () => {
                 Pricing & Inventory
               </Heading>
               <Text fontSize="sm" color="gray.500" mb={4}>
-                MRP, discount set karo. Sale price auto calculate ho jayega.
+                 Set the MRP and discount. The sale price will be calculated automatically.
               </Text>
 
               <SimpleGrid columns={[1, 3]} gap={4}>
@@ -1030,8 +1028,7 @@ const EditProducts = () => {
                 Fabric & Comfort Attributes
               </Heading>
               <Text fontSize="sm" color="gray.500" mb={4}>
-                Innerwear ke liye yeh fields bahut helpful hoti hain filters ke
-                liye.
+                These attributes are helpful for filtering innerwear products.
               </Text>
 
               <SimpleGrid columns={[1, 2]} gap={4}>
@@ -1224,7 +1221,7 @@ const EditProducts = () => {
                   <Flex wrap="wrap" gap={2}>
                     {featurePoints.length === 0 && (
                       <Text fontSize="xs" color="gray.400">
-                        Abhi koi feature add nahi hua hai.
+                        No features have been added yet.
                       </Text>
                     )}
 
@@ -1275,7 +1272,7 @@ const EditProducts = () => {
                   <Flex wrap="wrap" gap={2}>
                     {shippingPoints.length === 0 && (
                       <Text fontSize="xs" color="gray.400">
-                        Abhi koi shipping/return point add nahi hua hai.
+                         No shipping or return information has been added yet.
                       </Text>
                     )}
 
@@ -1330,7 +1327,7 @@ const EditProducts = () => {
                     placeholder="padded bra, seamless bra, cotton bra"
                   />
                   <Text fontSize="xs" color="gray.500" mt={1}>
-                    Comma separated – ye focus keywords rahenge.
+                    Enter keywords separated by commas – these will be your focus keywords.
                   </Text>
                 </FormControl>
 
