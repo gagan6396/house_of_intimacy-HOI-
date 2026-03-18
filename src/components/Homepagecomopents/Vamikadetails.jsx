@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Styles from '../../assets/styles/vamikadetails.module.css';
 
 import Banner1 from '../../assets/images/HomeBanner/banner_b.webp';
-import nightwearImg from '../../assets/images/5.jpg';
+import nightwearImg from '../../assets/images/banner_vm.webp';
 
 export const Vamikadetails = () => {
   return (
