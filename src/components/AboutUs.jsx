@@ -115,6 +115,7 @@ export function Aboutus() {
             </div>
           </div>
 
+
           <div className={styles.row}>
             <div className={styles.colMd6}>
               <div className={styles.textContent}>
