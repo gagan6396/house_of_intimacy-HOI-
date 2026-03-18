@@ -77,17 +77,16 @@ export default function Footer() {
             <div className={styles.contactInfo}>
               <div className={styles.infoItem}>
                 <span className={styles.label}>EMAIL:</span>
-                <a href="mailto:clientcare@linger.com">clientcare@linger.com</a>
+                <a href="mailto:roneesingh182@gmail.com">roneesingh182@gmail.com</a>
               </div>
               <div className={styles.infoItem}>
                 <span className={styles.label}>PHONE:</span>
-                <a href="91+ 9548474311">91+ 9548474311</a>
-                <a href="91+ 9084990547">91+ 9084990547</a>
+                <a href="+91 9548474311">+91 9548474311</a>
+                <a href="+91 9084990547">+91 9084990547</a>
               </div>
               <div className={styles.infoItem}>
                 <span className={styles.label}>HOURS:</span>
-                <span className={styles.hourLine}>• Mon–Thu: 9 AM - 7 PM</span>
-                <span className={styles.hourLine}>• Fri: 6 AM - 2 PM</span>
+                <span className={styles.hourLine}>• Sun–Sat: 10:00 AM - 10:00 PM</span>
               </div>
             </div>
           </div>

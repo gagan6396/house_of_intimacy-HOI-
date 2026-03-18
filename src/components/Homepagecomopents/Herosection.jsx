@@ -1,10 +1,10 @@
 import React from 'react';
 import '../../assets/styles/about.module.css';
-import Banner2 from '../../assets/images/Bannaer 01_V01.png';
-import Banner1 from '../../assets/images/Bannaer 02_V01.png';
-import Banner3 from '../../assets/images/Bannaer 03_V01.png';
-import Banner4 from '../../assets/images/Bannaer 04_V01.png';
-
+import Banner2 from '../../assets/images/ban2.webp';
+import Banner1 from '../../assets/images/ban1.webp';
+import Banner3 from '../../assets/images/ban3.webp';
+import Banner4 from '../../assets/images/11jck.webp';
+import Banner5 from '../../assets/images/ban1.webp';
 
 export default function Herosection() {
   return (
@@ -38,6 +38,7 @@ export default function Herosection() {
             data-bs-target="#imageCarousel"
             data-bs-slide-to="3"
           ></button>
+
         </div>
         <div className="carousel-inner">
           <div className="carousel-item active">

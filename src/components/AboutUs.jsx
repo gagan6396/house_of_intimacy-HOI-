@@ -1,6 +1,8 @@
 import React from 'react';
-import Banner1 from '../assets/images/HomeBanner/Banner1.webp';
-import Photo from '../assets/images/Banner-2-1400X1129.webp';
+import Banner1 from '../assets/images/HomeBanner/13abt.webp';
+import Photo from '../assets/images/17d.webp';
+import Photo1 from '../assets/images/16b.webp';
+import Photo2 from '../assets/images/17c.webp';
 import styles from '../assets/styles/about.module.css';
 import { FAQ } from './FAQ';
 // or "../FAQ" based on folder
@@ -146,13 +148,13 @@ export function Aboutus() {
               </div>
             </div>
             <div className={styles.colMd6}>
-              <img src={Photo} alt="img" className={styles.sectionImage} />
+              <img src={Photo1} alt="img" className={styles.sectionImage} />
             </div>
           </div>
 
           <div className={styles.row}>
             <div className={styles.colMd6}>
-              <img src={Photo} alt="img" className={styles.sectionImage} />
+              <img src={Photo2} alt="img" className={styles.sectionImage} />
             </div>
             <div className={styles.colMd6}>
               <div className={styles.textContent}>

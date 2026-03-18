@@ -9,9 +9,9 @@ import { CartContext } from '../contexts/CartContext';
 import styles from '../assets/styles/checkout/CheckoutPage.module.css';
 
 // Files (images) ke liye
-const FILE_BASE_URL = 'http://localhost:8000';
+const FILE_BASE_URL = 'https://vamikahouseofintimacy.com' || 'http://localhost:8000';
 // Backend API root
-const API_ROOT = 'http://localhost:8000/v1';
+const API_ROOT =  process.env.REACT_APP_APIURL || 'http://localhost:8000/v1';
 
 const getImageUrl = (url) => {
   if (!url) return '';

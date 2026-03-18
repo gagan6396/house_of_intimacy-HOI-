@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Styles from '../../assets/styles/vamikadetails.module.css';
 
-import Banner1 from '../../assets/images/HomeBanner/Banner1.webp';
+import Banner1 from '../../assets/images/HomeBanner/banner_b.webp';
 import nightwearImg from '../../assets/images/5.jpg';
 
 export const Vamikadetails = () => {

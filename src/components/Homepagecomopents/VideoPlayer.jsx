@@ -1,16 +1,19 @@
 import React from 'react';
+import Video from '../../assets/images/Sequence.mp4';
 
 const VideoPlayer = () => {
   return (
     <div className="container-fluid p-0">
       <video
         className="w-100"
-        src="https://flute-theme.myshopify.com/cdn/shop/videos/c/vp/4239b423129a40fbbcb670b41c10e21b/4239b423129a40fbbcb670b41c10e21b.HD-1080p-7.2Mbps-50361676.mp4?v=0"
+        src={Video}
         autoPlay
         muted
         loop
         playsInline
-        style={{ display: 'block', width: '100%', height: 'auto' }}
+        style={{  height: '75vh',
+    width: '100%',
+    objectFit: 'cover' }}
       />
     </div>
   );
