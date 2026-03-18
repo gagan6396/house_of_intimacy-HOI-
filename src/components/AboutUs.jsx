@@ -3,6 +3,10 @@ import Banner1 from '../assets/images/HomeBanner/13abt.webp';
 import Photo from '../assets/images/17d.webp';
 import Photo1 from '../assets/images/16b.webp';
 import Photo2 from '../assets/images/17c.webp';
+import Photo3 from '../assets/images/1a.webp';
+import Photo4 from '../assets/images/2a.webp';
+import Photo5 from '../assets/images/3a.webp';
+import Photo6 from '../assets/images/4a.webp';
 import styles from '../assets/styles/about.module.css';
 import { FAQ } from './FAQ';
 // or "../FAQ" based on folder
@@ -12,29 +16,28 @@ export function Aboutus() {
     {
       id: 1,
       title: 'Layering',
-      image:
-        'https://image.clovia.com/media/images/dtbanner/Cart-DT-Banner-6-2348234.jpg',
+      image:Photo3,
       bgColor: '#f5f5f5',
     },
     {
       id: 2,
       title: 'Athleisure',
       image:
-        'https://image.clovia.com/media/images/dtbanner/Cart-DT-Banner-3-234824.jpg',
+      Photo4,
       bgColor: '#e8f4f8',
     },
     {
       id: 3,
       title: 'Shapewear',
       image:
-        'https://image.clovia.com/media/images/dtbanner/Cart-DT-Banner-1-984343.jpg',
+       Photo5,
       bgColor: '#fef3e8',
     },
     {
       id: 4,
       title: 'Sleepwear',
       image:
-        'https://image.clovia.com/media/images/dtbanner/Cart-DT-Banner-4-2348234.jpg',
+       Photo6,
       bgColor: '#e8e9f3',
     },
   ];
