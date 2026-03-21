@@ -110,7 +110,8 @@ export default function Main() {
                   <Route
                     path="/order-success/:orderId"
                     element={<OrderSuccess />}
-                  />
+                  />                  
+<Route path="/order-result" element={<OrderSuccess />} />  {/* ← add this */}
                   <Route path="/Blog" element={<AllBlogs />} />
                   <Route path="/BlogDetails" element={<BlogDetails />} />
                   <Route path="/blog/:slug" element={<BlogDetails />} />

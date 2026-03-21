@@ -8,10 +8,8 @@ import { useToast } from '@chakra-ui/react';
 import { CartContext } from '../contexts/CartContext';
 import styles from '../assets/styles/checkout/CheckoutPage.module.css';
 
-// Files (images) ke liye
-const FILE_BASE_URL = 'https://vamikahouseofintimacy.com' || 'http://localhost:8000';
-// Backend API root
-const API_ROOT =  process.env.REACT_APP_APIURL || 'http://localhost:8000/v1';
+const FILE_BASE_URL = process.env.REACT_APP_APIURL || 'http://localhost:8000';
+const API_ROOT = process.env.REACT_APP_APIURL || 'http://localhost:8000/v1';
 
 const getImageUrl = (url) => {
   if (!url) return '';
@@ -19,10 +17,7 @@ const getImageUrl = (url) => {
   return `${FILE_BASE_URL}${url}`;
 };
 
-// ✅ Token helper
 const getToken = () => localStorage.getItem('authToken');
-
-// small helper for duplicate check
 const normalize = (str) => (str || '').trim().toLowerCase();
 
 function CheckoutPage() {
@@ -43,7 +38,7 @@ function CheckoutPage() {
   const [state, setStateVal] = useState('');
   const [pincode, setPincode] = useState('');
   const [landmark, setLandmark] = useState('');
-  const [addressType, setAddressType] = useState('home'); // 'home' | 'work' | 'other'
+  const [addressType, setAddressType] = useState('home');
 
   // ---------- MULTIPLE ADDRESSES (BACKEND) ----------
   const [addresses, setAddresses] = useState([]);
@@ -67,11 +62,7 @@ function CheckoutPage() {
 
     const fetchAll = async () => {
       try {
-        // 1) Logged-in user
-        const userRes = await axios.get(`${API_ROOT}/users/userdata`, {
-          headers,
-        });
-
+        const userRes = await axios.get(`${API_ROOT}/users/userdata`, { headers });
         const user = userRes.data?.user || {};
 
         setFullName(user.name || user.fullName || '');
@@ -79,19 +70,14 @@ function CheckoutPage() {
         setPhone(user.phone || user.mobile || user.contactNumber || '');
         if (user.email) setIsEmailLocked(true);
 
-        // 2) Addresses
         try {
-          const addrRes = await axios.get(`${API_ROOT}/users/addresses`, {
-            headers,
-          });
-
+          const addrRes = await axios.get(`${API_ROOT}/users/addresses`, { headers });
           const list = Array.isArray(addrRes.data)
             ? addrRes.data
             : addrRes.data.addresses || [];
 
           setAddresses(list);
 
-          // try to select default first
           const defaultAddr = list.find((a) => a.isDefault);
           if (defaultAddr) {
             setSelectedAddressId(defaultAddr._id);
@@ -114,29 +100,9 @@ function CheckoutPage() {
     fetchAll();
   }, [navigate]);
 
-  // ---------- LOAD RAZORPAY SCRIPT ----------
-  useEffect(() => {
-    const loadRazorpayScript = () => {
-      return new Promise((resolve) => {
-        const script = document.createElement('script');
-        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-        script.onload = () => {
-          resolve(true);
-        };
-        script.onerror = () => {
-          resolve(false);
-        };
-        document.body.appendChild(script);
-      });
-    };
-
-    loadRazorpayScript();
-  }, []);
-
   // ---------- ORDER TOTALS ----------
   const subtotal = useMemo(() => {
     if (!cartItems || cartItems.length === 0) return 0;
-
     return cartItems.reduce((sum, item) => {
       const unitPrice =
         Number(
@@ -146,13 +112,12 @@ function CheckoutPage() {
             item.product?.price?.mrp ??
             0,
         ) || 0;
-
       const qty = Number(item.quantity ?? 1);
       return sum + unitPrice * qty;
     }, 0);
   }, [cartItems]);
 
-  const shippingCharge = subtotal >= 799 ? 0 : 49; // example rule
+  const shippingCharge = subtotal >= 799 ? 0 : 49;
   const grandTotal = subtotal + shippingCharge;
 
   // ---------- SAVE ADDRESS (BACKEND) ----------
@@ -173,7 +138,6 @@ function CheckoutPage() {
       return;
     }
 
-    // 🔹 DUPLICATE CHECK (frontend)
     const isDuplicate = addresses.some(
       (a) =>
         normalize(a.addressLine1) === normalize(addressLine1) &&
@@ -186,22 +150,12 @@ function CheckoutPage() {
     if (isDuplicate) {
       const msg = 'This address is already saved in your account.';
       setError(msg);
-      toast({
-        title: 'Duplicate address',
-        description: msg,
-        status: 'warning',
-        duration: 4000,
-        isClosable: true,
-        position: 'top',
-      });
+      toast({ title: 'Duplicate address', description: msg, status: 'warning', duration: 4000, isClosable: true, position: 'top' });
       return;
     }
 
     const token = getToken();
-    if (!token) {
-      navigate('/login');
-      return;
-    }
+    if (!token) { navigate('/login'); return; }
     const headers = { Authorization: `Bearer ${token}` };
 
     const newAddressPayload = {
@@ -217,11 +171,7 @@ function CheckoutPage() {
     };
 
     try {
-      const res = await axios.post(
-        `${API_ROOT}/users/addresses`,
-        newAddressPayload,
-        { headers },
-      );
+      const res = await axios.post(`${API_ROOT}/users/addresses`, newAddressPayload, { headers });
 
       let updatedAddresses;
       if (Array.isArray(res.data)) {
@@ -236,7 +186,6 @@ function CheckoutPage() {
       const last = updatedAddresses[updatedAddresses.length - 1];
       setSelectedAddressId(last?._id || null);
 
-      // ✅ clear form after successful save
       setAddressLine1('');
       setAddressLine2('');
       setCity('');
@@ -246,64 +195,30 @@ function CheckoutPage() {
       setAddressType('home');
 
       setSuccessMessage('Address saved successfully ✅');
-      toast({
-        title: 'Address saved',
-        description: 'Your new address has been added.',
-        status: 'success',
-        duration: 4000,
-        isClosable: true,
-        position: 'top',
-      });
+      toast({ title: 'Address saved', description: 'Your new address has been added.', status: 'success', duration: 4000, isClosable: true, position: 'top' });
     } catch (err) {
       console.error('Save address error:', err);
-      const msg =
-        err.response?.data?.message ||
-        'Failed to save address. Please try again.';
+      const msg = err.response?.data?.message || 'Failed to save address. Please try again.';
       setError(msg);
-      toast({
-        title: 'Save failed',
-        description: msg,
-        status: 'error',
-        duration: 4000,
-        isClosable: true,
-        position: 'top',
-      });
+      toast({ title: 'Save failed', description: msg, status: 'error', duration: 4000, isClosable: true, position: 'top' });
     }
   };
 
   // ---------- DELETE SAVED ADDRESS (BACKEND) ----------
   const handleDeleteAddress = async (addressId, e) => {
-    // label click ko block karne ke liye
-    if (e) {
-      e.stopPropagation();
-      e.preventDefault();
-    }
-
+    if (e) { e.stopPropagation(); e.preventDefault(); }
     setError('');
     setSuccessMessage('');
 
     const token = getToken();
-    if (!token) {
-      navigate('/login');
-      return;
-    }
+    if (!token) { navigate('/login'); return; }
     const headers = { Authorization: `Bearer ${token}` };
 
     try {
-      const res = await axios.delete(
-        `${API_ROOT}/users/addresses/${addressId}`,
-
-        { headers },
-      );
-
-      // backend returns updated addresses
-      const updated = Array.isArray(res.data)
-        ? res.data
-        : res.data.addresses || [];
-
+      const res = await axios.delete(`${API_ROOT}/users/addresses/${addressId}`, { headers });
+      const updated = Array.isArray(res.data) ? res.data : res.data.addresses || [];
       setAddresses(updated);
 
-      // if deleted one was selected, pick default or first
       if (selectedAddressId === addressId) {
         const defaultAddr = updated.find((a) => a.isDefault);
         if (defaultAddr) {
@@ -316,23 +231,78 @@ function CheckoutPage() {
       }
 
       setSuccessMessage('Address deleted successfully ✅');
-      toast({
-        title: 'Address deleted',
-        description: 'The address has been removed from your account.',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-        position: 'top',
-      });
+      toast({ title: 'Address deleted', description: 'The address has been removed from your account.', status: 'success', duration: 3000, isClosable: true, position: 'top' });
     } catch (err) {
       console.error('Delete address error:', err);
-      const msg =
-        err.response?.data?.message ||
-        'Failed to delete address. Please try again.';
+      const msg = err.response?.data?.message || 'Failed to delete address. Please try again.';
       setError(msg);
+      toast({ title: 'Delete failed', description: msg, status: 'error', duration: 4000, isClosable: true, position: 'top' });
+    }
+  };
+
+  // ---------- BUILD ITEMS PAYLOAD FOR BACKEND ----------
+  const buildItemsPayload = () => {
+    if (!cartItems || cartItems.length === 0) return [];
+    return cartItems.map((item) => {
+      const productId = item.productId || item._id || item.product?._id || item.id;
+      return {
+        productId,
+        quantity: item.quantity || 1,
+        color: item.color || item.selectedColor || null,
+        size: typeof item.size === 'string' ? item.size : item.size?.label || null,
+      };
+    });
+  };
+
+  // ---------- DELETE SINGLE ITEM FROM CART ----------
+  const handleDeleteItem = (lineIndex) => {
+    try {
+      if (typeof removeFromCart !== 'function') {
+        console.warn('removeFromCart not available in CartContext');
+        return;
+      }
+      removeFromCart(lineIndex);
+      toast({ title: 'Item removed', status: 'info', duration: 2000, isClosable: true, position: 'top' });
+    } catch (err) {
+      console.error('Delete item error:', err);
+      toast({ title: 'Failed to remove item', status: 'error', duration: 3000, isClosable: true, position: 'top' });
+    }
+  };
+
+  // ---------- HDFC SMARTGATEWAY PAYMENT HANDLER ----------
+  const initializeHdfcPayment = async (shippingAddress, itemsPayload) => {
+    try {
+      const token = getToken();
+      const headers = { Authorization: `Bearer ${token}` };
+
+      // 1️⃣ Call backend → creates DB order (PENDING) + gets Juspay payment link
+      const orderResponse = await axios.post(
+        `${API_ROOT}/payment/create-order`,
+        {
+          customerName: fullName,
+          customerEmail: email,
+          customerPhone: phone,
+          shippingAddress,
+          items: itemsPayload,
+        },
+        { headers }
+      );
+
+      const { paymentUrl } = orderResponse.data;
+
+      if (!paymentUrl) {
+        throw new Error('Invalid response from payment server. Missing payment URL.');
+      }
+
+      // 2️⃣ Redirect user to HDFC hosted payment page
+      window.location.href = paymentUrl;
+
+    } catch (err) {
+      console.error('HDFC payment initialization error:', err);
+      setPlacingOrder(false);
       toast({
-        title: 'Delete failed',
-        description: msg,
+        title: 'Payment failed',
+        description: err.response?.data?.message || 'Unable to start payment. Please try again.',
         status: 'error',
         duration: 4000,
         isClosable: true,
@@ -341,208 +311,23 @@ function CheckoutPage() {
     }
   };
 
-  // ---------- BUILD ITEMS PAYLOAD FOR BACKEND ----------
-  const buildItemsPayload = () => {
-    if (!cartItems || cartItems.length === 0) return [];
-
-    return cartItems.map((item) => {
-      const productId =
-        item.productId || item._id || item.product?._id || item.id;
-
-      return {
-        productId,
-        quantity: item.quantity || 1,
-        color: item.color || item.selectedColor || null,
-        size:
-          typeof item.size === 'string' ? item.size : item.size?.label || null,
-      };
-    });
-  };
-
-  // ---------- DELETE SINGLE ITEM FROM CART (ORDER SUMMARY) ----------
-  const handleDeleteItem = (lineIndex) => {
-    try {
-      if (typeof removeFromCart !== 'function') {
-        console.warn('removeFromCart not available in CartContext');
-        return;
-      }
-
-      removeFromCart(lineIndex);
-      toast({
-        title: 'Item removed',
-        status: 'info',
-        duration: 2000,
-        isClosable: true,
-        position: 'top',
-      });
-    } catch (err) {
-      console.error('Delete item error:', err);
-      toast({
-        title: 'Failed to remove item',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-        position: 'top',
-      });
-    }
-  };
-
-  // ---------- RAZORPAY PAYMENT HANDLER ----------
-  const initializeRazorpayPayment = async (shippingAddress, itemsPayload) => {
-  try {
-    const token = getToken();
-    const headers = { Authorization: `Bearer ${token}` };
-
-    // 1️⃣ Create Razorpay Order
-    const orderResponse = await axios.post(
-      `${API_ROOT}/payment/create-order`,
-      { amount: grandTotal },
-      { headers }
-    );
-
-    const { id: razorpay_order_id, amount, currency } = orderResponse.data;
-
-    const options = {
-      key: 'rzp_test_S8pXl5qqvVLN0P',
-      amount,
-      currency,
-      name: 'House of Intimacy',
-      description: 'Order Payment',
-      order_id: razorpay_order_id,
-      prefill: {
-        name: fullName,
-        email,
-        contact: phone,
-      },
-      theme: { color: '#d63384' },
-
-      // 2️⃣ Payment Success Handler
-      handler: async function (response) {
-        try {
-          // 3️⃣ Verify payment
-          const verifyRes = await axios.post(
-            `${API_ROOT}/payment/verify-payment`,
-            {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-            },
-            { headers }
-          );
-
-          if (!verifyRes.data.success) {
-            throw new Error('Payment verification failed');
-          }
-
-          // 4️⃣ CREATE ORDER WITH PAID STATUS ✅
-          const orderRes = await axios.post(
-            `${API_ROOT}/orders`,
-            {
-              items: itemsPayload,
-              shippingAddress,
-              paymentMethod: 'ONLINE',
-              paymentStatus: 'PAID',  // 🔥 FIXED - Payment is already verified
-              razorpayOrderId: response.razorpay_order_id,
-              razorpayPaymentId: response.razorpay_payment_id,
-            },
-            { headers }
-          );
-
-          const dbOrder = orderRes.data;
-
-          clearCart?.();
-
-          toast({
-            title: 'Payment successful',
-            description: 'Order placed successfully 🎉',
-            status: 'success',
-            duration: 4000,
-            isClosable: true,
-            position: 'top',
-          });
-
-          navigate(`/order-success/${dbOrder._id}`);
-        } catch (err) {
-          console.error('Payment processing error:', err);
-          toast({
-            title: 'Payment verification failed',
-            description: err.response?.data?.message || 'Please contact support.',
-            status: 'error',
-            duration: 4000,
-            isClosable: true,
-            position: 'top',
-          });
-        } finally {
-          setPlacingOrder(false);
-        }
-      },
-
-      modal: {
-        ondismiss: () => {
-          setPlacingOrder(false);
-          toast({
-            title: 'Payment cancelled',
-            status: 'warning',
-            duration: 3000,
-            isClosable: true,
-            position: 'top',
-          });
-        },
-      },
-    };
-
-    const rzp = new window.Razorpay(options);
-    rzp.open();
-  } catch (err) {
-    console.error('Razorpay initialization error:', err);
-    setPlacingOrder(false);
-    toast({
-      title: 'Payment failed',
-      description: err.response?.data?.message || 'Unable to start payment',
-      status: 'error',
-      duration: 4000,
-      isClosable: true,
-      position: 'top',
-    });
-  }
-};
-
-  // ---------- PLACE ORDER (BACKEND) ----------
+  // ---------- PLACE ORDER ----------
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
     setError('');
     setSuccessMessage('');
 
-    // CONTACT VALIDATION
-    if (!fullName.trim()) {
-      setError('Please enter your full name.');
-      return;
-    }
-    if (!phone.trim() || phone.trim().length < 10) {
-      setError('Please enter a valid phone number.');
-      return;
-    }
-
-    if (!paymentMethod) {
-      setError('Please select a payment method.');
-      return;
-    }
-
-    if (!cartItems || cartItems.length === 0) {
-      setError('Your bag is empty.');
-      return;
-    }
+    if (!fullName.trim()) { setError('Please enter your full name.'); return; }
+    if (!phone.trim() || phone.trim().length < 10) { setError('Please enter a valid phone number.'); return; }
+    if (!paymentMethod) { setError('Please select a payment method.'); return; }
+    if (!cartItems || cartItems.length === 0) { setError('Your bag is empty.'); return; }
 
     // ADDRESS SELECTION / VALIDATION
     let shippingAddress = null;
 
     if (selectedAddressId) {
       const addr = addresses.find((a) => a._id === selectedAddressId);
-      if (!addr) {
-        setError('Please select a valid saved address.');
-        return;
-      }
-
+      if (!addr) { setError('Please select a valid saved address.'); return; }
       shippingAddress = {
         name: addr.name,
         phone: addr.phone,
@@ -555,15 +340,8 @@ function CheckoutPage() {
         addressType: addr.addressType || 'home',
       };
     } else {
-      if (!addressLine1.trim()) {
-        setError('Please enter your address.');
-        return;
-      }
-      if (!city.trim() || !state.trim() || !pincode.trim()) {
-        setError('Please fill City, State and Pincode.');
-        return;
-      }
-
+      if (!addressLine1.trim()) { setError('Please enter your address.'); return; }
+      if (!city.trim() || !state.trim() || !pincode.trim()) { setError('Please fill City, State and Pincode.'); return; }
       shippingAddress = {
         name: fullName.trim(),
         phone: phone.trim(),
@@ -578,33 +356,19 @@ function CheckoutPage() {
     }
 
     const itemsPayload = buildItemsPayload();
-    if (!itemsPayload.length) {
-      setError('Unable to prepare order items.');
-      return;
-    }
+    if (!itemsPayload.length) { setError('Unable to prepare order items.'); return; }
 
     setPlacingOrder(true);
 
-    // CHECK IF ONLINE PAYMENT
+    // ONLINE PAYMENT → HDFC SmartGateway
     if (paymentMethod === 'upi' || paymentMethod === 'card') {
-      // Razorpay integration for online payment
-      if (!window.Razorpay) {
-        setError('Payment gateway not loaded. Please refresh and try again.');
-        setPlacingOrder(false);
-        return;
-      }
-
-      // Initialize Razorpay payment
-      await initializeRazorpayPayment(shippingAddress, itemsPayload);
-      return; // Don't proceed further, Razorpay will handle the rest
+      await initializeHdfcPayment(shippingAddress, itemsPayload);
+      return; // window.location.href redirect happens inside, no further code runs
     }
 
-    // COD PAYMENT - Direct order creation
+    // COD PAYMENT → Direct order creation
     const token = getToken();
-    if (!token) {
-      navigate('/login');
-      return;
-    }
+    if (!token) { navigate('/login'); return; }
     const headers = { Authorization: `Bearer ${token}` };
 
     const orderPayload = {
@@ -614,16 +378,11 @@ function CheckoutPage() {
     };
 
     try {
-      const res = await axios.post(`${API_ROOT}/orders`, orderPayload, {
-        headers,
-      });
-
+      const res = await axios.post(`${API_ROOT}/orders`, orderPayload, { headers });
       const createdOrder = res.data;
-      setSuccessMessage('Order placed successfully 🎉');
 
-      if (typeof clearCart === 'function') {
-        clearCart();
-      }
+      setSuccessMessage('Order placed successfully 🎉');
+      if (typeof clearCart === 'function') clearCart();
 
       toast({
         title: 'Order placed',
@@ -641,18 +400,9 @@ function CheckoutPage() {
       }
     } catch (err) {
       console.error('Place order error:', err);
-      const msg =
-        err.response?.data?.message ||
-        'Failed to place order. Please try again.';
+      const msg = err.response?.data?.message || 'Failed to place order. Please try again.';
       setError(msg);
-      toast({
-        title: 'Order failed',
-        description: msg,
-        status: 'error',
-        duration: 4000,
-        isClosable: true,
-        position: 'top',
-      });
+      toast({ title: 'Order failed', description: msg, status: 'error', duration: 4000, isClosable: true, position: 'top' });
     } finally {
       setPlacingOrder(false);
     }
@@ -665,11 +415,7 @@ function CheckoutPage() {
         <div className={styles.emptyState}>
           <h1>Your bag is empty</h1>
           <p>Add some products to your bag before checking out.</p>
-          <button
-            type="button"
-            className={styles.primaryBtn}
-            onClick={() => navigate('/')}
-          >
+          <button type="button" className={styles.primaryBtn} onClick={() => navigate('/')}>
             Back to shopping
           </button>
         </div>
@@ -688,11 +434,7 @@ function CheckoutPage() {
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.headerRow}>
-        <button
-          type="button"
-          className={styles.backBtn}
-          onClick={() => navigate(-1)}
-        >
+        <button type="button" className={styles.backBtn} onClick={() => navigate(-1)}>
           <FiArrowLeft />
           <span>Back</span>
         </button>
@@ -706,6 +448,7 @@ function CheckoutPage() {
       <div className={styles.layout}>
         {/* LEFT COLUMN: FORM */}
         <form className={styles.leftCol} onSubmit={handlePlaceOrder}>
+
           {/* CONTACT */}
           <section className={styles.card}>
             <h2 className={styles.sectionTitle}>Contact Details</h2>
@@ -724,16 +467,10 @@ function CheckoutPage() {
                 <input
                   type="email"
                   value={email}
-                  onChange={
-                    isEmailLocked ? undefined : (e) => setEmail(e.target.value)
-                  }
+                  onChange={isEmailLocked ? undefined : (e) => setEmail(e.target.value)}
                   readOnly={isEmailLocked}
                   className={isEmailLocked ? styles.readOnlyInput : ''}
-                  placeholder={
-                    isEmailLocked
-                      ? 'Using your login email'
-                      : 'Enter your email (optional)'
-                  }
+                  placeholder={isEmailLocked ? 'Using your login email' : 'Enter your email (optional)'}
                 />
               </div>
               <div className={styles.formGroup}>
@@ -748,11 +485,10 @@ function CheckoutPage() {
             </div>
           </section>
 
-          {/* SHIPPING ADDRESS WITH MULTIPLE OPTIONS */}
+          {/* SHIPPING ADDRESS */}
           <section className={styles.card}>
             <h2 className={styles.sectionTitle}>Shipping Address</h2>
 
-            {/* SAVED ADDRESSES (BACKEND) */}
             {addresses.length > 0 && (
               <div className={styles.savedAddresses}>
                 <h3 className={styles.savedTitle}>Saved addresses</h3>
@@ -760,11 +496,7 @@ function CheckoutPage() {
                   {addresses.map((addr) => (
                     <label
                       key={addr._id}
-                      className={`${styles.addressCard} ${
-                        selectedAddressId === addr._id
-                          ? styles.addressCardActive
-                          : ''
-                      }`}
+                      className={`${styles.addressCard} ${selectedAddressId === addr._id ? styles.addressCardActive : ''}`}
                     >
                       <input
                         type="radio"
@@ -778,23 +510,16 @@ function CheckoutPage() {
                           <div className={styles.addressLabelRow}>
                             <div className={styles.addressTypePills}>
                               <span className={styles.addressTypeChip}>
-                                {addr.addressType
-                                  ? addr.addressType.toUpperCase()
-                                  : 'HOME'}
+                                {addr.addressType ? addr.addressType.toUpperCase() : 'HOME'}
                               </span>
                               {addr.isDefault && (
-                                <span className={styles.defaultBadge}>
-                                  Default
-                                </span>
+                                <span className={styles.defaultBadge}>Default</span>
                               )}
                             </div>
-
                             <span className={styles.addressName}>
                               {addr.name} • {addr.phone}
                             </span>
                           </div>
-
-                          {/* DELETE BUTTON */}
                           <button
                             type="button"
                             className={styles.addressDeleteBtn}
@@ -803,39 +528,27 @@ function CheckoutPage() {
                             <FiTrash2 className={styles.addressDeleteIcon} />
                           </button>
                         </div>
-
                         <div className={styles.addressText}>
                           {addr.addressLine1}
                           {addr.addressLine2 ? `, ${addr.addressLine2}` : ''}
                           <br />
                           {addr.city}, {addr.state} - {addr.pincode}
-                          {addr.landmark ? (
-                            <>
-                              <br />
-                              Landmark: {addr.landmark}
-                            </>
-                          ) : null}
+                          {addr.landmark ? (<><br />Landmark: {addr.landmark}</>) : null}
                         </div>
                       </div>
                     </label>
                   ))}
                 </div>
-                <div className={styles.orNewAddress}>
-                  Or deliver to a new address
-                </div>
+                <div className={styles.orNewAddress}>Or deliver to a new address</div>
               </div>
             )}
 
-            {/* NEW ADDRESS FORM */}
             <div className={styles.formGroup}>
               <label>Address Line 1 *</label>
               <input
                 type="text"
                 value={addressLine1}
-                onChange={(e) => {
-                  setAddressLine1(e.target.value);
-                  setSelectedAddressId(null);
-                }}
+                onChange={(e) => { setAddressLine1(e.target.value); setSelectedAddressId(null); }}
                 placeholder="Flat / House No. / Street"
               />
             </div>
@@ -844,10 +557,7 @@ function CheckoutPage() {
               <input
                 type="text"
                 value={addressLine2}
-                onChange={(e) => {
-                  setAddressLine2(e.target.value);
-                  setSelectedAddressId(null);
-                }}
+                onChange={(e) => { setAddressLine2(e.target.value); setSelectedAddressId(null); }}
                 placeholder="Area / Landmark (optional)"
               />
             </div>
@@ -855,37 +565,15 @@ function CheckoutPage() {
             <div className={styles.formGrid}>
               <div className={styles.formGroup}>
                 <label>City *</label>
-                <input
-                  type="text"
-                  value={city}
-                  onChange={(e) => {
-                    setCity(e.target.value);
-                    setSelectedAddressId(null);
-                  }}
-                />
+                <input type="text" value={city} onChange={(e) => { setCity(e.target.value); setSelectedAddressId(null); }} />
               </div>
               <div className={styles.formGroup}>
                 <label>State *</label>
-                <input
-                  type="text"
-                  value={state}
-                  onChange={(e) => {
-                    setStateVal(e.target.value);
-                    setSelectedAddressId(null);
-                  }}
-                />
+                <input type="text" value={state} onChange={(e) => { setStateVal(e.target.value); setSelectedAddressId(null); }} />
               </div>
               <div className={styles.formGroup}>
                 <label>Pincode *</label>
-                <input
-                  type="text"
-                  maxLength={6}
-                  value={pincode}
-                  onChange={(e) => {
-                    setPincode(e.target.value);
-                    setSelectedAddressId(null);
-                  }}
-                />
+                <input type="text" maxLength={6} value={pincode} onChange={(e) => { setPincode(e.target.value); setSelectedAddressId(null); }} />
               </div>
             </div>
 
@@ -895,19 +583,13 @@ function CheckoutPage() {
                 <input
                   type="text"
                   value={landmark}
-                  onChange={(e) => {
-                    setLandmark(e.target.value);
-                    setSelectedAddressId(null);
-                  }}
+                  onChange={(e) => { setLandmark(e.target.value); setSelectedAddressId(null); }}
                   placeholder="Near XYZ (optional)"
                 />
               </div>
               <div className={styles.formGroup}>
                 <label>Address Type</label>
-                <select
-                  value={addressType}
-                  onChange={(e) => setAddressType(e.target.value)}
-                >
+                <select value={addressType} onChange={(e) => setAddressType(e.target.value)}>
                   <option value="home">Home</option>
                   <option value="work">Work</option>
                   <option value="other">Other</option>
@@ -915,11 +597,7 @@ function CheckoutPage() {
               </div>
             </div>
 
-            <button
-              type="button"
-              className={styles.saveAddressBtn}
-              onClick={handleSaveAddress}
-            >
+            <button type="button" className={styles.saveAddressBtn} onClick={handleSaveAddress}>
               Save this address
             </button>
           </section>
@@ -962,16 +640,10 @@ function CheckoutPage() {
           </section>
 
           {error && <div className={styles.errorBox}>{error}</div>}
-          {successMessage && (
-            <div className={styles.successBox}>{successMessage}</div>
-          )}
+          {successMessage && <div className={styles.successBox}>{successMessage}</div>}
 
-          <button
-            type="submit"
-            className={styles.placeOrderBtn}
-            disabled={placingOrder}
-          >
-            {placingOrder ? 'Placing your order...' : 'Place Order'}
+          <button type="submit" className={styles.placeOrderBtn} disabled={placingOrder}>
+            {placingOrder ? 'Redirecting to payment...' : 'Place Order'}
           </button>
         </form>
 
@@ -986,8 +658,7 @@ function CheckoutPage() {
                 const img =
                   item.image ||
                   item.product?.mainImage ||
-                  (Array.isArray(item.product?.galleryImages) &&
-                    item.product.galleryImages[0]) ||
+                  (Array.isArray(item.product?.galleryImages) && item.product.galleryImages[0]) ||
                   null;
                 const unitPrice =
                   Number(
@@ -998,10 +669,7 @@ function CheckoutPage() {
                       0,
                   ) || 0;
                 const qty = Number(item.quantity ?? 1);
-                const sizeLabel =
-                  typeof item.size === 'string'
-                    ? item.size
-                    : item.size?.label || '';
+                const sizeLabel = typeof item.size === 'string' ? item.size : item.size?.label || '';
 
                 return (
                   <div key={idx} className={styles.itemRow}>
@@ -1009,38 +677,23 @@ function CheckoutPage() {
                       {img && <img src={getImageUrl(img)} alt={itemName} />}
                     </div>
                     <div className={styles.itemInfo}>
-                      {itemBrand && (
-                        <div className={styles.itemBrand}>{itemBrand}</div>
-                      )}
+                      {itemBrand && <div className={styles.itemBrand}>{itemBrand}</div>}
                       <div className={styles.itemName}>{itemName}</div>
                       <div className={styles.itemMeta}>
                         {sizeLabel && <span>Size: {sizeLabel}</span>}
                         {item.color && (
                           <span className={styles.colorWrapper}>
                             Color:
-                            <span
-                              className={styles.colorDot}
-                              style={{ backgroundColor: item.color }}
-                            />
+                            <span className={styles.colorDot} style={{ backgroundColor: item.color }} />
                           </span>
                         )}
                       </div>
                       <div className={styles.itemPriceRow}>
-                        <span>
-                          ₹ {unitPrice} × {qty}
-                        </span>
-                        <span className={styles.itemLineTotal}>
-                          ₹ {unitPrice * qty}
-                        </span>
+                        <span>₹ {unitPrice} × {qty}</span>
+                        <span className={styles.itemLineTotal}>₹ {unitPrice * qty}</span>
                       </div>
                     </div>
-
-                    {/* DELETE BUTTON ON RIGHT */}
-                    <button
-                      type="button"
-                      className={styles.deleteBtn}
-                      onClick={() => handleDeleteItem(idx)}
-                    >
+                    <button type="button" className={styles.deleteBtn} onClick={() => handleDeleteItem(idx)}>
                       <FiTrash2 />
                     </button>
                   </div>
@@ -1055,9 +708,7 @@ function CheckoutPage() {
               </div>
               <div className={styles.summaryRow}>
                 <span>Shipping</span>
-                <span>
-                  {shippingCharge === 0 ? 'FREE' : `₹ ${shippingCharge}`}
-                </span>
+                <span>{shippingCharge === 0 ? 'FREE' : `₹ ${shippingCharge}`}</span>
               </div>
               <div className={styles.summaryRowTotal}>
                 <span>Total</span>
@@ -1066,8 +717,7 @@ function CheckoutPage() {
             </div>
 
             <p className={styles.summaryNote}>
-              You will see available offers and final payment options on the
-              next step of payment gateway.
+              You will see available offers and final payment options on the next step of payment gateway.
             </p>
           </section>
         </aside>

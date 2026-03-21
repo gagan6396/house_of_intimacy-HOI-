@@ -1,13 +1,14 @@
 // src/pages/Checkout/OrderSuccess.jsx
-import React, { useEffect, useState, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { FiCheckCircle } from 'react-icons/fi';
+import React, { useEffect, useState, useMemo, useContext } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { FiCheckCircle, FiXCircle, FiClock } from 'react-icons/fi';
 import axios from 'axios';
 import styles from '../../assets/styles/checkout/OrderSuccess.module.css';
+import { CartContext } from '../../contexts/CartContext';
 
 // ---- CONFIG ----
-const FILE_BASE_URL = 'http://localhost:8000';
-const API_ROOT = 'http://localhost:8000/v1';
+const FILE_BASE_URL = process.env.REACT_APP_APIURL || 'http://localhost:8000';
+const API_ROOT = process.env.REACT_APP_APIURL || 'http://localhost:8000/v1';
 
 const getImageUrl = (url) => {
   if (!url) return '';
@@ -18,39 +19,57 @@ const getImageUrl = (url) => {
 const getToken = () => localStorage.getItem('authToken');
 
 function OrderSuccess() {
-  const { orderId } = useParams();
+  const { id, orderId: paramOrderId } = useParams();
+  const resolvedOrderId = id || paramOrderId;
+
+  const location = useLocation();
   const navigate = useNavigate();
+  const { clearCart } = useContext(CartContext);
+
+  // ── Detect failure/pending from URL query params ──────────────────────────
+  // Success:  /order-success/:id
+  // Failed:   /order-result?status=failed&reason=...
+  // Pending:  /order-result?status=pending&orderId=...
+  const searchParams = new URLSearchParams(location.search);
+  const urlStatus = searchParams.get('status');       // "failed" | "pending" | null
+  const urlReason = searchParams.get('reason') || ''; // AUTHORIZATION_FAILED etc.
+
+  const isFailure = urlStatus === 'failed';
+  const isPending = urlStatus === 'pending';
+  const isSuccess = !isFailure && !isPending;         // normal /order-success/:id
 
   const [order, setOrder] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(isSuccess);  // only load if success
   const [error, setError] = useState('');
 
-  // ---------- FETCH ORDER DETAILS ----------
+  // ---------- FETCH ORDER DETAILS (only on success) ----------
   useEffect(() => {
+    if (!isSuccess) return; // don't fetch for failed/pending
+
     const fetchOrder = async () => {
-      if (!orderId) {
+      if (!resolvedOrderId) {
         setError('Invalid order ID.');
         setLoading(false);
         return;
       }
 
       const token = getToken();
-      if (!token) {
-        navigate('/login');
-        return;
-      }
+      if (!token) { navigate('/login'); return; }
 
       try {
         setLoading(true);
         setError('');
 
-        const res = await axios.get(`${API_ROOT}/orders/${orderId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const res = await axios.get(`${API_ROOT}/orders/${resolvedOrderId}`, {
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         setOrder(res.data);
+
+        // ✅ Clear cart only on success
+        if (typeof clearCart === 'function') {
+          clearCart();
+        }
       } catch (err) {
         console.error('OrderSuccess fetch error:', err);
         setError(
@@ -63,7 +82,7 @@ function OrderSuccess() {
     };
 
     fetchOrder();
-  }, [orderId, navigate]);
+  }, [resolvedOrderId, navigate, isSuccess]);
 
   // ---------- HELPERS ----------
   const items = useMemo(() => {
@@ -78,21 +97,13 @@ function OrderSuccess() {
 
   const grandTotal = useMemo(() => {
     if (!order) return null;
-
-    // 1) direct key from backend
     if (order.grandTotal != null) return order.grandTotal;
-
-    // 2) if in nested objects (for future safety)
     if (order.totals?.grandTotal != null) return order.totals.grandTotal;
-    if (order.paymentSummary?.grandTotal != null)
-      return order.paymentSummary.grandTotal;
+    if (order.paymentSummary?.grandTotal != null) return order.paymentSummary.grandTotal;
     if (order.totalAmount != null) return order.totalAmount;
-
-    // 3) last fallback: calculate from itemsTotal + shippingFee
     if (order.itemsTotal != null && order.shippingFee != null) {
       return Number(order.itemsTotal) + Number(order.shippingFee);
     }
-
     return null;
   }, [order]);
 
@@ -116,7 +127,18 @@ function OrderSuccess() {
     return s;
   }, [order]);
 
-  // ---------- LOADING / ERROR UI ----------
+  // ── Friendly reason label ─────────────────────────────────────────────────
+  const failureReasonLabel = useMemo(() => {
+    const r = urlReason.toUpperCase();
+    if (r === 'AUTHORIZATION_FAILED') return 'Payment authorization failed.';
+    if (r === 'AUTHENTICATION_FAILED') return 'Payment authentication failed.';
+    if (r === 'SERVER_ERROR') return 'Something went wrong on our end.';
+    if (r === 'MISSING_ORDER_ID') return 'Invalid payment session.';
+    if (urlReason) return urlReason;
+    return 'Your payment could not be completed.';
+  }, [urlReason]);
+
+  // ---------- LOADING ----------
   if (loading) {
     return (
       <div className={styles.page}>
@@ -129,16 +151,84 @@ function OrderSuccess() {
     );
   }
 
+  // ---------- FAILED UI ----------
+  if (isFailure) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.container}>
+          <div className={styles.card}>
+            <div className={styles.iconWrap}>
+              <FiXCircle className={styles.icon} style={{ color: '#ef4444' }} />
+            </div>
+            <h1 className={styles.title}>Payment Failed</h1>
+            <p className={styles.subtitle}>{failureReasonLabel}</p>
+            <p className={styles.tipText}>
+              Your cart items are safe. You can try again or choose a different payment method.
+            </p>
+            <div className={styles.buttonsRow}>
+              <button className={styles.primaryBtn} onClick={() => navigate('/checkout')}>
+                Try Again
+              </button>
+              <button className={styles.secondaryBtn} onClick={() => navigate('/')}>
+                Continue Shopping
+              </button>
+            </div>
+            <p className={styles.footerNote}>
+              Need help?{' '}
+              <button className={styles.inlineLink} onClick={() => navigate('/ContactUs')}>
+                Contact support
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ---------- PENDING UI ----------
+  if (isPending) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.container}>
+          <div className={styles.card}>
+            <div className={styles.iconWrap}>
+              <FiClock className={styles.icon} style={{ color: '#f59e0b' }} />
+            </div>
+            <h1 className={styles.title}>Payment Pending</h1>
+            <p className={styles.subtitle}>
+              Your payment is being processed. This may take a few minutes.
+            </p>
+            <p className={styles.tipText}>
+              Please do not retry payment. We'll update your order status once confirmed.
+            </p>
+            <div className={styles.buttonsRow}>
+              <button className={styles.primaryBtn} onClick={() => navigate('/account/orders')}>
+                View My Orders
+              </button>
+              <button className={styles.secondaryBtn} onClick={() => navigate('/')}>
+                Go to Home
+              </button>
+            </div>
+            <p className={styles.footerNote}>
+              Need help?{' '}
+              <button className={styles.inlineLink} onClick={() => navigate('/ContactUs')}>
+                Contact support
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ---------- SUCCESS: ERROR / NOT FOUND ----------
   if (error) {
     return (
       <div className={styles.page}>
         <div className={styles.container}>
           <div className={styles.card}>
             <p className={styles.errorText}>{error}</p>
-            <button
-              className={styles.primaryBtn}
-              onClick={() => navigate('/account/orders')}
-            >
+            <button className={styles.primaryBtn} onClick={() => navigate('/account/orders')}>
               Go to my orders
             </button>
           </div>
@@ -162,7 +252,7 @@ function OrderSuccess() {
     );
   }
 
-  // ---------- MAIN UI ----------
+  // ---------- SUCCESS: MAIN UI ----------
   return (
     <div className={styles.page}>
       <div className={styles.container}>
@@ -230,16 +320,12 @@ function OrderSuccess() {
                       const colorName =
                         item.colorName ||
                         item.selectedColorName ||
-                        (rawColor && !rawColor.startsWith('#')
-                          ? rawColor
-                          : null);
+                        (rawColor && !rawColor.startsWith('#') ? rawColor : null);
 
                       const colorHex =
                         item.colorHex ||
                         item.selectedColorHex ||
-                        (rawColor && rawColor.startsWith('#')
-                          ? rawColor
-                          : null);
+                        (rawColor && rawColor.startsWith('#') ? rawColor : null);
 
                       const lineTotal =
                         item.lineTotal || Number(unitPrice) * Number(qty || 1);
@@ -264,7 +350,6 @@ function OrderSuccess() {
 
                             <div className={styles.itemMeta}>
                               {size && <span>Size: {size}</span>}
-
                               {(colorName || colorHex) && (
                                 <span className={styles.colorMeta}>
                                   Color:
@@ -284,12 +369,8 @@ function OrderSuccess() {
                             </div>
 
                             <div className={styles.itemPriceRow}>
-                              <span>
-                                ₹{unitPrice} × {qty}
-                              </span>
-                              <span className={styles.itemLineTotal}>
-                                ₹{lineTotal}
-                              </span>
+                              <span>₹{unitPrice} × {qty}</span>
+                              <span className={styles.itemLineTotal}>₹{lineTotal}</span>
                             </div>
                           </div>
                         </div>
@@ -306,7 +387,7 @@ function OrderSuccess() {
                 <div className={styles.infoRow}>
                   <span className={styles.label}>Order ID</span>
                   <span className={styles.valueMono}>
-                    {order._id || orderId}
+                    {order._id || resolvedOrderId}
                   </span>
                 </div>
 
@@ -334,11 +415,9 @@ function OrderSuccess() {
                       </strong>
                       <br />
                       {shippingAddress.addressLine1}
-                      {shippingAddress.addressLine2 &&
-                        `, ${shippingAddress.addressLine2}`}
+                      {shippingAddress.addressLine2 && `, ${shippingAddress.addressLine2}`}
                       <br />
-                      {shippingAddress.city}, {shippingAddress.state} -{' '}
-                      {shippingAddress.pincode}
+                      {shippingAddress.city}, {shippingAddress.state} - {shippingAddress.pincode}
                       {shippingAddress.landmark && (
                         <>
                           <br />
