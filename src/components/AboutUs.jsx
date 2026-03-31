@@ -41,6 +41,7 @@ export function Aboutus() {
       bgColor: '#e8e9f3',
     },
   ];
+  
 
   return (
     <>
@@ -49,7 +50,7 @@ export function Aboutus() {
           <img src={Banner1} alt="Banner" className={styles.bannerImage} />
         </div>
       </section>
-      
+
 
       <section className={styles.introSection}>
         <div className="container">
