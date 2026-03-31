@@ -462,6 +462,7 @@ function CheckoutPage() {
                   placeholder="Enter your full name"
                 />
               </div>
+              
               <div className={styles.formGroup}>
                 <label>Email</label>
                 <input
