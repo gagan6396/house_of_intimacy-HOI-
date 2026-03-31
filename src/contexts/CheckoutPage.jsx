@@ -10,11 +10,12 @@ import styles from '../assets/styles/checkout/CheckoutPage.module.css';
 
 const FILE_BASE_URL = process.env.REACT_APP_APIURL || 'http://localhost:8000';
 const API_ROOT = process.env.REACT_APP_APIURL || 'http://localhost:8000/v1';
+const imgUrl  = process.env.REACT_APP_CLIENT_URL
 
 const getImageUrl = (url) => {
   if (!url) return '';
   if (url.startsWith('http')) return url;
-  return `${FILE_BASE_URL}${url}`;
+  return `${imgUrl}${url}`;
 };
 
 const getToken = () => localStorage.getItem('authToken');
@@ -462,7 +463,7 @@ function CheckoutPage() {
                   placeholder="Enter your full name"
                 />
               </div>
-              
+
               <div className={styles.formGroup}>
                 <label>Email</label>
                 <input
